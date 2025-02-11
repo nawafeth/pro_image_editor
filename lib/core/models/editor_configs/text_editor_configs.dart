@@ -40,6 +40,7 @@ class TextEditorConfigs {
     this.canToggleTextAlign = true,
     this.canToggleBackgroundMode = true,
     this.canChangeFontScale = true,
+    this.enableMainEditorZoomFactor = false,
     this.initFontSize = 24.0,
     this.initialTextAlign = TextAlign.center,
     this.initFontScale = 1.0,
@@ -73,6 +74,10 @@ class TextEditorConfigs {
 
   /// Determines if the background mode can be toggled.
   final bool canToggleBackgroundMode;
+
+  /// A flag to enable or disable scaling of the text field in sync with the
+  /// editor's zoom level.
+  final bool enableMainEditorZoomFactor;
 
   /// The initial font size for text.
   final double initFontSize;
@@ -144,6 +149,7 @@ class TextEditorConfigs {
     bool? canChangeFontScale,
     bool? showSelectFontStyleBottomBar,
     bool? canToggleBackgroundMode,
+    bool? enableMainEditorZoomFactor,
     double? initFontSize,
     TextAlign? initialTextAlign,
     double? initFontScale,
@@ -170,6 +176,8 @@ class TextEditorConfigs {
           showSelectFontStyleBottomBar ?? this.showSelectFontStyleBottomBar,
       canToggleBackgroundMode:
           canToggleBackgroundMode ?? this.canToggleBackgroundMode,
+      enableMainEditorZoomFactor:
+          enableMainEditorZoomFactor ?? this.enableMainEditorZoomFactor,
       initFontSize: initFontSize ?? this.initFontSize,
       initialTextAlign: initialTextAlign ?? this.initialTextAlign,
       initFontScale: initFontScale ?? this.initFontScale,

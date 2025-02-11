@@ -1001,6 +1001,9 @@ class ProImageEditorState extends State<ProImageEditor>
         configs: configs,
         theme: _theme,
         callbacks: callbacks,
+        scaleFactor: textEditorConfigs.enableMainEditorZoomFactor
+            ? _interactiveViewer.currentState?.scaleFactor ?? 1.0
+            : 1.0,
       ),
 
       /// Small Duration is important for a smooth hero animation
@@ -1250,6 +1253,7 @@ class ProImageEditorState extends State<ProImageEditor>
         configs: configs,
         theme: _theme,
         callbacks: callbacks,
+        scaleFactor: _interactiveViewer.currentState?.scaleFactor ?? 1.0,
       ),
       duration: duration,
     );
