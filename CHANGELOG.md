@@ -1,5 +1,8 @@
 # Changelog
 
+## 8.1.11
+- **FIX**(export): Resolve an issue where exporting the first state history did return all state histories. Resolves [#353](https://github.com/hm21/pro_image_editor/issues/353).
+
 ## 8.1.10
 - **FEAT**(callback): Introduced `onEscapeButton` callback inside `MainEditorCallbacks` to allow external handling of the Escape key logic.
 

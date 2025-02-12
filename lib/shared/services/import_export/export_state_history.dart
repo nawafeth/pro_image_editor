@@ -160,7 +160,7 @@ class ExportStateHistory {
       return EditorStateHistory(
         blur: blur,
         filters: filters,
-        layers: changes[position - 1].layers,
+        layers: position <= 0 ? [] : changes[position - 1].layers,
         transformConfigs: transformConfigs,
         tuneAdjustments: tuneAdjustments,
       );
@@ -169,9 +169,7 @@ class ExportStateHistory {
     /// Choose history span
     switch (_configs.historySpan) {
       case ExportHistorySpan.current:
-        if (editorPosition > 0) {
-          changes = [accumulateHistory(editorPosition)];
-        }
+        changes = [accumulateHistory(editorPosition)];
         break;
       case ExportHistorySpan.currentAndBackward:
         changes.removeRange(editorPosition, changes.length);
@@ -179,11 +177,11 @@ class ExportStateHistory {
       case ExportHistorySpan.currentAndForward:
         int position = editorPosition;
 
-        var history = accumulateHistory(position);
-
-        changes.removeRange(0, editorPosition - 1);
-
-        changes[0] = history;
+        if (position != 0) {
+          var history = accumulateHistory(position);
+          changes.removeRange(0, position - 1);
+          changes[0] = history;
+        }
         break;
       case ExportHistorySpan.all:
         break;
