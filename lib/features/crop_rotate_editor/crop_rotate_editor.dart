@@ -22,6 +22,7 @@ import '/shared/mixins/extended_loop.dart';
 import '/shared/services/content_recorder/widgets/record_invisible_widget.dart';
 import '/shared/services/layer_transform_generator.dart';
 import '/shared/utils/debounce.dart';
+import '/shared/utils/file_constructor_utils.dart';
 import '/shared/widgets/extended/extended_custom_paint.dart';
 import '/shared/widgets/extended/extended_transform_scale.dart';
 import '/shared/widgets/extended/extended_transform_translate.dart';
@@ -87,7 +88,7 @@ class CropRotateEditor extends StatefulWidget
   }) {
     return CropRotateEditor._(
       key: key,
-      editorImage: EditorImage(file: file),
+      editorImage: EditorImage(file: ensureFileInstance(file)),
       initConfigs: initConfigs,
     );
   }
@@ -140,7 +141,7 @@ class CropRotateEditor extends StatefulWidget
       );
     } else if (file != null || editorImage?.file != null) {
       return CropRotateEditor.file(
-        file ?? editorImage!.file!,
+        ensureFileInstance(file ?? editorImage!.file!),
         key: key,
         initConfigs: initConfigs,
       );

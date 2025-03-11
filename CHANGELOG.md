@@ -3,6 +3,7 @@
 ## 9.0.0
 - **FEAT**(callbacks): Add new callbacks that are triggered when a layer intersects with a helper line.
 - **FEAT**(TextLayer): Improve the text layer hit box for better gesture recognition.
+- **FEAT**(File): The file constructor in the main editor and sub-editors now supports adding just the file path in addition to the File itself.
 
 - **FIX**(Layers): Fix incorrect layer selection when drawing lines overlay other layers
 

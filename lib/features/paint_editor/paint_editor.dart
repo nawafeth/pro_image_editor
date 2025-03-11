@@ -19,6 +19,7 @@ import '/pro_image_editor.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
 import '/shared/services/shader_manager.dart';
 import '/shared/styles/platform_text_styles.dart';
+import '/shared/utils/file_constructor_utils.dart';
 import '/shared/widgets/auto_image.dart';
 import '/shared/widgets/extended/extended_interactive_viewer.dart';
 import '/shared/widgets/layer/layer_stack.dart';
@@ -80,7 +81,7 @@ class PaintEditor extends StatefulWidget
   }) {
     return PaintEditor._(
       key: key,
-      editorImage: EditorImage(file: file),
+      editorImage: EditorImage(file: ensureFileInstance(file)),
       initConfigs: initConfigs,
     );
   }
@@ -146,7 +147,7 @@ class PaintEditor extends StatefulWidget
       );
     } else if (file != null || editorImage?.file != null) {
       return PaintEditor.file(
-        file ?? editorImage!.file!,
+        ensureFileInstance(file ?? editorImage!.file!),
         key: key,
         initConfigs: initConfigs,
       );

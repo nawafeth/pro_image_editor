@@ -23,6 +23,7 @@ import '/shared/services/content_recorder/widgets/content_recorder.dart';
 import '/shared/services/import_export/export_state_history.dart';
 import '/shared/services/layer_transform_generator.dart';
 import '/shared/utils/debounce.dart';
+import '/shared/utils/file_constructor_utils.dart';
 import '/shared/widgets/adaptive_dialog.dart';
 import '/shared/widgets/extended/extended_interactive_viewer.dart';
 import '/shared/widgets/screen_resize_detector.dart';
@@ -155,7 +156,8 @@ class ProImageEditor extends StatefulWidget
   /// This constructor creates a `ProImageEditor` widget configured to edit an
   /// image loaded from the specified `file`.
   ///
-  /// The `file` parameter should point to the image file.
+  /// The `file` parameter should be from the type `File` or the path to the
+  /// file.
   ///
   /// {@macro mainEditorConfigs}
   ///
@@ -167,14 +169,14 @@ class ProImageEditor extends StatefulWidget
   /// )
   /// ```
   factory ProImageEditor.file(
-    File file, {
+    dynamic file, {
     Key? key,
     ProImageEditorConfigs configs = const ProImageEditorConfigs(),
     required ProImageEditorCallbacks callbacks,
   }) {
     return ProImageEditor._(
       key: key,
-      file: file,
+      file: ensureFileInstance(file),
       configs: configs,
       callbacks: callbacks,
     );
@@ -236,6 +238,111 @@ class ProImageEditor extends StatefulWidget
       callbacks: callbacks,
     );
   }
+
+  /// Creates a `ProImageEditor` instance by automatically determining the
+  /// image source.
+  ///
+  /// This factory constructor intelligently selects the appropriate image
+  /// loading method based on the provided parameters. It allows for seamless
+  /// integration without requiring users to manually specify whether the image
+  /// is from memory, a file, a network URL, or an asset.
+  ///
+  /// The selection is based on the first non-null parameter in the following
+  /// order of priority:
+  /// 1. `byteArray` (raw image data in memory)
+  /// 2. `file` (local file system)
+  /// 3. `networkUrl` (image from a remote URL)
+  /// 4. `assetPath` (image stored as an app asset)
+  ///
+  /// Additionally, an `EditorImage` instance can be provided, which may contain
+  /// any of the above sources, and will be processed in the same priority
+  /// order.
+  ///
+  /// {@macro mainEditorConfigs}
+  ///
+  /// Example usage:
+  /// ```dart
+  /// ProImageEditor.autoSource(
+  ///   byteArray: imageData,
+  ///   callbacks: editorCallbacks,
+  ///   configs: ProImageEditorConfigs(),
+  /// )
+  ///
+  /// ProImageEditor.autoSource(
+  ///   file: File('path/to/image.jpg'),
+  ///   callbacks: editorCallbacks,
+  /// )
+  ///
+  /// ProImageEditor.autoSource(
+  ///   networkUrl: 'https://example.com/image.jpg',
+  ///   callbacks: editorCallbacks,
+  /// )
+  ///
+  /// ProImageEditor.autoSource(
+  ///   assetPath: 'assets/images/sample.jpg',
+  ///   callbacks: editorCallbacks,
+  /// )
+  ///
+  /// ProImageEditor.autoSource(
+  ///   editorImage: EditorImage(file: File('path/to/image.jpg')),
+  ///   callbacks: editorCallbacks,
+  /// )
+  /// ```
+  ///
+  /// Throws an [ArgumentError] if no valid image source is provided.
+  ///
+  /// - [byteArray] - Raw image data as a `Uint8List` (highest priority).
+  /// - [file] - A `File` instance representing a local image file.
+  /// - [networkUrl] - URL pointing to an image on the internet.
+  /// - [assetPath] - Path to an image stored in the app’s assets.
+  /// - [editorImage] - An `EditorImage` instance containing one of the above.
+  /// - [configs] - Optional configuration settings for the editor.
+  /// - [callbacks] - Required callbacks for handling image editor events.
+  factory ProImageEditor.autoSource({
+    Key? key,
+    Uint8List? byteArray,
+    File? file,
+    String? assetPath,
+    String? networkUrl,
+    EditorImage? editorImage,
+    ProImageEditorConfigs configs = const ProImageEditorConfigs(),
+    required ProImageEditorCallbacks callbacks,
+  }) {
+    if (byteArray != null || editorImage?.byteArray != null) {
+      return ProImageEditor.memory(
+        byteArray ?? editorImage!.byteArray!,
+        key: key,
+        configs: configs,
+        callbacks: callbacks,
+      );
+    } else if (file != null || editorImage?.file != null) {
+      return ProImageEditor.file(
+        ensureFileInstance(file ?? editorImage!.file!),
+        key: key,
+        configs: configs,
+        callbacks: callbacks,
+      );
+    } else if (networkUrl != null || editorImage?.networkUrl != null) {
+      return ProImageEditor.network(
+        networkUrl ?? editorImage!.networkUrl!,
+        key: key,
+        configs: configs,
+        callbacks: callbacks,
+      );
+    } else if (assetPath != null || editorImage?.assetPath != null) {
+      return ProImageEditor.asset(
+        assetPath ?? editorImage!.assetPath!,
+        key: key,
+        configs: configs,
+        callbacks: callbacks,
+      );
+    } else {
+      throw ArgumentError(
+          "Either 'byteArray', 'file', 'networkUrl' or 'assetPath' must "
+          'be provided.');
+    }
+  }
+
   @override
   final ProImageEditorConfigs configs;
   @override
