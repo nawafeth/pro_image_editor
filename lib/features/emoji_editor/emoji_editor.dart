@@ -92,6 +92,10 @@ class EmojiEditorState extends State<EmojiEditor>
     });
   }
 
+  List<CategoryEmoji> _getDefaultEmojiSet(Locale locale) {
+    return emojiSetEnglish;
+  }
+
   Config _getEditorConfig(BoxConstraints constraints) {
     var emojiI18n = i18n.emojiEditor;
 
@@ -101,7 +105,7 @@ class EmojiEditorState extends State<EmojiEditor>
       emojiSet: emojiEditorConfigs.emojiSet ??
           (i18n.emojiEditor.enableSearchAutoI18n
               ? getDefaultEmojiLocale
-              : (_) => emojiSetEnglish),
+              : _getDefaultEmojiSet),
       checkPlatformCompatibility: emojiEditorConfigs.checkPlatformCompatibility,
       emojiTextStyle: _textStyle,
       emojiViewConfig: emojiEditorConfigs.style.emojiViewConfig ??
