@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
-import 'package:pro_image_editor/shared/controllers/video_controller.dart';
 
 import '/core/mixins/converted_callbacks.dart';
 import '/core/mixins/converted_configs.dart';
@@ -22,7 +21,6 @@ import '/pro_image_editor.dart';
 import '/shared/mixins/extended_loop.dart';
 import '/shared/services/content_recorder/widgets/record_invisible_widget.dart';
 import '/shared/services/layer_transform_generator.dart';
-import '/shared/utils/debounce.dart';
 import '/shared/utils/file_constructor_utils.dart';
 import '/shared/widgets/extended/extended_custom_paint.dart';
 import '/shared/widgets/extended/extended_transform_scale.dart';

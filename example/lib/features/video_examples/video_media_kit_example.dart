@@ -7,7 +7,9 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
+/// A widget that demonstrates video editing using MediaKit and ProImageEditor.
 class VideoMediaKitExample extends StatefulWidget {
+  /// Creates a [VideoMediaKitExample] widget.
   const VideoMediaKitExample({super.key});
 
   @override

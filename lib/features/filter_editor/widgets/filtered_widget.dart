@@ -55,6 +55,7 @@ class FilteredWidget extends StatelessWidget {
   /// The editor image to display.
   final EditorImage? image;
 
+  /// The video player to display.
   final Widget? videoPlayer;
 
   /// How the image should be inscribed into the space allocated for it.

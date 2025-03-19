@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../video_editor_configurable.dart';
 
+/// Displays a playtime indicator on the video trim bar.
+///
+/// This widget visually represents the current playback position
+/// within the selected trim duration.
 class VideoEditorPlayTimeIndicator extends StatelessWidget {
+  /// Creates a [VideoEditorPlayTimeIndicator] widget.
+  ///
+  /// Requires the [areaWidth] to determine positioning within the trim bar.
   const VideoEditorPlayTimeIndicator({super.key, required this.areaWidth});
 
+  /// The width of the trim bar area.
   final double areaWidth;
 
   @override

@@ -7,6 +7,7 @@ import '/core/models/editor_configs/pro_image_editor_configs.dart';
 import '/features/crop_rotate_editor/widgets/crop_layer_painter.dart';
 import '/features/main_editor/controllers/main_editor_controllers.dart';
 import '/features/main_editor/services/layer_interaction_manager.dart';
+import '/shared/controllers/video_controller.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
 import '/shared/widgets/extended/extended_interactive_viewer.dart';
 import '/shared/widgets/video/video_editor_configurable.dart';
@@ -14,7 +15,6 @@ import '/shared/widgets/video/video_editor_controls_widget.dart';
 import '../main_editor.dart';
 import '../services/sizes_manager.dart';
 import '../services/state_manager.dart';
-import '../../../shared/controllers/video_controller.dart';
 import 'main_editor_font_preloader.dart';
 
 /// A widget representing the interactive content area of the main editor,

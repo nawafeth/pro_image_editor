@@ -1,7 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:pro_image_editor/shared/widgets/video/video_editor_configurable.dart';
+import '/shared/widgets/video/video_editor_configurable.dart';
 
+/// Displays a thumbnail preview of the video trim selection.
+///
+/// This widget shows a series of generated thumbnails representing
+/// different frames of the trimmed video section.
 class VideoEditorTrimThumbnailBar extends StatelessWidget {
+  /// Creates a [VideoEditorTrimThumbnailBar] widget.
   const VideoEditorTrimThumbnailBar({super.key});
 
   @override

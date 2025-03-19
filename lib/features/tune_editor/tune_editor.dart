@@ -12,7 +12,6 @@ import '/core/models/transform_helper.dart';
 import '/core/platform/io/io_helper.dart';
 import '/features/tune_editor/widgets/tune_editor_bottombar.dart';
 import '/pro_image_editor.dart';
-import '/shared/controllers/video_controller.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
 import '/shared/utils/file_constructor_utils.dart';
 import '/shared/widgets/layer/layer_stack.dart';

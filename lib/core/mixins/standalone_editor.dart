@@ -31,6 +31,7 @@ mixin StandaloneEditor<T extends EditorInitConfigs> {
   /// Returns the editor image
   EditorImage? get editorImage;
 
+  /// Returns the video controller
   ProVideoController? get videoController;
 }
 
@@ -134,7 +135,6 @@ mixin StandaloneEditorState<T extends StatefulWidget,
     initConfigs.onImageEditingStarted?.call();
 
     if (initConfigs.convertToUint8List) {
-      /// TODO: export video code
       createScreenshot = true;
       LoadingDialog.instance.show(
         context,

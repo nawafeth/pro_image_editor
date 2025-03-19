@@ -9,13 +9,15 @@ import '../video_editor_configurable.dart';
 import 'video_editor_trim_handle.dart';
 import 'video_editor_trim_thumbnail_bar.dart';
 
+/// A widget representing the trim bar in the video editor.
+///
+/// This allows users to select and adjust the trim duration of the video.
 class VideoEditorTrimBar extends StatefulWidget {
-  const VideoEditorTrimBar({
-    super.key,
-  });
+  /// Creates a [VideoEditorTrimBar] widget.
+  const VideoEditorTrimBar({super.key});
 
   @override
-  _VideoEditorTrimBarState createState() => _VideoEditorTrimBarState();
+  State<VideoEditorTrimBar> createState() => _VideoEditorTrimBarState();
 }
 
 class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {

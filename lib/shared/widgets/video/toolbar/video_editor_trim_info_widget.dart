@@ -3,7 +3,11 @@ import 'package:pro_image_editor/shared/extensions/duration_extension.dart';
 
 import '../video_editor_configurable.dart';
 
+/// Displays the trim duration information in the video editor.
+///
+/// This widget shows the start and end time of the selected trim span.
 class VideoEditorTrimInfoWidget extends StatelessWidget {
+  /// Creates a [VideoEditorTrimInfoWidget] widget.
   const VideoEditorTrimInfoWidget({super.key});
 
   @override

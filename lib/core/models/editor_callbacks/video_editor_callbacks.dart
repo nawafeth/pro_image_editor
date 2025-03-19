@@ -1,6 +1,11 @@
 import '../video/trim_duration_span_model.dart';
 
+/// Defines callback functions for handling video editor events.
 class VideoEditorCallbacks {
+  /// Creates an instance of [VideoEditorCallbacks].
+  ///
+  /// Allows defining custom callbacks for play, pause, mute toggle,
+  /// and trim span updates.
   VideoEditorCallbacks({
     this.onPlay,
     this.onPause,
@@ -8,9 +13,25 @@ class VideoEditorCallbacks {
     this.onTrimSpanUpdate,
     this.onTrimSpanEnd,
   });
+
+  /// Callback triggered when the video starts playing.
   final Function()? onPlay;
+
+  /// Callback triggered when the video is paused.
   final Function()? onPause;
+
+  /// Callback triggered when the mute state is toggled.
+  ///
+  /// Receives a boolean indicating whether the video is muted.
   final Function(bool isMuted)? onMuteToggle;
+
+  /// Callback triggered when the trim duration span is updated.
+  ///
+  /// Provides the new [TrimDurationSpan].
   final Function(TrimDurationSpan durationSpan)? onTrimSpanUpdate;
+
+  /// Callback triggered when the trim duration span selection ends.
+  ///
+  /// Provides the final [TrimDurationSpan].
   final Function(TrimDurationSpan durationSpan)? onTrimSpanEnd;
 }

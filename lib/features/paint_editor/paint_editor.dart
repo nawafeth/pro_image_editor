@@ -16,7 +16,6 @@ import '/features/paint_editor/widgets/paint_editor_appbar.dart';
 import '/features/paint_editor/widgets/paint_editor_bottombar.dart';
 import '/features/paint_editor/widgets/paint_editor_color_picker.dart';
 import '/pro_image_editor.dart';
-import '/shared/controllers/video_controller.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
 import '/shared/services/shader_manager.dart';
 import '/shared/styles/platform_text_styles.dart';

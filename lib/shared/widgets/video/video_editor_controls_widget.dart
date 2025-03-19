@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:pro_image_editor/shared/widgets/video/toolbar/video_editor_trim_info_widget.dart';
 
 import '/core/models/editor_configs/video_editor_configs.dart';
-import 'toolbar/video_editor_mute_button.dart';
+import '/shared/widgets/video/toolbar/video_editor_trim_info_widget.dart';
 import '/shared/widgets/video/video_editor_state_widget.dart';
-import 'video_editor_configurable.dart';
 import 'toolbar/video_editor_info_banner.dart';
+import 'toolbar/video_editor_mute_button.dart';
 import 'trimmer/video_editor_trim_bar.dart';
+import 'video_editor_configurable.dart';
 
+/// A widget that manages the video editor's control elements.
+///
+/// This includes the trim bar, mute button, info banner, and state indicator.
 class VideoEditorControlsWidget extends StatelessWidget {
-  const VideoEditorControlsWidget();
+  /// Creates a [VideoEditorControlsWidget] widget.
+  const VideoEditorControlsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

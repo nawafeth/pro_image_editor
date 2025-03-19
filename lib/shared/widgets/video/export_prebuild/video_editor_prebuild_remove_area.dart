@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pro_image_editor/features/main_editor/main_editor.dart';
+import '/features/main_editor/main_editor.dart';
 
+/// A widget representing the remove area in the video editor.
+///
+/// This widget displays a delete zone where layers can be dragged
+/// for removal.
 class VideoEditorRemoveArea extends StatelessWidget {
+  /// Creates a [VideoEditorRemoveArea] widget.
+  ///
+  /// Requires a [removeAreaKey], [editor] state, and a [rebuildStream]
+  /// to update the UI when necessary.
   const VideoEditorRemoveArea({
     super.key,
     required this.removeAreaKey,
@@ -9,8 +17,13 @@ class VideoEditorRemoveArea extends StatelessWidget {
     required this.rebuildStream,
   });
 
+  /// The global key for the remove area container.
   final GlobalKey removeAreaKey;
+
+  /// The state of the [ProImageEditor].
   final ProImageEditorState editor;
+
+  /// A stream that triggers UI rebuilds.
   final Stream<void> rebuildStream;
 
   @override

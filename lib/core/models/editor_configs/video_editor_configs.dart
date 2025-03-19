@@ -8,7 +8,13 @@ export '/core/models/custom_widgets/video_editor_widgets.dart';
 export '/core/models/icons/video_editor_icons.dart';
 export '/core/models/styles/video_editor_style.dart';
 
+/// Configuration settings for the video editor.
 class VideoEditorConfigs {
+  /// Creates an instance of [VideoEditorConfigs].
+  ///
+  /// Allows customization of icons, styles, widgets, and various behavior
+  /// settings like initial play state, mute state, trim bar behavior, and
+  /// animation configurations.
   const VideoEditorConfigs({
     this.icons = const VideoEditorIcons(),
     this.style = const VideoEditorStyle(),
@@ -25,24 +31,46 @@ class VideoEditorConfigs {
     this.trimBarMaxScale = 3,
   });
 
+  /// Configurable icons for the video editor.
   final VideoEditorIcons icons;
+
+  /// Style configurations for the video editor.
   final VideoEditorStyle style;
+
+  /// Customizable UI widgets for the video editor.
   final VideoEditorWidgets widgets;
 
+  /// Whether the video should start playing automatically.
   final bool initialPlay;
+
+  /// Whether the video should start muted.
   final bool initialMuted;
+
+  /// Whether to invert mouse scroll behavior on the trim bar.
   final bool trimBarInvertMouseScroll;
+
+  /// Minimum scale factor for the trim bar.
   final double trimBarMinScale;
+
+  /// Maximum scale factor for the trim bar.
   final double trimBarMaxScale;
 
+  /// Minimum trim duration allowed.
   final Duration minTrimDuration;
 
+  /// Position of the control bar in the video editor.
   final VideoEditorControlPosition controlsPosition;
 
+  /// Duration of animated indicators.
   final Duration animatedIndicatorDuration;
+
+  /// Curve for the animated indicator switch-in effect.
   final Curve animatedIndicatorSwitchInCurve;
+
+  /// Curve for the animated indicator switch-out effect.
   final Curve animatedIndicatorSwitchOutCurve;
 
+  /// Creates a copy of this instance with the given parameters overridden.
   VideoEditorConfigs copyWith({
     VideoEditorIcons? icons,
     VideoEditorStyle? style,
@@ -119,4 +147,11 @@ class VideoEditorConfigs {
   }
 }
 
-enum VideoEditorControlPosition { top, bottom }
+/// Enum defining possible positions for video editor controls.
+enum VideoEditorControlPosition {
+  /// Place the controls on the top of the screen.
+  top,
+
+  /// Place the controls on the bottom of the screen.
+  bottom
+}

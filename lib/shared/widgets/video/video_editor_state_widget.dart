@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'video_editor_configurable.dart';
 
+/// Displays the current play state in the video editor.
+///
+/// This widget shows a play or pause indicator based on the video state.
 class VideoEditorStateWidget extends StatelessWidget {
-  const VideoEditorStateWidget();
+  /// Creates a [VideoEditorStateWidget] widget.
+  const VideoEditorStateWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +25,12 @@ class VideoEditorStateWidget extends StatelessWidget {
                 : player.widgets.playIndicator ??
                     IgnorePointer(
                       child: Container(
+                        width: 64,
+                        height: 64,
                         decoration: ShapeDecoration(
                           shape: const CircleBorder(),
                           color: player.style.playIndicatorBackground,
                         ),
-                        width: 64,
-                        height: 64,
                         child: Icon(
                           player.icons.playIndicator,
                           color: player.style.playIndicatorColor,
