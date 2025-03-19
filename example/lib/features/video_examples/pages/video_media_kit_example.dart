@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:example/core/constants/example_constants.dart';
 import 'package:example/core/mixin/example_helper.dart';
+import 'package:example/features/video_examples/mixins/thumbnail_generator_mixin.dart';
+import 'package:example/features/video_examples/widgets/video_initializing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -17,23 +19,12 @@ class VideoMediaKitExample extends StatefulWidget {
 }
 
 class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
-    with ExampleHelperState<VideoMediaKitExample> {
-  /// Ensure that you have called `MediaKit.ensureInitialized();` in the
-  /// main method.
+    with ExampleHelperState<VideoMediaKitExample>, ThumbnailGeneratorMixin {
+  /// IMPORTANT: Ensure that you have called `MediaKit.ensureInitialized();`
+  /// in the main method.
 
-  bool _isSeeking = false;
-  TrimDurationSpan? _durationSpan;
-  TrimDurationSpan? _tempDurationSpan;
-
-  late final _player = Player();
+  final _player = Player();
   late final _controller = VideoController(_player);
-
-  final VideoEditorConfigs _configs = const VideoEditorConfigs(
-    initialMuted: true,
-    initialPlay: false,
-    minTrimDuration: Duration(seconds: 7),
-  );
-  ProVideoController? _proVideoController;
 
   @override
   void initState() {
@@ -52,10 +43,10 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
 
     await _player.open(
       await Media.memory(bytes),
-      play: _configs.initialPlay,
+      play: videoConfigs.initialPlay,
     );
     await _player.setPlaylistMode(PlaylistMode.none);
-    await _player.setVolume(_configs.initialMuted ? 0 : 100);
+    await _player.setVolume(videoConfigs.initialMuted ? 0 : 100);
 
     Completer<void> durationCompleter = Completer();
     Completer<void> resolutionCompleter = Completer();
@@ -91,59 +82,58 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
 
     /// Listen to play time
     _player.stream.position.listen((position) {
-      if (!mounted) return;
-      _proVideoController!.setPlayTime(position);
+      if (!mounted || proVideoController == null) return;
+      proVideoController!.setPlayTime(position);
 
-      if (_isSeeking ||
-          _durationSpan == null ||
-          position < _durationSpan!.end) {
+      if (isSeeking || durationSpan == null || position < durationSpan!.end) {
         return;
       }
 
-      _seekToPosition(_durationSpan!);
+      _seekToPosition(durationSpan!);
     });
 
     /// Listen video end
     _player.stream.completed.listen((isEnded) {
-      if (!mounted || !isEnded || _isSeeking || _durationSpan == null) {
+      if (!mounted || !isEnded || isSeeking || durationSpan == null) {
         return;
       }
 
-      _seekToPosition(_durationSpan!);
+      _seekToPosition(durationSpan!);
     });
 
     await durationCompleter.future;
     await resolutionCompleter.future;
 
-    _proVideoController = ProVideoController(
+    proVideoController = ProVideoController(
       videoPlayer: _buildVideoPlayer(),
       initialResolution: initialSize,
       videoDuration: videoDuration,
       fileSize: bytes.lengthInBytes,
+      thumbnails: thumbnails,
     );
   }
 
   Future<void> _seekToPosition(TrimDurationSpan span) async {
-    _durationSpan = span;
+    durationSpan = span;
 
-    if (_isSeeking) {
-      _tempDurationSpan = span; // Store the latest seek request
+    if (isSeeking) {
+      tempDurationSpan = span; // Store the latest seek request
       return;
     }
-    _isSeeking = true;
+    isSeeking = true;
 
-    _proVideoController!.pause();
-    _proVideoController!.setPlayTime(_durationSpan!.start);
+    proVideoController!.pause();
+    proVideoController!.setPlayTime(durationSpan!.start);
 
     await _player.pause();
     await _player.seek(span.start);
 
-    _isSeeking = false;
+    isSeeking = false;
 
     // Check if there's a pending seek request
-    if (_tempDurationSpan != null) {
-      TrimDurationSpan nextSeek = _tempDurationSpan!;
-      _tempDurationSpan = null; // Clear the pending seek
+    if (tempDurationSpan != null) {
+      TrimDurationSpan nextSeek = tempDurationSpan!;
+      tempDurationSpan = null; // Clear the pending seek
       await _seekToPosition(nextSeek); // Process the latest request
     }
   }
@@ -152,10 +142,10 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 220),
-      child: _proVideoController == null
-          ? _buildProcessing()
+      child: proVideoController == null
+          ? VideoInitializingWidget(player: _buildVideoPlayer())
           : ProImageEditor.video(
-              _proVideoController!,
+              proVideoController!,
               callbacks: ProImageEditorCallbacks(
                 videoEditorCallbacks: VideoEditorCallbacks(
                   onPause: _player.pause,
@@ -165,7 +155,7 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
                   },
                   onTrimSpanUpdate: (durationSpan) {
                     if (_player.state.playing) {
-                      _proVideoController!.pause();
+                      proVideoController!.pause();
                     }
                   },
                   onTrimSpanEnd: _seekToPosition,
@@ -182,7 +172,7 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
                     ),
                   ),
                 ),
-                videoEditor: _configs,
+                videoEditor: videoConfigs,
               ),
             ),
     );
@@ -193,57 +183,6 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
       key: const ValueKey('Video-Player'),
       controller: _controller,
       controls: null,
-    );
-  }
-
-  Widget _buildProcessing() {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Offstage(child: _buildVideoPlayer()),
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.blueGrey.shade900,
-                  Colors.black87,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: const Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 30,
-                children: [
-                  Icon(
-                    Icons.video_camera_back_rounded,
-                    size: 80,
-                    color: Colors.white70,
-                  ),
-                  Text(
-                    'Initializing Video-Editor...',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      color: Colors.white70,
-                      strokeWidth: 3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

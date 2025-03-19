@@ -15,6 +15,7 @@ class ProVideoController {
     required this.videoDuration,
     required this.initialResolution,
     required this.fileSize,
+    required this.thumbnails,
   });
 
   /// The video player widget.
@@ -30,9 +31,7 @@ class ProVideoController {
   final int fileSize;
 
   /// Stores generated thumbnails for the trimmer bar and filter background.
-  ///
-  /// TODO: Generate thumbnails dynamically.
-  List<ImageProvider> thumbnails = [];
+  final List<ImageProvider> thumbnails;
 
   late VideoEditorCallbacks Function() _callbacksFunction;
   late VideoEditorConfigs Function() _configsFunction;

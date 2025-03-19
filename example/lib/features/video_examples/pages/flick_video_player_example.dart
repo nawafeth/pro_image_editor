@@ -1,0 +1,162 @@
+import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flutter/material.dart';
+import 'package:pro_image_editor/pro_image_editor.dart';
+import 'package:video_player/video_player.dart';
+
+import '/core/constants/example_constants.dart';
+import '../mixins/thumbnail_generator_mixin.dart';
+import '../widgets/video_initializing_widget.dart';
+
+/// A widget that demonstrates video playback using the Flick video player.
+///
+/// This serves as an example implementation of a video player with Flick.
+class FlickVideoPlayerExample extends StatefulWidget {
+  /// Creates a [FlickVideoPlayerExample] widget.
+  const FlickVideoPlayerExample({super.key});
+
+  @override
+  State<FlickVideoPlayerExample> createState() =>
+      _FlickVideoPlayerExampleState();
+}
+
+class _FlickVideoPlayerExampleState extends State<FlickVideoPlayerExample>
+    with ThumbnailGeneratorMixin {
+  late FlickManager _flickManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePlayer();
+  }
+
+  @override
+  void dispose() {
+    _flickManager.dispose();
+    super.dispose();
+  }
+
+  void _initializePlayer() async {
+    _flickManager = FlickManager(
+      videoPlayerController:
+          VideoPlayerController.asset(kVideoEditorExampleAssetPath),
+      autoPlay: videoConfigs.initialPlay,
+      onVideoEnd: () {
+        if (!mounted || isSeeking || durationSpan == null) {
+          return;
+        }
+        _seekToPosition(durationSpan!);
+      },
+    );
+
+    var bytes = await loadAssetImageAsUint8List(kVideoEditorExampleAssetPath);
+
+    await _flickManager.flickControlManager?.setVolume(
+      videoConfigs.initialMuted ? 0.0 : 100.0,
+      isMute: videoConfigs.initialMuted,
+    );
+
+    do {
+      await Future.delayed(const Duration(milliseconds: 30));
+    } while (_flickManager.flickVideoManager?.videoPlayerValue?.size == null ||
+        _flickManager.flickVideoManager?.videoPlayerValue?.duration == null);
+
+    proVideoController = ProVideoController(
+      videoPlayer: _buildVideoPlayer(),
+      initialResolution:
+          _flickManager.flickVideoManager!.videoPlayerValue!.size,
+      videoDuration:
+          _flickManager.flickVideoManager!.videoPlayerValue!.duration,
+      fileSize: bytes.lengthInBytes,
+      thumbnails: thumbnails,
+    );
+    _flickManager.flickVideoManager!.videoPlayerController!
+        .addListener(_onDurationChange);
+    setState(() {});
+  }
+
+  void _onDurationChange() {
+    proVideoController!.setPlayTime(
+      _flickManager.flickVideoManager!.videoPlayerValue!.position,
+    );
+  }
+
+  Future<void> _seekToPosition(TrimDurationSpan span) async {
+    durationSpan = span;
+
+    if (isSeeking) {
+      tempDurationSpan = span; // Store the latest seek request
+      return;
+    }
+    isSeeking = true;
+
+    proVideoController!.pause();
+    proVideoController!.setPlayTime(durationSpan!.start);
+
+    await _flickManager.flickControlManager?.pause();
+    await _flickManager.flickControlManager?.seekTo(span.start);
+
+    isSeeking = false;
+
+    // Check if there's a pending seek request
+    if (tempDurationSpan != null) {
+      TrimDurationSpan nextSeek = tempDurationSpan!;
+      tempDurationSpan = null; // Clear the pending seek
+      await _seekToPosition(nextSeek); // Process the latest request
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 220),
+      child: proVideoController == null ||
+              _flickManager.flickVideoManager?.isVideoInitialized != true
+          ? VideoInitializingWidget(player: _buildVideoPlayer())
+          : ProImageEditor.video(
+              proVideoController!,
+              callbacks: ProImageEditorCallbacks(
+                videoEditorCallbacks: VideoEditorCallbacks(
+                  onPause: _flickManager.flickControlManager?.pause,
+                  onPlay: _flickManager.flickControlManager?.play,
+                  onMuteToggle: (isMuted) {
+                    _flickManager.flickControlManager?.setVolume(
+                      isMuted ? 0.0 : 100.0,
+                      isMute: isMuted,
+                    );
+                  },
+                  onTrimSpanUpdate: (durationSpan) {
+                    if (_flickManager.flickVideoManager?.isPlaying == true) {
+                      proVideoController!.pause();
+                    }
+                  },
+                  onTrimSpanEnd: _seekToPosition,
+                ),
+              ),
+              configs: ProImageEditorConfigs(
+                mainEditor: MainEditorConfigs(
+                  widgets: MainEditorWidgets(
+                    removeLayerArea: (removeAreaKey, editor, rebuildStream) =>
+                        VideoEditorRemoveArea(
+                      removeAreaKey: removeAreaKey,
+                      editor: editor,
+                      rebuildStream: rebuildStream,
+                    ),
+                  ),
+                ),
+                videoEditor: videoConfigs,
+              ),
+            ),
+    );
+  }
+
+  Widget _buildVideoPlayer() {
+    return FlickVideoPlayer(
+      key: const ValueKey('Video-Player'),
+      flickManager: _flickManager,
+      webKeyDownHandler: (p0, p1) {},
+      flickVideoWithControls: const FlickVideoWithControls(
+        videoFit: BoxFit.contain,
+      ),
+    );
+  }
+}

@@ -320,7 +320,7 @@ class ProImageEditor extends StatefulWidget
   ///
   /// Example usage:
   ///
-  /// [Example with media_kit](https://github.com/hm21/pro_image_editor/blob/stable/example/lib/features/video_examples/video_media_kit_example.dart)
+  /// [Example with media_kit](https://github.com/hm21/pro_image_editor/blob/stable/example/lib/features/video_examples/pages/video_media_kit_example.dart)
   factory ProImageEditor.video(
     ProVideoController videoController, {
     Key? key,

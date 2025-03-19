@@ -62,6 +62,6 @@ class VideoEditorConfigurable extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant VideoEditorConfigurable oldWidget) {
-    return true;
+    return false;
   }
 }
