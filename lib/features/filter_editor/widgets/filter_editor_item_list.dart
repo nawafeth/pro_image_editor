@@ -19,7 +19,8 @@ class FilterEditorItemList extends StatefulWidget {
   /// Constructor for creating an instance of FilterEditorItemList.
   const FilterEditorItemList({
     super.key,
-    required this.editorImage,
+    this.editorImage,
+    this.image,
     this.activeFilters,
     this.activeTuneAdjustments = const [],
     this.blurFactor,
@@ -33,11 +34,15 @@ class FilterEditorItemList extends StatefulWidget {
     this.borderRadius,
     this.listHeight = 104.0,
     this.previewImageSize = const Size(64, 64),
-  });
+  }) : assert(editorImage != null || image != null,
+            'Either editorImage or image must be provided.');
 
   /// The EditorImage class represents an image with multiple sources,
   /// including bytes, file, network URL, and asset path.
-  final EditorImage editorImage;
+  final EditorImage? editorImage;
+
+  /// A custom background image which can be used instant of the editorImage
+  final Widget? image;
 
   /// The image editor configs.
   final ProImageEditorConfigs configs;
@@ -283,6 +288,7 @@ class _FilterEditorItemListState extends State<FilterEditorItemList> {
                 offset: offset,
                 child: FilteredWidget(
                   image: widget.editorImage,
+                  videoPlayer: widget.image,
                   fit: transformConfigs.isNotEmpty
                       ? BoxFit.contain
                       : BoxFit.cover,

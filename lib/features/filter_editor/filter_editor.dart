@@ -400,11 +400,12 @@ class FilterEditorState extends State<FilterEditor>
               return FilterEditorItemList(
                 mainBodySize: getMinimumSize(mainBodySize, editorBodySize),
                 mainImageSize: getMinimumSize(mainImageSize, editorBodySize),
-                editorImage: editorImage ??
-                    EditorImage(
-                      /// TODO: Add a default image for video editing
-                      byteArray: kImageEditorTransparentBytes,
-                    ),
+                editorImage: editorImage,
+                image: editorImage != null
+                    ? null
+                    : widget.videoController!.thumbnails.isNotEmpty
+                        ? Image(image: widget.videoController!.thumbnails.first)
+                        : Image.memory(kImageEditorTransparentBytes),
                 activeFilters: appliedFilters,
                 blurFactor: appliedBlurFactor,
                 configs: configs,
