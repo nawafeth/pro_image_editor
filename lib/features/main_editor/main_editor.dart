@@ -2000,9 +2000,7 @@ class ProImageEditorState extends State<ProImageEditor>
       enableInteraction: false,
       onlyCurrentHistory: onlyCurrentHistory,
     );
-    selectedLayerIndex = -1;
-    layerInteractionManager.selectedLayerId = '';
-    _controllers.uiLayerCtrl.add(null);
+    clearLayerSelection();
   }
 
   /// Unlocks all layers in the editor.
@@ -2023,6 +2021,49 @@ class ProImageEditorState extends State<ProImageEditor>
       enableInteraction: true,
       onlyCurrentHistory: onlyCurrentHistory,
     );
+  }
+
+  /// Clears the currently selected layer by:
+  /// - Resetting the selected layer index to -1
+  /// - Clearing the selected layer ID in the [layerInteractionManager]
+  /// - Notifying listeners via [_controllers.uiLayerCtrl]
+  void clearLayerSelection() {
+    selectedLayerIndex = -1;
+    layerInteractionManager.selectedLayerId = '';
+    _controllers.uiLayerCtrl.add(null);
+  }
+
+  /// Selects a layer by its index in [activeLayers].
+  ///
+  /// If the index is out of bounds, the selection is cleared and `null` is
+  /// returned.
+  /// Otherwise, the corresponding layer is marked as selected and listeners
+  /// are notified.
+  ///
+  /// Returns the selected [Layer] or `null` if the index is invalid.
+  Layer? selectLayerByIndex(int index) {
+    if (index < 0 || index >= activeLayers.length) {
+      clearLayerSelection();
+      return null;
+    }
+
+    var layer = activeLayers[index];
+
+    layerInteractionManager.selectedLayerId = layer.id;
+    _controllers.uiLayerCtrl.add(null);
+
+    return activeLayers[index];
+  }
+
+  /// Selects a layer by its unique [id].
+  ///
+  /// Internally uses [selectLayerByIndex] after finding the layer's index.
+  ///
+  /// Returns the selected [Layer] or `null` if the ID does not match any
+  /// active layer.
+  Layer? selectLayerById(String id) {
+    var index = activeLayers.indexWhere((layer) => layer.id == id);
+    return selectLayerByIndex(index);
   }
 
   @override
@@ -2172,7 +2213,7 @@ class ProImageEditorState extends State<ProImageEditor>
       buildVideo: _buildVideo,
       buildLayers: _buildLayers,
       buildHelperLines: _buildHelperLines,
-      buildRemoveIcon: _buildRemoveIcon,
+      buildRemoveArea: _buildRemoveArea,
       callbacks: callbacks,
       sizesManager: sizesManager,
       configs: configs,
@@ -2247,10 +2288,10 @@ class ProImageEditorState extends State<ProImageEditor>
     );
   }
 
-  Widget _buildRemoveIcon() {
-    /* if (_activeLayer?.interaction.enableMove == false) {
+  Widget _buildRemoveArea() {
+    if (_activeLayer?.interaction.enableMove == false) {
       return const SizedBox.shrink();
-    } */
+    }
     return MainEditorRemoveLayerArea(
       layerInteraction: layerInteraction,
       layerInteractionManager: layerInteractionManager,
