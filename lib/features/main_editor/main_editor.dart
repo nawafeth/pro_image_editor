@@ -314,8 +314,6 @@ class ProImageEditor extends StatefulWidget
     );
   }
 
-  /// 🚧 The Video Editor is under development and not ready for use.
-  ///
   /// This constructor creates a `ProImageEditor` widget configured to edit an
   /// video.
   ///
@@ -324,7 +322,6 @@ class ProImageEditor extends StatefulWidget
   /// Example usage:
   ///
   /// [Example with media_kit](https://github.com/hm21/pro_image_editor/blob/stable/example/lib/features/video_examples/pages/video_media_kit_example.dart)
-  @Deprecated('The Video Editor is under development and not ready for use.')
   factory ProImageEditor.video(
     ProVideoController videoController, {
     Key? key,

@@ -74,10 +74,8 @@ class _VideoExampleState extends State<VideoExample>
             margin: EdgeInsets.fromLTRB(16, 4, 16, 16),
             color: Colors.red,
             child: Text(
-              'The video editor is still under development and does not yet '
-              'support video exporting. This is merely a preview to give users '
-              'an idea of what the editor will look like, allowing them to '
-              'prepare for its future implementation.',
+              'The video editor is still under development and is only fully '
+              'supported on Android.',
               style: TextStyle(
                 color: Colors.red,
                 fontSize: 16,
@@ -105,7 +103,7 @@ class _VideoExampleState extends State<VideoExample>
               margin: EdgeInsets.fromLTRB(16, 16, 16, 4),
               color: Colors.red,
               child: Text(
-                'The package currently doesn\'t support web editing. I '
+                'The package didn\'t support web editing. I '
                 'recommend trying it out on any Dart-native platform, such as '
                 'Android or iOS.',
                 style: TextStyle(

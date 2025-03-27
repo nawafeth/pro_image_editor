@@ -104,32 +104,31 @@ mixin VideoEditorMixin<T extends StatefulWidget> on State<T> {
     var devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
     var videoBytes = await video.safeByteArray();
 
-    exportedVideo = await VideoUtilsService.instance.exportVideo(
-      ExportVideoModel(
-        videoBytes: videoBytes,
-        imageBytes: parameters.image,
-        videoDuration: videoInformation.duration,
-        devicePixelRatio: devicePixelRatio,
-        blur: parameters.blur,
-        colorFilters: parameters.colorFilters,
-        startTime: parameters.startTime,
-        endTime: parameters.endTime,
-        transform: ExportTransform(
-          width: parameters.cropWidth,
-          height: parameters.cropHeight,
-          rotateTurns: parameters.rotateTurns,
-          x: parameters.cropX?.toString(),
-          y: parameters.cropY?.toString(),
-          flipX: parameters.flipX,
-          flipY: parameters.flipY,
-        ),
-
-        /// Generation configurations
-        outputFormat: VideoOutputFormat.mp4,
-        outputQuality: OutputQuality.high,
-        encodingPreset: EncodingPreset.ultrafast,
+    var exportModel = ExportVideoModel(
+      videoBytes: videoBytes,
+      imageBytes: parameters.image,
+      videoDuration: videoInformation.duration,
+      devicePixelRatio: devicePixelRatio,
+      blur: parameters.blur,
+      colorFilters: parameters.colorFilters,
+      startTime: parameters.startTime,
+      endTime: parameters.endTime,
+      transform: ExportTransform(
+        width: parameters.cropWidth,
+        height: parameters.cropHeight,
+        rotateTurns: parameters.rotateTurns,
+        x: parameters.cropX?.toString(),
+        y: parameters.cropY?.toString(),
+        flipX: parameters.flipX,
+        flipY: parameters.flipY,
       ),
+
+      /// Generation configurations
+      outputFormat: VideoOutputFormat.mp4,
+      outputQuality: OutputQuality.high,
+      encodingPreset: EncodingPreset.ultrafast,
     );
+    exportedVideo = await VideoUtilsService.instance.exportVideo(exportModel);
     videoGenerationTime = stopwatch.elapsed;
   }
 

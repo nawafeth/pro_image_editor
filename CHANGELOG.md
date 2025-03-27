@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.3.0
+- **FEAT**: Added video editing support for Android platforms.
+
 ## 9.2.0
 - **FEAT**: Added `clearLayerSelection` method to reset selected layers.
 - **FEAT**: Added `selectLayerByIndex` method to select a layer using its index.

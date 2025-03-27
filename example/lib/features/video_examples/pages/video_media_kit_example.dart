@@ -129,11 +129,11 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
       duration: const Duration(milliseconds: 220),
       child: proVideoController == null
           ? const VideoInitializingWidget()
-          // TODO: remove deprecated warning
-          // ignore: deprecated_member_use
           : ProImageEditor.video(
               proVideoController!,
               callbacks: ProImageEditorCallbacks(
+                onCompleteWithParameters: generateVideo,
+                onCloseEditor: onCloseEditor,
                 videoEditorCallbacks: VideoEditorCallbacks(
                   onPause: _player.pause,
                   onPlay: _player.play,
@@ -164,6 +164,11 @@ class _VideoMediaKitExampleState extends State<VideoMediaKitExample>
                       rebuildStream: rebuildStream,
                     ),
                   ),
+                ),
+                paintEditor: const PaintEditorConfigs(
+                  /// Blur and pixelate are not supported.
+                  enableModePixelate: false,
+                  enableModeBlur: false,
                 ),
                 videoEditor: videoConfigs,
               ),

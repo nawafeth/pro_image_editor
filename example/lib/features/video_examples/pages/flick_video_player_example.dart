@@ -118,11 +118,11 @@ class _FlickVideoPlayerExampleState extends State<FlickVideoPlayerExample>
       duration: const Duration(milliseconds: 220),
       child: proVideoController == null
           ? const VideoInitializingWidget()
-          // TODO: remove deprecated warning
-          // ignore: deprecated_member_use
           : ProImageEditor.video(
               proVideoController!,
               callbacks: ProImageEditorCallbacks(
+                onCompleteWithParameters: generateVideo,
+                onCloseEditor: onCloseEditor,
                 videoEditorCallbacks: VideoEditorCallbacks(
                   onPause: _flickManager.flickControlManager?.pause,
                   onPlay: _flickManager.flickControlManager?.play,
@@ -156,6 +156,11 @@ class _FlickVideoPlayerExampleState extends State<FlickVideoPlayerExample>
                       rebuildStream: rebuildStream,
                     ),
                   ),
+                ),
+                paintEditor: const PaintEditorConfigs(
+                  /// Blur and pixelate are not supported.
+                  enableModePixelate: false,
+                  enableModeBlur: false,
                 ),
                 videoEditor: videoConfigs.copyWith(
                   playTimeSmoothingDuration: const Duration(milliseconds: 600),
