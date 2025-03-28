@@ -284,11 +284,16 @@ Check out the web [demo](https://hm21.github.io/pro_image_editor/) to explore al
 
 ## Video-Editor
 
-The video editor is an upcoming feature and has been added to the example folder. The demo does not currently support exporting edited videos—it simply provides a preview of what video editing could look like.
+The video editor is an upcoming feature now included in the example folder. It is planned to support all platforms except web. The image editor already provides all required functionality, but the video processing package is still under development.
 
-To keep the image editor as lightweight as possible, you’ll need to manually include both the [pro_video_editor](https://github.com/hm21/pro_video_editor) package and a video player package of your choice.
+To keep the image editor as lightweight as possible, you’ll need to manually include video player package of your choice.
+
+Currently, the editor can be extended using my `pro_video_editor` package, which supports full video generation on Android, iOS, and macOS. However, it relies on the GPL-licensed `ffmpeg` package, which may not be suitable for all companies. I’m actively exploring alternative solutions—feel free to reach out if you’re aware of a similar option with more permissive licensing.
+
+Alternatively, as shown in the [video examples](https://github.com/hm21/pro_image_editor/tree/stable/example/lib/features/video_examples), the editor returns all the necessary information for processing videos. This allows you to integrate any package or API of your choice. For instance, you could use a cloud-based solution like [Shotstack](https://shotstack.io/) to handle video processing externally.
 
 If you're interested in contributing to this feature, feel free to open a pull request in the [pro_video_editor](https://github.com/hm21/pro_video_editor/pulls) repository. Alternatively, sponsoring the package would enable me to dedicate more time to its development and to this functionality.
+
 
 
 ## Sponsors 
