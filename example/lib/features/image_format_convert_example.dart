@@ -24,6 +24,14 @@ class ImageFormatConvertExample extends StatefulWidget {
 
 class _ImageFormatConvertExampleState extends State<ImageFormatConvertExample>
     with ExampleHelperState<ImageFormatConvertExample> {
+  Future<Uint8List?> convertFormatWithoutEditor(Uint8List bytes) async {
+    var result = await ImageConverter.instance.convertFormat(
+      image: EditorImage(byteArray: bytes),
+      format: OutputFormat.jpg,
+    );
+    return result;
+  }
+
   // ignore: unused_element
   Future<void> _convertImage(Uint8List bytes) async {
     try {
@@ -65,7 +73,7 @@ class _ImageFormatConvertExampleState extends State<ImageFormatConvertExample>
       callbacks: ProImageEditorCallbacks(
         onImageEditingStarted: onImageEditingStarted,
         onImageEditingComplete: (bytes) async {
-          editedBytes = bytes;
+          editedBytes = await convertFormatWithoutEditor(bytes);
 
           /// For special formats like webp, you can uncomment the line below,
           /// and follow the instructions there.

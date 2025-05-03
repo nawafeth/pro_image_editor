@@ -1,6 +1,6 @@
 name: pro_image_editor
 description: "A Flutter image editor: Seamlessly enhance your images with user-friendly editing features."
-version: 9.6.1
+version: 9.7.0
 homepage: https://github.com/hm21/pro_image_editor/
 repository: https://github.com/hm21/pro_image_editor/
 documentation: https://github.com/hm21/pro_image_editor/
@@ -16,7 +16,7 @@ topics:
 screenshots:
   - description: "Showcase from the image editor with the frosted-glass design"
     path: assets/showcase-frosted-glass.jpg
-  - description: "Showcase from the image editor with the Whatsapp design"
+  - description: "Showcase from the image editor with the WhatsApp design"
     path: assets/showcase-whatsapp.jpg
   - description: "Showcase from the image editor with simple design"
     path: assets/showcase.jpg

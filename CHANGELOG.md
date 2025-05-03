@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.7.0
+- **FEAT**(image-converter): Add singleton `ImageConverter` class for format conversion without the image editor.
+
 ## 9.6.1
 - **FIX**(double-tap): Resolved an issue where double-tapping interfered with pinch-to-zoom functionality. Resolves [#439](https://github.com/hm21/pro_image_editor/issues/439).
 - **FIX**(hit-detection): Prevent layer hit detection errors by clamping inner dimensions. Resolves [#440](https://github.com/hm21/pro_image_editor/issues/440).
