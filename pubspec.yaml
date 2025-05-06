@@ -4,7 +4,8 @@ version: 9.7.0
 homepage: https://github.com/hm21/pro_image_editor/
 repository: https://github.com/hm21/pro_image_editor/
 documentation: https://github.com/hm21/pro_image_editor/
-
+funding:
+  - https://github.com/sponsors/hm21
 
 topics:
   - image-editor
