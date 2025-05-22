@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pro_image_editor/core/utils/size_utils.dart';
+
 import '/core/mixins/converted_configs.dart';
 import '/core/mixins/editor_configs_mixin.dart';
+import '/core/utils/size_utils.dart';
 import '/designs/grounded/grounded_design.dart';
 import '/pro_image_editor.dart';
 

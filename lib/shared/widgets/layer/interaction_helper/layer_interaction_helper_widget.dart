@@ -162,18 +162,23 @@ class _LayerInteractionHelperWidgetState
 
   @override
   Widget build(BuildContext context) {
+    if (widget.forceIgnoreGestures) {
+      return IgnorePointer(
+          ignoring: widget.forceIgnoreGestures, child: widget.child);
+    }
+
+    String layerId = widget.layerData.id;
     var deferManager = DeferManager.maybeOf(context);
 
     if (!widget.isInteractive ||
         (!widget.selected && deferManager?.selectedLayerId != '')) {
       // Return the child widget directly if the layer is not interactive.
-      return IgnorePointer(
-          ignoring: widget.forceIgnoreGestures, child: widget.child);
+      return widget.child;
     } else if (!widget.selected) {
       // Use a defer pointer if the layer is not selected, preventing
       // interaction.
-      return IgnorePointer(
-        ignoring: widget.forceIgnoreGestures,
+      return DeferPointer(
+        key: ValueKey('Defer-${deferManager?.id ?? ''}-$layerId'),
         child: widget.child,
       );
     }
@@ -183,8 +188,7 @@ class _LayerInteractionHelperWidgetState
 
     return TooltipVisibility(
       visible: layerInteraction.style.showTooltips,
-      child: IgnorePointer(
-        ignoring: widget.forceIgnoreGestures,
+      child: DeferPointer(
         child: Stack(
           fit: StackFit.passthrough,
           alignment: Alignment.center,
