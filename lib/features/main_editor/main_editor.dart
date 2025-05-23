@@ -1229,17 +1229,17 @@ class ProImageEditorState extends State<ProImageEditor>
 
     SubEditor editorName = SubEditor.unknown;
 
-    if (T is PaintEditor) {
+    if (page is PaintEditor) {
       editorName = SubEditor.paint;
-    } else if (T is TextEditor) {
+    } else if (page is TextEditor) {
       editorName = SubEditor.text;
-    } else if (T is CropRotateEditor) {
+    } else if (page is CropRotateEditor) {
       editorName = SubEditor.cropRotate;
-    } else if (T is FilterEditor) {
+    } else if (page is FilterEditor) {
       editorName = SubEditor.filter;
-    } else if (T is BlurEditor) {
+    } else if (page is BlurEditor) {
       editorName = SubEditor.blur;
-    } else if (T is EmojiEditor) {
+    } else if (page is EmojiEditor) {
       editorName = SubEditor.emoji;
     }
 
