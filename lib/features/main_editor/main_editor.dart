@@ -763,13 +763,13 @@ class ProImageEditorState extends State<ProImageEditor>
     _checkInteractiveViewer();
     _controllers.uiLayerCtrl.add(null);
 
-    /* 
+    /*
     String selectedLayerId = _layerInteractionManager.selectedLayerId;
     _layerInteractionManager.selectedLayerId = '';
     setState(() {});
     takeScreenshot();
     if (selectedLayerId.isNotEmpty) {
-      /// Skip one frame to ensure captured image in separate thread will not 
+      /// Skip one frame to ensure captured image in separate thread will not
       /// capture the border.
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         _layerInteractionManager.selectedLayerId = selectedLayerId;

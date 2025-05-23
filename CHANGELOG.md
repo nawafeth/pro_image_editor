@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.9.3
+- **FIX**(Layers): Corrected size calculation to prevent layer shifting.
+- **FIX**(Main-Editor): Fixed an issue where disabled layers blocked zoom gestures.
+
 ## 9.9.2
  - **FIX**(Crop-Rotate-Editor): Ensure the editor respects the `maxOutputSize` constraint.
 
