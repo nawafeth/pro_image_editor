@@ -5,8 +5,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pro_image_editor/core/utils/size_utils.dart';
-import 'package:pro_image_editor/shared/mixins/editor_zoom.mixin.dart';
 
 import '/core/constants/image_constants.dart';
 import '/core/mixins/converted_callbacks.dart';
@@ -27,6 +25,8 @@ import '/shared/widgets/extended/extended_interactive_viewer.dart';
 import '/shared/widgets/layer/layer_stack.dart';
 import '/shared/widgets/slider_bottom_sheet.dart';
 import '/shared/widgets/transform/transformed_content_generator.dart';
+import '../../core/utils/size_utils.dart';
+import '../../shared/mixins/editor_zoom.mixin.dart';
 import '../filter_editor/widgets/filtered_widget.dart';
 import 'controllers/paint_controller.dart';
 import 'models/painted_model.dart';

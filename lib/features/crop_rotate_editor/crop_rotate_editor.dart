@@ -2,14 +2,13 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 
 import 'dart:math';
-import 'dart:ui';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
-import 'package:pro_image_editor/shared/extensions/double_extension.dart';
 
 import '/core/mixins/converted_callbacks.dart';
 import '/core/mixins/converted_configs.dart';
@@ -33,6 +32,7 @@ import '/shared/widgets/extended/mouse_region/extended_rebuild_mouse_region.dart
 import '/shared/widgets/layer/layer_stack.dart';
 import '/shared/widgets/screen_resize_detector.dart';
 import '/shared/widgets/transform/transformed_content_generator.dart';
+import '../../shared/extensions/double_extension.dart';
 import '../filter_editor/widgets/filtered_widget.dart';
 import 'enums/crop_area_part.dart';
 import 'enums/crop_rotate_angle_side.dart';
