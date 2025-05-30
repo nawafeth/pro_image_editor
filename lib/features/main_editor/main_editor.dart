@@ -1891,6 +1891,8 @@ class ProImageEditorState extends State<ProImageEditor>
             flipY: transform.is90DegRotated ? transform.flipX : transform.flipY,
             rotateTurns: transform.angleToTurns(),
             image: bytes,
+            isTransformed: isTransformed,
+            layers: activeLayers,
           ),
         );
       }

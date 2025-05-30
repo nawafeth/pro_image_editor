@@ -865,6 +865,8 @@ class CropRotateEditorState extends State<CropRotateEditor>
             startTime: null,
             endTime: null,
             image: imageBytes,
+            isTransformed: isTransformed,
+            layers: layers ?? [],
           ),
         );
       }

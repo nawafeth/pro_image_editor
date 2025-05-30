@@ -216,6 +216,8 @@ mixin StandaloneEditorState<T extends StatefulWidget,
             startTime: null,
             endTime: null,
             image: imageBytes,
+            isTransformed: isTransformed,
+            layers: layers ?? [],
           ),
         );
       }
