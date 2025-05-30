@@ -21,6 +21,7 @@ class GroundedFilterBar extends StatefulWidget with SimpleConfigsAccess {
     required this.configs,
     required this.callbacks,
     required this.editor,
+    this.image,
   });
 
   /// The editor state that holds filter and editing information.
@@ -31,6 +32,9 @@ class GroundedFilterBar extends StatefulWidget with SimpleConfigsAccess {
 
   @override
   final ProImageEditorCallbacks callbacks;
+
+  /// A custom background image which can be used instant of the editorImage
+  final Widget? image;
 
   @override
   State<GroundedFilterBar> createState() => _GroundedFilterBarState();
@@ -120,7 +124,8 @@ class _GroundedFilterBarState extends State<GroundedFilterBar>
                   widget.editor.mainBodySize, widget.editor.editorBodySize),
               mainImageSize: getValidSizeOrDefault(
                   widget.editor.mainImageSize, widget.editor.editorBodySize),
-              editorImage: widget.editor.editorImage!,
+              editorImage: widget.editor.editorImage,
+              image: widget.image,
               activeFilters: widget.editor.appliedFilters,
               blurFactor: widget.editor.appliedBlurFactor,
               configs: configs,
