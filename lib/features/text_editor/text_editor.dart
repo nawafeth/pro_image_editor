@@ -267,8 +267,8 @@ class TextEditorState extends State<TextEditor>
     showModalBottomSheet(
       context: context,
       backgroundColor: textEditorConfigs.style.fontScaleBottomSheetBackground,
-      builder: (BuildContext context) {
-        return SliderBottomSheet<TextEditorState>(
+      builder: (BuildContext context) => SafeArea(
+        child: SliderBottomSheet<TextEditorState>(
           value: _fontScale,
           title: i18n.textEditor.fontScale,
           headerTextStyle: textEditorConfigs.style.fontSizeBottomSheetTitle,
@@ -288,8 +288,8 @@ class TextEditorState extends State<TextEditor>
           onValueChanged: (value) {
             fontScale = value;
           },
-        );
-      },
+        ),
+      ),
     );
   }
 

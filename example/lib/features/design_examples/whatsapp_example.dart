@@ -78,8 +78,8 @@ class _WhatsAppExampleState extends State<WhatsAppExample>
         showDragHandle: false,
         isScrollControlled: true,
         useSafeArea: true,
-        builder: (context) {
-          return Padding(
+        builder: (context) => SafeArea(
+          child: Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
@@ -92,8 +92,8 @@ class _WhatsAppExampleState extends State<WhatsAppExample>
                 callbacks: editor.callbacks,
               ),
             ),
-          );
-        },
+          ),
+        ),
       );
     }
 

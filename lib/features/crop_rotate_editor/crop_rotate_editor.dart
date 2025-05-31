@@ -1092,19 +1092,19 @@ class CropRotateEditorState extends State<CropRotateEditor>
         backgroundColor:
             cropRotateEditorConfigs.style.aspectRatioSheetBackgroundColor,
         isScrollControlled: true,
-        builder: (BuildContext context) {
-          return cropRotateEditorConfigs.widgets.aspectRatioOptions?.call(
-                this,
-                rebuildController.stream,
-                aspectRatio,
-                _mainImageSize.aspectRatio,
-              ) ??
-              CropAspectRatioOptions(
-                aspectRatio: aspectRatio,
-                configs: configs,
-                originalAspectRatio: _mainImageSize.aspectRatio,
-              );
-        }).then((value) {
+        builder: (BuildContext context) => SafeArea(
+              child: cropRotateEditorConfigs.widgets.aspectRatioOptions?.call(
+                    this,
+                    rebuildController.stream,
+                    aspectRatio,
+                    _mainImageSize.aspectRatio,
+                  ) ??
+                  CropAspectRatioOptions(
+                    aspectRatio: aspectRatio,
+                    configs: configs,
+                    originalAspectRatio: _mainImageSize.aspectRatio,
+                  ),
+            )).then((value) {
       if (value != null) {
         updateAspectRatio(value);
       }

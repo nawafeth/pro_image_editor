@@ -405,8 +405,8 @@ class PaintEditorState extends State<PaintEditor>
     showModalBottomSheet(
       context: context,
       backgroundColor: paintEditorConfigs.style.lineWidthBottomSheetBackground,
-      builder: (BuildContext context) {
-        return SliderBottomSheet<PaintEditorState>(
+      builder: (BuildContext context) => SafeArea(
+        child: SliderBottomSheet<PaintEditorState>(
           title: i18n.paintEditor.lineWidth,
           headerTextStyle: paintEditorConfigs.style.lineWidthBottomSheetTitle,
           min: 2,
@@ -422,8 +422,8 @@ class PaintEditorState extends State<PaintEditor>
           onValueChanged: (value) {
             setStrokeWidth(value);
           },
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -432,8 +432,8 @@ class PaintEditorState extends State<PaintEditor>
     showModalBottomSheet(
       context: context,
       backgroundColor: paintEditorConfigs.style.opacityBottomSheetBackground,
-      builder: (BuildContext context) {
-        return SliderBottomSheet<PaintEditorState>(
+      builder: (BuildContext context) => SafeArea(
+        child: SliderBottomSheet<PaintEditorState>(
           title: i18n.paintEditor.changeOpacity,
           headerTextStyle: paintEditorConfigs.style.opacityBottomSheetTitle,
           max: 1,
@@ -449,8 +449,8 @@ class PaintEditorState extends State<PaintEditor>
           onValueChanged: (value) {
             setOpacity(value);
           },
-        );
-      },
+        ),
+      ),
     );
   }
 

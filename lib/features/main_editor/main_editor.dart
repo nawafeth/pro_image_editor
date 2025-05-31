@@ -284,7 +284,7 @@ class ProImageEditor extends StatefulWidget
   /// - [byteArray] - Raw image data as a `Uint8List` (highest priority).
   /// - [file] - A `File` instance representing a local image file.
   /// - [networkUrl] - URL pointing to an image on the internet.
-  /// - [assetPath] - Path to an image stored in the app’s assets.
+  /// - [assetPath] - Path to an image stored in the app's assets.
   /// - [editorImage] - An `EditorImage` instance containing one of the above.
   /// - [configs] - Optional configuration settings for the editor.
   /// - [callbacks] - Required callbacks for handling image editor events.
@@ -1643,32 +1643,31 @@ class ProImageEditorState extends State<ProImageEditor>
         showDragHandle: emojiEditorConfigs.style.showDragHandle,
         isScrollControlled: true,
         useSafeArea: true,
-        builder: (BuildContext context) {
-          if (!useDraggableSheet) {
-            return ConstrainedBox(
-              constraints: effectiveBoxConstraints ??
-                  BoxConstraints(
-                      maxHeight: 300 + MediaQuery.viewInsetsOf(context).bottom),
-              child: EmojiEditor(configs: configs),
-            );
-          }
-
-          return DraggableScrollableSheet(
-              expand: sheetTheme.expand,
-              initialChildSize: sheetTheme.initialChildSize,
-              maxChildSize: sheetTheme.maxChildSize,
-              minChildSize: sheetTheme.minChildSize,
-              shouldCloseOnMinExtent: sheetTheme.shouldCloseOnMinExtent,
-              snap: sheetTheme.snap,
-              snapAnimationDuration: sheetTheme.snapAnimationDuration,
-              snapSizes: sheetTheme.snapSizes,
-              builder: (_, controller) {
-                return EmojiEditor(
-                  configs: configs,
-                  scrollController: controller,
-                );
-              });
-        });
+        builder: (BuildContext context) => SafeArea(
+              child: !useDraggableSheet
+                  ? ConstrainedBox(
+                      constraints: effectiveBoxConstraints ??
+                          BoxConstraints(
+                              maxHeight: 300 +
+                                  MediaQuery.viewInsetsOf(context).bottom),
+                      child: EmojiEditor(configs: configs),
+                    )
+                  : DraggableScrollableSheet(
+                      expand: sheetTheme.expand,
+                      initialChildSize: sheetTheme.initialChildSize,
+                      maxChildSize: sheetTheme.maxChildSize,
+                      minChildSize: sheetTheme.minChildSize,
+                      shouldCloseOnMinExtent: sheetTheme.shouldCloseOnMinExtent,
+                      snap: sheetTheme.snap,
+                      snapAnimationDuration: sheetTheme.snapAnimationDuration,
+                      snapSizes: sheetTheme.snapSizes,
+                      builder: (_, controller) {
+                        return EmojiEditor(
+                          configs: configs,
+                          scrollController: controller,
+                        );
+                      }),
+            ));
     ServicesBinding.instance.keyboard.addHandler(_onKeyEvent);
     if (layer == null || !mounted) return;
     layer.scale = emojiEditorConfigs.initScale;
@@ -1695,24 +1694,24 @@ class ProImageEditorState extends State<ProImageEditor>
         showDragHandle: stickerEditorConfigs.style.showDragHandle,
         isScrollControlled: true,
         useSafeArea: true,
-        builder: (_) {
-          return DraggableScrollableSheet(
-            expand: sheetTheme.expand,
-            initialChildSize: sheetTheme.initialChildSize,
-            maxChildSize: sheetTheme.maxChildSize,
-            minChildSize: sheetTheme.minChildSize,
-            shouldCloseOnMinExtent: sheetTheme.shouldCloseOnMinExtent,
-            snap: sheetTheme.snap,
-            snapAnimationDuration: sheetTheme.snapAnimationDuration,
-            snapSizes: sheetTheme.snapSizes,
-            builder: (_, controller) {
-              return StickerEditor(
-                configs: configs,
-                scrollController: controller,
-              );
-            },
-          );
-        });
+        builder: (_) => SafeArea(
+              child: DraggableScrollableSheet(
+                expand: sheetTheme.expand,
+                initialChildSize: sheetTheme.initialChildSize,
+                maxChildSize: sheetTheme.maxChildSize,
+                minChildSize: sheetTheme.minChildSize,
+                shouldCloseOnMinExtent: sheetTheme.shouldCloseOnMinExtent,
+                snap: sheetTheme.snap,
+                snapAnimationDuration: sheetTheme.snapAnimationDuration,
+                snapSizes: sheetTheme.snapSizes,
+                builder: (_, controller) {
+                  return StickerEditor(
+                    configs: configs,
+                    scrollController: controller,
+                  );
+                },
+              ),
+            ));
     ServicesBinding.instance.keyboard.addHandler(_onKeyEvent);
     if (layer == null || !mounted) return;
 
