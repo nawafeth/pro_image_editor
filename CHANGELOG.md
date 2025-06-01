@@ -1,14 +1,7 @@
 # Changelog
 
 ## 9.11.2
-- **FIX**(main-editor): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(paint-editor): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(text-editor): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(crop-rotate-editor): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(whatsapp-example): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(recoder_layer-example): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(movable-background-image-example): Add missing `showModalBottomSheet` parameter to `SafeArea`.
-- **FIX**(frame-example): Add missing `showModalBottomSheet` parameter to `SafeArea`.
+- **FIX**(bottom-sheet): Wrap bottom sheets in `SafeArea` to ensure proper display within device safe zones.
 
 ## 9.11.1
 - **FIX**(video-editor): Add missing `image` parameter to `GroundedFilterBar`.
