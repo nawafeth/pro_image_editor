@@ -175,6 +175,13 @@ class _LayerInteractionHelperWidgetState
     super.setState(fn);
   }
 
+  double get _rotation {
+    if (widget.layerData.flipX) {
+      return widget.layerData.rotation;
+    }
+    return -widget.layerData.rotation;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.forceIgnoreGestures) {
@@ -214,7 +221,11 @@ class _LayerInteractionHelperWidgetState
           child: Transform(
             transform: transform,
             alignment: Alignment.topLeft,
-            child: _buildSelectionOverlay(),
+            child: Transform.flip(
+              flipX: widget.layerData.flipX,
+              flipY: widget.layerData.flipY,
+              child: _buildSelectionOverlay(),
+            ),
           ),
         );
       },
@@ -297,13 +308,13 @@ class _LayerInteractionHelperWidgetState
           _rebuildStream.stream,
           (value) => widget.onScaleRotateDown?.call(value),
           (value) => widget.onScaleRotateUp?.call(value),
-          -widget.layerData.rotation,
+          _rotation,
         ) ??
         Positioned(
           bottom: 0,
           right: 0,
           child: LayerInteractionButton(
-            rotation: -widget.layerData.rotation,
+            rotation: _rotation,
             onScaleRotateDown: interactions.scaleRotateDown,
             onScaleRotateUp: interactions.scaleRotateUp,
             buttonRadius: layerInteraction.style.buttonRadius,
@@ -320,13 +331,13 @@ class _LayerInteractionHelperWidgetState
     return layerInteraction.widgets.editButton?.call(
           _rebuildStream.stream,
           () => widget.onEditLayer?.call(),
-          -widget.layerData.rotation,
+          _rotation,
         ) ??
         Positioned(
           top: 0,
           right: 0,
           child: LayerInteractionButton(
-            rotation: -widget.layerData.rotation,
+            rotation: _rotation,
             onTap: interactions.edit,
             buttonRadius: layerInteraction.style.buttonRadius,
             cursor: layerInteraction.style.editCursor,
@@ -342,13 +353,13 @@ class _LayerInteractionHelperWidgetState
     return layerInteraction.widgets.removeButton?.call(
           _rebuildStream.stream,
           () => widget.onRemoveLayer?.call(),
-          -widget.layerData.rotation,
+          _rotation,
         ) ??
         Positioned(
           top: 0,
           left: 0,
           child: LayerInteractionButton(
-            rotation: -widget.layerData.rotation,
+            rotation: _rotation,
             onTap: interactions.remove,
             buttonRadius: layerInteraction.style.buttonRadius,
             cursor: layerInteraction.style.removeCursor,
