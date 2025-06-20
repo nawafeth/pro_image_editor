@@ -160,6 +160,30 @@ class Layer {
   /// that may be needed for processing or rendering.
   Map<String, dynamic>? meta;
 
+  /// Indicates whether this layer is a [TextLayer].
+  ///
+  /// Subclasses can override this to return `true` if the layer represents
+  /// a text-based element.
+  bool get isTextLayer => false;
+
+  /// Indicates whether this layer is a [PaintLayer].
+  ///
+  /// Subclasses can override this to return `true` if the layer contains
+  /// freehand drawing or painted content.
+  bool get isPaintLayer => false;
+
+  /// Indicates whether this layer is an [EmojiLayer].
+  ///
+  /// Subclasses can override this to return `true` if the layer represents
+  /// an emoji or similar symbolic element.
+  bool get isEmojiLayer => false;
+
+  /// Indicates whether this layer is a [WidgetLayer].
+  ///
+  /// Subclasses can override this to return `true` if the layer hosts a
+  /// Flutter widget or sticker.
+  bool get isWidgetLayer => false;
+
   /// Converts this transform object to a Map.
   ///
   /// Returns a Map representing the properties of this layer object,

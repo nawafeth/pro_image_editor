@@ -192,6 +192,9 @@ class TextLayer extends Layer {
   TextStyle? textStyle;
 
   @override
+  bool get isTextLayer => false;
+
+  @override
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),

@@ -90,6 +90,9 @@ class PaintLayer extends Layer {
   Size get size => Size(rawSize.width * scale, rawSize.height * scale);
 
   @override
+  bool get isPaintLayer => false;
+
+  @override
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),

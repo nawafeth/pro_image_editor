@@ -136,6 +136,9 @@ class WidgetLayer extends Layer {
   /// widget import-loader.
   WidgetLayerExportConfigs exportConfigs;
 
+  @override
+  bool get isWidgetLayer => false;
+
   /// Converts this transform object to a Map suitable for representing a
   /// widget.
   ///
