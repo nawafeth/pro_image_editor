@@ -144,6 +144,7 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
     widget.callbacks.mainEditorCallbacks?.handleUpdateUI();
     widget.state.selectedLayerIndex = -1;
     widget.checkInteractiveViewer();
+    widget.callbacks.mainEditorCallbacks?.onLayerTapUp?.call(layer);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -156,6 +157,7 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
     widget.state.selectedLayerIndex = index;
     widget.setTempLayer(layer);
     widget.checkInteractiveViewer();
+    widget.callbacks.mainEditorCallbacks?.onLayerTapDown?.call(layer);
   }
 
   void _handleScaleRotateDown(int index, Size layerOriginalSize, Layer layer) {
