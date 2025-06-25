@@ -9,7 +9,7 @@ import '/features/main_editor/controllers/main_editor_controllers.dart';
 import '/features/main_editor/services/layer_interaction_manager.dart';
 import '/shared/controllers/video_controller.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/widgets/extended/extended_interactive_viewer.dart';
+import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
 import '/shared/widgets/video/video_editor_configurable.dart';
 import '/shared/widgets/video/video_editor_controls_widget.dart';
 import '../../crop_rotate_editor/enums/crop_mode.enum.dart';
@@ -177,6 +177,7 @@ class MainEditorInteractiveContent extends StatelessWidget {
     var paintConfigs = configs.paintEditor;
     return ExtendedInteractiveViewer(
       key: interactiveViewerKey,
+      enableExternalGestureDetector: true,
       zoomConfigs: mainConfigs,
       onInteractionStart: (details) {
         callbacks.mainEditorCallbacks?.onEditorZoomScaleStart?.call(details);

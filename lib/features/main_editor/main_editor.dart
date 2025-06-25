@@ -19,14 +19,14 @@ import '/features/main_editor/widgets/main_editor_helper_lines.dart';
 import '/features/main_editor/widgets/main_editor_layers.dart';
 import '/features/main_editor/widgets/main_editor_remove_layer_area.dart';
 import '/pro_image_editor.dart';
+import '/shared/mixins/editor_zoom.mixin.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
 import '/shared/services/import_export/export_state_history.dart';
 import '/shared/services/layer_transform_generator.dart';
 import '/shared/utils/file_constructor_utils.dart';
 import '/shared/widgets/adaptive_dialog.dart';
-import '/shared/widgets/extended/extended_interactive_viewer.dart';
+import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
 import '/shared/widgets/screen_resize_detector.dart';
-import '../../shared/mixins/editor_zoom.mixin.dart';
 import '../filter_editor/types/filter_matrix.dart';
 import '../filter_editor/widgets/filter_generator.dart';
 import '../tune_editor/models/tune_adjustment_matrix.dart';
@@ -548,6 +548,7 @@ class ProImageEditorState extends State<ProImageEditor>
   }
 
   void _checkInteractiveViewer() {
+    if (mainEditorConfigs.canZoomWhenLayerSelected) return;
     interactiveViewer.currentState?.setEnableInteraction(
       selectedLayerIndex < 0 && layerInteractionManager.selectedLayerId.isEmpty,
     );
@@ -762,20 +763,6 @@ class ProImageEditorState extends State<ProImageEditor>
     }
     _checkInteractiveViewer();
     _controllers.uiLayerCtrl.add(null);
-
-    /*
-    String selectedLayerId = _layerInteractionManager.selectedLayerId;
-    _layerInteractionManager.selectedLayerId = '';
-    setState(() {});
-    takeScreenshot();
-    if (selectedLayerId.isNotEmpty) {
-      /// Skip one frame to ensure captured image in separate thread will not
-      /// capture the border.
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        _layerInteractionManager.selectedLayerId = selectedLayerId;
-        setState(() {});
-      });
-    } */
 
     List<Layer> oldLayers =
         stateHistory[stateManager.historyPointer - 1].layers;
@@ -994,7 +981,10 @@ class ProImageEditorState extends State<ProImageEditor>
       ..snapStartPosX = details.focalPoint.dx
       ..snapStartPosY = details.focalPoint.dy;
 
-    if (selectedLayerIndex < 0) return;
+    if (selectedLayerIndex < 0) {
+      interactiveViewer.currentState?.onScaleStart(details);
+      return;
+    }
 
     var layer = activeLayers[selectedLayerIndex];
 
@@ -1036,7 +1026,11 @@ class ProImageEditorState extends State<ProImageEditor>
   /// layer's position and properties.
   void _onScaleUpdate(ScaleUpdateDetails details) {
     mainEditorCallbacks?.handleScaleUpdate(details);
-    if (selectedLayerIndex < 0 || blockOnScaleUpdateFunction) return;
+    if (blockOnScaleUpdateFunction) return;
+    if (selectedLayerIndex < 0) {
+      interactiveViewer.currentState?.onScaleUpdate(details);
+      return;
+    }
 
     bool beforeShowHorizontalHelperLine =
         layerInteractionManager.showHorizontalHelperLine;
@@ -1120,6 +1114,10 @@ class ProImageEditorState extends State<ProImageEditor>
   /// lines and flags.
   void _onScaleEnd(ScaleEndDetails details) async {
     mainEditorCallbacks?.handleScaleEnd(details);
+
+    if (selectedLayerIndex < 0) {
+      interactiveViewer.currentState?.onScaleEnd(details);
+    }
 
     if (!layerInteractionManager.hoverRemoveBtn && _tempLayer != null) {
       _updateTempLayer();
