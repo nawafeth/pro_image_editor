@@ -678,11 +678,6 @@ class ExtendedRawInteractiveViewerState
       nextTotalTranslation.dx - offendingDistance.dx * currentScale,
       nextTotalTranslation.dy - offendingDistance.dy * currentScale,
     );
-    // TODO(justinmc): This needs some work to handle rotation properly. The
-    // idea is that the boundaries are axis aligned (boundariesAabbQuad), but
-    // calculating the translation to put the viewport inside that Quad is more
-    // complicated than this when rotated.
-    // https://github.com/flutter/flutter/issues/57698
     final Matrix4 correctedMatrix = matrix.clone()
       ..setTranslation(
         Vector3(

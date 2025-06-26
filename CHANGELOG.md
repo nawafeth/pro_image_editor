@@ -16,6 +16,8 @@
 
 - **FIX**(text-layer): Resolve textLayer opening without requiring double-tap.
 - **FIX**(autoSource): Resolve issue where an error is thrown when the 'file' argument in the 'autoSource' constructor is null. This resolves issue [#509](https://github.com/hm21/pro_image_editor/issues/509).
+- **FIX**(text-editor): Resolve the issue of input text auto-wrapping, which does not happen in the main editor. This resolves issue [#469](https://github.com/hm21/pro_image_editor/issues/469). 
+
 
 <br/>
 

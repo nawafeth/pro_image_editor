@@ -113,22 +113,18 @@ class _TextEditorInputState extends State<TextEditorInput> {
   Widget build(BuildContext context) {
     return Align(
       alignment: widget.configs.inputTextFieldAlign,
-
-      ///  TODO: remove `IntrinsicWidth` after improve
-      /// `RoundedBackgroundTextField` code
-      child: IntrinsicWidth(
-        child: Padding(
-          padding: widget.configs.style.textFieldMargin,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: widget.configs.style.textFieldMargin,
+        child: IntrinsicWidth(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Hero(
-                flightShuttleBuilder: _flightShuttleBuilder,
-                tag: widget.heroTag ?? 'Text-Image-Editor-Empty-Hero',
-                createRectTween: (begin, end) =>
-                    RectTween(begin: begin, end: end),
-                child: _buildInputField(),
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Hero(
+              flightShuttleBuilder: _flightShuttleBuilder,
+              tag: widget.heroTag ?? 'Text-Image-Editor-Empty-Hero',
+              createRectTween: (begin, end) =>
+                  RectTween(begin: begin, end: end),
+              child: _buildInputField(),
             ),
           ),
         ),
