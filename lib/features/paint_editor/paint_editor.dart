@@ -595,6 +595,12 @@ class PaintEditorState extends State<PaintEditor>
       );
     }
 
+    final mainEditorSize = widget.initConfigs.mainBodySize ?? editorBodySize;
+    final mainEditorSizeFactor = max(
+      mainEditorSize.width / editorBodySize.width,
+      mainEditorSize.height / editorBodySize.height,
+    );
+
     // Convert to free positions
     return paintCtrl.activePaintItemList.map((e) {
       PaintedModel layer = PaintedModel(
@@ -654,7 +660,8 @@ class PaintEditorState extends State<PaintEditor>
           max(size.height, layer.strokeWidth),
         ),
         opacity: layer.opacity,
-        offset: finalOffset,
+        offset: finalOffset * mainEditorSizeFactor,
+        scale: mainEditorSizeFactor,
       );
     }).toList();
   }
