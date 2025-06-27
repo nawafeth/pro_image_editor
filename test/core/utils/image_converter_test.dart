@@ -25,8 +25,8 @@ Future<ui.Image> createTestUiImage() async {
 void main() {
   group('ImageConverter', () {
     test(
-        'uiImageToImageBytes returns bytes and precaches if context is provided',
-        () async {
+        'uiImageToImageBytes returns bytes and precaches if context is '
+        'provided', () async {
       final testImage = await createTestUiImage();
       final context = MockBuildContext();
 

@@ -110,8 +110,9 @@ void main() {
     });
 
     test('pause() sets isPlayingNotifier and calls onPause', () {
-      controller.play();
-      controller.pause();
+      controller
+        ..play()
+        ..pause();
       expect(controller.isPlayingNotifier.value, isFalse);
       expect(callbacks.paused, isTrue);
     });
@@ -128,8 +129,8 @@ void main() {
     });
 
     test(
-        'setTrimSpan updates trimDurationSpanNotifier and calls onTrimSpanUpdate',
-        () {
+        'setTrimSpan updates trimDurationSpanNotifier and calls '
+        'onTrimSpanUpdate', () {
       const span = TrimDurationSpan(
           start: Duration(seconds: 2), end: Duration(seconds: 8));
       controller.setTrimSpan(span);
