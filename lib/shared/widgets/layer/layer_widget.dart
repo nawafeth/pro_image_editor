@@ -196,8 +196,8 @@ class _LayerWidgetState extends State<LayerWidget>
     _contextManager.open(
       context: context,
       details: details,
-      enableEditButton: _layerType == LayerWidgetType.text &&
-          widget.layerData.interaction.enableEdit,
+      enableEditButton:
+          _layerType == LayerWidgetType.text && _layer.interaction.enableEdit,
       enableRemoveButton: true,
     );
   }
@@ -229,7 +229,7 @@ class _LayerWidgetState extends State<LayerWidget>
     if (_downPosition == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final interaction = widget.layerData.interaction;
+      final interaction = _layer.interaction;
       final offsetDistance = (event.position - _downPosition!).distance;
       final timeElapsed =
           DateTime.now().difference(_tapDownTimestamp).inMilliseconds;
@@ -290,9 +290,9 @@ class _LayerWidgetState extends State<LayerWidget>
 
   void _onHoverLeave() {
     if (_layer.isPaintLayer) {
-      (widget.layerData as PaintLayer).item.hit = false;
+      (_layer as PaintLayer).item.hit = false;
     } else if (_layer.isTextLayer) {
-      (widget.layerData as TextLayer).hit = false;
+      (_layer as TextLayer).hit = false;
     }
     _showMoveCursor.value = false;
     _lastHitState.value = false;
@@ -310,7 +310,7 @@ class _LayerWidgetState extends State<LayerWidget>
         child: Hero(
           // Important that hero is above transform
           createRectTween: (begin, end) => RectTween(begin: begin, end: end),
-          tag: widget.layerData.id,
+          tag: _layer.id,
           child: Transform(
             transform: transformMatrix,
             alignment: Alignment.center,
@@ -322,9 +322,9 @@ class _LayerWidgetState extends State<LayerWidget>
   }
 
   Widget _buildInteractionHandlers() {
-    var interaction = widget.layerData.interaction;
+    var interaction = _layer.interaction;
     return LayerInteractionHelperWidget(
-      layerData: widget.layerData,
+      layerData: _layer,
       configs: configs,
       callbacks: callbacks,
       selected: widget.selected,
@@ -375,7 +375,7 @@ class _LayerWidgetState extends State<LayerWidget>
         builder: (_, showCursor, __) {
           return MouseRegion(
             hitTestBehavior: HitTestBehavior.translucent,
-            cursor: showCursor && widget.layerData.interaction.enableMove
+            cursor: showCursor && _layer.interaction.enableMove
                 ? layerInteraction.style.hoverCursor
                 : MouseCursor.defer,
             onEnter: (event) => _onHoverEnter(),
@@ -413,7 +413,7 @@ class _LayerWidgetState extends State<LayerWidget>
       case LayerWidgetType.canvas:
         content = LayerWidgetPaintItem(
           layer: _layer as PaintLayer,
-          scale: widget.layerData.scale,
+          scale: _layer.scale,
           isSelected: widget.selected,
           enableHitDetection: widget.enableHitDetection,
           isHighPerformanceMode: widget.highPerformanceMode,
