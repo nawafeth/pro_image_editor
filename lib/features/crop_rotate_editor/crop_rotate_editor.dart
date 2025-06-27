@@ -86,7 +86,7 @@ class CropRotateEditor extends StatefulWidget
 
   /// Constructs a `CropRotateEditor` widget with an image loaded from a file.
   factory CropRotateEditor.file(
-    File file, {
+    dynamic file, {
     Key? key,
     required CropRotateEditorInitConfigs initConfigs,
   }) {

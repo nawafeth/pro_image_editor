@@ -20,10 +20,15 @@
 - **FIX**(text-editor): Resolve the issue of input text auto-wrapping, which does not happen in the main editor. This resolves issue [#469](https://github.com/hm21/pro_image_editor/issues/469). 
 - **FIX**(paint-editor): Resolve the issue where drawings shift when the AppBar or BottomBar is missing in the main editor. This resolves issue [#410](https://github.com/hm21/pro_image_editor/issues/410). 
 
-
 <br/>
 
 - **DOCS**(example): Introduce a new [example](https://github.com/hm21/pro_image_editor/blob/stable/example/lib/features/layer_select_design_example.dart) to showcase a more contemporary layer selection design.
+
+<br/>
+
+- **TEST**: Added more than 200 new unit and widget tests to improve coverage and ensure more robust error detection.
+
+<br/>
 
 #### Breaking Changes
 - Removed all deprecated configuration settings.

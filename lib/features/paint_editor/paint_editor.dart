@@ -11,7 +11,6 @@ import '/core/mixins/converted_callbacks.dart';
 import '/core/mixins/converted_configs.dart';
 import '/core/mixins/standalone_editor.dart';
 import '/core/models/transform_helper.dart';
-import '/core/platform/io/io_helper.dart';
 import '/core/utils/size_utils.dart';
 import '/features/paint_editor/widgets/paint_editor_appbar.dart';
 import '/features/paint_editor/widgets/paint_editor_bottombar.dart';
@@ -80,7 +79,7 @@ class PaintEditor extends StatefulWidget
 
   /// Constructs a `PaintEditor` widget with an image loaded from a file.
   factory PaintEditor.file(
-    File file, {
+    dynamic file, {
     Key? key,
     required PaintEditorInitConfigs initConfigs,
   }) {
@@ -453,6 +452,7 @@ class PaintEditorState extends State<PaintEditor>
   /// When the `fill` parameter is `true`, drawing elements will be filled;
   /// otherwise, they will be outlined.
   void setFill(bool fill) {
+    _isFillMode = fill;
     paintCtrl.setFill(fill);
     _uiAppbarStream.add(null);
     paintEditorCallbacks?.handleToggleFill(fill);
