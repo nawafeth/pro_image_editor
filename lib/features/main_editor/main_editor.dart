@@ -2341,6 +2341,9 @@ class ProImageEditorState extends State<ProImageEditor>
               child: Listener(
                 behavior: HitTestBehavior.translucent,
                 onPointerDown: (details) {
+                  if (layerInteractionManager.selectedLayerId.isNotEmpty) {
+                    return;
+                  }
                   bool isDoubleTap = detectDoubleTap(details);
                   if (!isDoubleTap) return;
 
