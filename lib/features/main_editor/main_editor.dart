@@ -700,6 +700,8 @@ class ProImageEditorState extends State<ProImageEditor>
     int removeLayerIndex = -1,
     bool blockSelectLayer = false,
     bool blockCaptureScreenshot = false,
+    bool autoCorrectZoomOffset = true,
+    bool autoCorrectZoomScale = true,
   }) {
     void correctOffset() {
       Offset fractionalOffset = const Offset(-0.5, -0.5);
@@ -734,6 +736,28 @@ class ProImageEditorState extends State<ProImageEditor>
     }
 
     correctOffset();
+
+    final viewer = interactiveViewer.currentState;
+    if (viewer != null) {
+      final scaleDelta = viewer.scaleFactor;
+
+      if (autoCorrectZoomScale) {
+        layer.scale /= scaleDelta;
+      }
+      if (autoCorrectZoomOffset) {
+        final bodySize = sizesManager.bodySize;
+
+        final scaledSize = bodySize * scaleDelta;
+
+        final zoomOffset = Offset(
+              scaledSize.width - bodySize.width,
+              scaledSize.height - bodySize.height,
+            ) /
+            2;
+
+        layer.offset -= (viewer.offset + zoomOffset) / viewer.scaleFactor;
+      }
+    }
 
     layerInteractionManager.selectedLayerId = '';
 
@@ -1408,6 +1432,8 @@ class ProImageEditorState extends State<ProImageEditor>
           paintItemLayers[i],
           blockSelectLayer: true,
           blockCaptureScreenshot: i != paintItemLayers.length - 1,
+          autoCorrectZoomOffset: false,
+          autoCorrectZoomScale: false,
         );
       }
 
@@ -2448,7 +2474,11 @@ class ProImageEditorState extends State<ProImageEditor>
       },
       onDuplicateLayer: (layer) {
         var duplication = _layerCopyManager.duplicateLayer(layer);
-        addLayer(duplication);
+        addLayer(
+          duplication,
+          autoCorrectZoomOffset: false,
+          autoCorrectZoomScale: false,
+        );
       },
     );
   }
