@@ -46,6 +46,7 @@ class HelperLineConfigs {
     this.showHorizontalLine = true,
     this.showRotateLine = true,
     this.showLayerAlignLine = true,
+    this.releaseThreshold = 10.0,
     this.style = const HelperLineStyle(),
   });
 
@@ -64,6 +65,10 @@ class HelperLineConfigs {
   /// Style configuration for helper lines.
   final HelperLineStyle style;
 
+  /// The minimum distance in logical pixels that a draggable element must be
+  /// released from a helper line for the snapping effect to be deactivated.
+  final double releaseThreshold;
+
   /// Creates a copy of this `HelperLineConfigs` object with the given fields
   /// replaced with new values.
   ///
@@ -75,6 +80,7 @@ class HelperLineConfigs {
     bool? showHorizontalLine,
     bool? showRotateLine,
     bool? showLayerAlignLine,
+    double? releaseThreshold,
     HelperLineStyle? style,
   }) {
     return HelperLineConfigs(
@@ -82,6 +88,7 @@ class HelperLineConfigs {
       showHorizontalLine: showHorizontalLine ?? this.showHorizontalLine,
       showRotateLine: showRotateLine ?? this.showRotateLine,
       showLayerAlignLine: showLayerAlignLine ?? this.showLayerAlignLine,
+      releaseThreshold: releaseThreshold ?? this.releaseThreshold,
       style: style ?? this.style,
     );
   }

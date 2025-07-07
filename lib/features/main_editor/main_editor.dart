@@ -378,6 +378,7 @@ class ProImageEditorState extends State<ProImageEditor>
   late final LayerInteractionManager layerInteractionManager =
       LayerInteractionManager(
     helperLinesCallbacks: mainEditorCallbacks?.helperLines,
+    helperLineConfigs: configs.helperLines,
     onSelectedLayerChanged: mainEditorCallbacks?.onSelectedLayerChanged,
   );
 
