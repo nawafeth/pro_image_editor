@@ -47,6 +47,7 @@ class Layer {
     this.meta,
     this.boxConstraints,
   })  : key = key ??= GlobalKey(),
+        keyInternalSize = GlobalKey(),
         id = id ?? generateUniqueId(),
         interaction = interaction ?? LayerInteraction();
 
@@ -129,6 +130,9 @@ class Layer {
   /// Global key associated with the Layer instance, used for accessing the
   /// widget tree.
   GlobalKey key;
+
+  /// A global key used to get the layer size.
+  GlobalKey keyInternalSize;
 
   /// The position offset of the widget.
   Offset offset;
@@ -229,7 +233,7 @@ class Layer {
   }
 
   RenderBox? get _renderBox {
-    final renderObj = key.currentContext?.findRenderObject();
+    final renderObj = keyInternalSize.currentContext?.findRenderObject();
     return renderObj is RenderBox ? renderObj : null;
   }
 

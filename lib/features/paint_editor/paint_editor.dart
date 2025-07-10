@@ -861,6 +861,7 @@ class PaintEditorState extends State<PaintEditor>
                           transformConfigs: initialTransformConfigs,
                         ),
                         overlayColor: paintEditorConfigs.style.background,
+                        clipBehavior: Clip.none,
                       ),
                     _buildPainter(),
                     if (paintEditorConfigs.widgets.bodyItemsRecorded != null)

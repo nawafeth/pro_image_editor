@@ -307,9 +307,18 @@ class _LayerWidgetState extends State<LayerWidget>
   Widget build(BuildContext context) {
     Matrix4 transformMatrix = _calcTransformMatrix();
 
+    final overlayPadding = widget.selected
+        ? layerInteraction.style.overlayPadding
+        : EdgeInsets.zero;
+
+    final adjustedLeft =
+        offsetX - overlayPadding.horizontal * (_fractionalOffset.dx + 0.5);
+    final adjustedTop =
+        offsetY - overlayPadding.vertical * (_fractionalOffset.dy + 0.5);
+
     return Positioned(
-      top: offsetY,
-      left: offsetX,
+      left: adjustedLeft,
+      top: adjustedTop,
       child: FractionalTranslation(
         translation: _fractionalOffset,
         child: Hero(
@@ -343,33 +352,29 @@ class _LayerWidgetState extends State<LayerWidget>
       onScaleRotateUp: widget.onScaleRotateUp,
       onRemoveLayer: widget.onRemoveTap,
       onDuplicate: widget.onDuplicate,
-      child: Padding(
-        padding: widget.selected
-            ? EdgeInsets.zero
-            : layerInteraction.style.overlayPadding,
-        child: _buildCursor(
-          child: ValueListenableBuilder(
-              valueListenable: _lastHitState,
-              builder: (_, __, ___) {
-                return GestureDetector(
+      child: _buildCursor(
+        child: ValueListenableBuilder(
+            valueListenable: _lastHitState,
+            builder: (_, __, ___) {
+              return GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onSecondaryTapUp: isDesktop ? _onSecondaryTapUp : null,
+                child: Listener(
                   behavior: HitTestBehavior.translucent,
-                  onSecondaryTapUp: isDesktop ? _onSecondaryTapUp : null,
-                  child: Listener(
-                    behavior: HitTestBehavior.translucent,
-                    onPointerDown: _onPointerDown,
-                    onPointerUp: _onPointerUp,
-                    child: Padding(
-                      padding: !widget.selected
-                          ? EdgeInsets.zero
-                          : layerInteraction.style.overlayPadding,
-                      child: FittedBox(
-                        child: _buildContent(),
-                      ),
+                  onPointerDown: _onPointerDown,
+                  onPointerUp: _onPointerUp,
+                  child: Padding(
+                    padding: !widget.selected
+                        ? EdgeInsets.zero
+                        : layerInteraction.style.overlayPadding,
+                    child: FittedBox(
+                      key: _layer.keyInternalSize,
+                      child: _buildContent(),
                     ),
                   ),
-                );
-              }),
-        ),
+                ),
+              );
+            }),
       ),
     );
   }

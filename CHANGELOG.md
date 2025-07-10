@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.2.9
+- **FIX**(screen-resize): Resolve issue causing layers with custom `FractionalTranslation` to be misplaced.
+
 ## 10.2.8
 - **FIX**(helper-lines): Resolve issue where layers wouldn't release when sharing the same axis.
 - **FIX**(helper-lines): Resolve issue where helperLine configs had no effect.

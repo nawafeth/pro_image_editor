@@ -89,19 +89,16 @@ class LayerStack extends StatelessWidget {
   bool get _cutOutsideImageArea =>
       cutOutsideImageArea ?? configs.imageGeneration.cropToImageBounds;
 
+  TransformConfigs? get _transformConfigs =>
+      transformHelper.transformConfigs?.isNotEmpty == true
+          ? transformHelper.transformConfigs
+          : null;
   @override
   Widget build(BuildContext context) {
-    // Retrieve transformation configurations, if available.
-    TransformConfigs? transformConfigs =
-        transformHelper.transformConfigs != null &&
-                transformHelper.transformConfigs!.isNotEmpty
-            ? transformHelper.transformConfigs
-            : null;
-
-    return Stack(
-      children: [
-        IgnorePointer(
-          child: Transform.scale(
+    return IgnorePointer(
+      child: Stack(
+        children: [
+          Transform.scale(
             scale: transformHelper.scale,
             child: Stack(
                 fit: StackFit.expand,
@@ -117,31 +114,34 @@ class LayerStack extends StatelessWidget {
                   );
                 }).toList()),
           ),
-        ),
-        if (configs.imageGeneration.cropToImageBounds)
-          RepaintBoundary(
-            child: Hero(
-              tag: 'crop_layer_painter_hero',
-              child: CustomPaint(
-                foregroundPainter: _cutOutsideImageArea
-                    ? CropLayerPainter(
-                        opacity: configs
-                            .mainEditor.style.outsideCaptureAreaLayerOpacity,
-                        backgroundColor: overlayColor,
-                        imgRatio: transformConfigs?.cropRect.size.aspectRatio ??
-                            transformHelper.mainImageSize.aspectRatio,
-                        isRoundCropper: transformConfigs?.isOvalCropper ??
-                            configs.cropRotateEditor.initialCropMode ==
-                                CropMode.oval,
-                        is90DegRotated:
-                            transformConfigs?.is90DegRotated ?? false,
-                      )
-                    : null,
-                child: const SizedBox.expand(),
+          if (configs.imageGeneration.cropToImageBounds)
+            RepaintBoundary(
+              child: Hero(
+                tag: 'crop_layer_painter_hero',
+                child: CustomPaint(
+                  foregroundPainter:
+                      _cutOutsideImageArea ? _buildCropPainter() : null,
+                  child: const SizedBox.expand(),
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  CustomPainter _buildCropPainter() {
+    final imgRatio = _transformConfigs?.cropRect.size.aspectRatio ??
+        transformHelper.mainImageSize.aspectRatio;
+    final isRoundCropper = _transformConfigs?.isOvalCropper ??
+        configs.cropRotateEditor.initialCropMode == CropMode.oval;
+
+    return CropLayerPainter(
+      opacity: configs.mainEditor.style.outsideCaptureAreaLayerOpacity,
+      backgroundColor: overlayColor,
+      imgRatio: imgRatio,
+      isRoundCropper: isRoundCropper,
+      is90DegRotated: _transformConfigs?.is90DegRotated ?? false,
     );
   }
 }
