@@ -1,5 +1,8 @@
 # Changelog
 
+## X.X.X
+- **FIX** Do not reset the rotation after Aspect Ratio is selected
+
 ## 10.2.8
 - **FIX**(helper-lines): Resolve issue where layers wouldn't release when sharing the same axis.
 - **FIX**(helper-lines): Resolve issue where helperLine configs had no effect.

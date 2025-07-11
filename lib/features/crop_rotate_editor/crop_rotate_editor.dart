@@ -1126,7 +1126,7 @@ class CropRotateEditorState extends State<CropRotateEditor>
     calcCropRect();
     calcFitToScreen();
     _setOffsetLimits();
-    addHistory(scaleRotation: oldScaleFactor, angle: 0);
+    addHistory(scaleRotation: oldScaleFactor);
     _updateAllStates();
   }
 
