@@ -17,7 +17,7 @@ import '../../constants/export_import_version.dart';
 /// - `layerMap`: A map representing the layer data.
 /// - `version`: The version of the export/import format.
 /// - `minifier`: An instance of `EditorKeyMinifier` used to convert keys.
-historyCompatibilityLayerInteraction({
+void historyCompatibilityLayerInteraction({
   required Map<String, dynamic> layerMap,
   required String version,
   required EditorKeyMinifier minifier,
