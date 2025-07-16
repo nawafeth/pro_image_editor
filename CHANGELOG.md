@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.5.3
+- **FIX**(helper-lines): Resolve lint issues after upgrading to `flutter_lints: ^6.0.0`.
+
 ## 10.5.2
 - **FIX**(helper-lines): Resolve issue where helper lines are visible when hovering over the layer remove zone. This resolves issue [#561](https://github.com/hm21/pro_image_editor/issues/561).
 
