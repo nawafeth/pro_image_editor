@@ -1114,6 +1114,17 @@ class ProImageEditorState extends State<ProImageEditor>
           helperLineCtrl: _controllers.helperLineCtrl,
         );
     } else if (details.pointerCount == 2) {
+      // If we have multi-selection active,
+      //treat two-finger gestures as editor zoom
+      // instead of layer scaling
+      final hasMultiSelection = selectedLayers.length > 1;
+      
+      if (hasMultiSelection) {
+        interactiveViewer.currentState?.onScaleUpdate(details);
+        return;
+      }
+      
+      // Single layer scaling (original logic)
       layerInteractionManager
         ..freeStyleHighPerformanceScaling =
             paintEditorConfigs.enableFreeStyleHighPerformanceScaling ??
@@ -2412,6 +2423,14 @@ class ProImageEditorState extends State<ProImageEditor>
                 onPointerUp: onPointerUp,
                 onPointerSignal: isDesktop && hasSelectedLayers
                     ? (event) {
+                        // If we have multi-selection active, don't handle mouse
+                        // scroll for layer scaling - let it go to editor zoom
+                        final hasMultiSelection = selectedLayers.length > 1;
+                        
+                        if (hasMultiSelection) {
+                          return;
+                        }
+                        
                         _desktopInteractionManager.mouseScroll(
                           event,
                           selectedLayers: selectedLayers,
