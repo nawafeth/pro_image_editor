@@ -127,11 +127,12 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
   Set<String> _temporarySelectedIds = {};
 
   late final _layerInteraction = widget.layerInteractionManager;
+  late final _layerInteractionConfigs = widget.configs.layerInteraction;
 
   bool get _enableMultiSelect =>
       widget.enableMultiSelectMode ||
-      _keyboard.isCtrlPressed ||
-      _keyboard.isShiftPressed;
+      ((_keyboard.isCtrlPressed || _keyboard.isShiftPressed) &&
+          _layerInteractionConfigs.enableKeyboardMultiSelection);
 
   // Helper methods for handling layer interactions
   void _handleEditTap(Layer layer) {
@@ -254,7 +255,7 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
   }
 
   void _validateClearLayer() {
-    if (!widget.configs.layerInteraction.keepSelectionOnInteraction) {
+    if (!_layerInteractionConfigs.keepSelectionOnInteraction) {
       _layerInteraction.clearSelectedLayers();
     }
   }
@@ -412,7 +413,11 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
       onScaleRotateDown: (details, layerOriginalSize) =>
           _handleScaleRotateDown(layerOriginalSize, layer),
       onLongPress: () {
-        if (!areLayersSelectable) return;
+        if (!areLayersSelectable ||
+            !_layerInteractionConfigs.enableLongPressMultiSelection) {
+          return;
+        }
+
         _helperEnforceMultiSelect = true;
 
         final newIds = {..._temporarySelectedIds, layer.id};
