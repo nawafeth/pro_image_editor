@@ -28,6 +28,8 @@ class LayerInteractionConfigs {
     this.hideToolbarOnInteraction = false,
     this.hideVideoControlsOnInteraction = true,
     this.keepSelectionOnInteraction = true,
+    this.enableKeyboardMultiSelection = true,
+    this.enableLongPressMultiSelection = true,
     this.videoControlsSwitchDuration = const Duration(milliseconds: 220),
     this.icons = const LayerInteractionIcons(),
     this.widgets = const LayerInteractionWidgets(),
@@ -59,6 +61,9 @@ class LayerInteractionConfigs {
   /// If set to `false`, the selection will be cleared upon interaction.
   final bool keepSelectionOnInteraction;
 
+  final bool enableKeyboardMultiSelection;
+  final bool enableLongPressMultiSelection;
+
   /// The duration of the switch animation when the video controls show/hide.
   final Duration videoControlsSwitchDuration;
 
@@ -83,6 +88,8 @@ class LayerInteractionConfigs {
     bool? hideToolbarOnInteraction,
     bool? hideVideoControlsOnInteraction,
     bool? keepSelectionOnInteraction,
+    bool? enableKeyboardMultiSelection,
+    bool? enableLongPressMultiSelection,
     Duration? videoControlsSwitchDuration,
     LayerInteractionIcons? icons,
     LayerInteractionWidgets? widgets,
@@ -99,6 +106,10 @@ class LayerInteractionConfigs {
           hideVideoControlsOnInteraction ?? this.hideVideoControlsOnInteraction,
       keepSelectionOnInteraction:
           keepSelectionOnInteraction ?? this.keepSelectionOnInteraction,
+      enableKeyboardMultiSelection:
+          enableKeyboardMultiSelection ?? this.enableKeyboardMultiSelection,
+      enableLongPressMultiSelection:
+          enableLongPressMultiSelection ?? this.enableLongPressMultiSelection,
       videoControlsSwitchDuration:
           videoControlsSwitchDuration ?? this.videoControlsSwitchDuration,
       style: style ?? this.style,
