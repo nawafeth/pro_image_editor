@@ -5,6 +5,7 @@ import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
 import '/core/models/editor_configs/pro_image_editor_configs.dart';
 import '/core/models/layers/layer.dart';
 import '/core/services/keyboard_service.dart';
+import '/core/services/mouse_service.dart';
 import '/core/utils/size_utils.dart';
 import '/features/main_editor/controllers/main_editor_controllers.dart';
 import '/features/main_editor/services/layer_interaction_manager.dart';
@@ -52,6 +53,7 @@ class MainEditorLayers extends StatefulWidget {
     required this.state,
     required this.onContextMenuToggled,
     required this.onDuplicateLayer,
+    required this.mouseService,
     this.enableMultiSelectMode = false,
   });
 
@@ -75,6 +77,10 @@ class MainEditorLayers extends StatefulWidget {
 
   /// Handles interactions with editor layers.
   final LayerInteractionManager layerInteractionManager;
+
+  /// A service that handles mouse interactions within the editor.
+  /// This is used to manage mouse-related events and behaviors.
+  final MouseService mouseService;
 
   /// List of active layers in the editor.
   final List<Layer> activeLayers;
@@ -147,6 +153,8 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
   }
 
   void _handleLayerTap(Layer layer) {
+    if (widget.mouseService.validatePanAction(widget.configs)) return;
+
     // Only handle selection if selectable
     if (layer.interaction.enableSelection) {
       final selectedIds = _layerInteraction.selectedLayerIds;
@@ -210,8 +218,11 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
   }
 
   void _handleTapDown(Layer layer) {
-    if (_isScaleInteractionActive || widget.isLayerBeingTransformed) return;
-
+    if (_isScaleInteractionActive ||
+        widget.isLayerBeingTransformed ||
+        widget.mouseService.validatePanAction(widget.configs)) {
+      return;
+    }
     _layerInteraction.activeInteractionLayer = layer;
 
     final selectedIds = _layerInteraction.selectedLayerIds;
@@ -429,7 +440,8 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
           _handleScaleRotateDown(layerOriginalSize, layer),
       onLongPress: () {
         if (!areLayersSelectable ||
-            !_layerInteractionConfigs.enableLongPressMultiSelection) {
+            !_layerInteractionConfigs.enableLongPressMultiSelection ||
+            widget.mouseService.validatePanAction(widget.configs)) {
           return;
         }
 

@@ -1039,13 +1039,13 @@ class ProImageEditorState extends State<ProImageEditor>
       _calcAppBarHeight();
     }
 
-    if (layerInteractionManager.activeInteractionLayer == null) {
-      layerInteractionManager.clearSelectedLayers();
-    }
-
-    if (!hasSelectedLayers) {
-      _layerDragSelectionService.startDragging(details.localFocalPoint);
+    if (_mouseService.validatePanAction(configs)) {
       interactiveViewer.currentState?.onScaleStart(details);
+      return;
+    } else if (_mouseService.validateDragAction(configs) &&
+        layerInteractionManager.activeInteractionLayer == null) {
+      layerInteractionManager.clearSelectedLayers();
+      _layerDragSelectionService.startDragging(details.localFocalPoint);
       return;
     }
 
@@ -1074,16 +1074,13 @@ class ProImageEditorState extends State<ProImageEditor>
     mainEditorCallbacks?.handleScaleUpdate(details);
     if (blockOnScaleUpdateFunction) return;
 
-    if (!hasSelectedLayers &&
-        mainEditorConfigs.enableZoom &&
-        _mouseService.isRightMousePressed) {
+    if (_mouseService.validatePanAction(configs)) {
       interactiveViewer.currentState?.onScaleUpdate(details);
       return;
     }
 
     if (_layerDragSelectionService.isActive &&
-        (_mouseService.isLeftMousePressed ||
-            _mouseService.isMiddleMousePressed)) {
+        _mouseService.validateDragAction(configs)) {
       _layerDragSelectionService.updateSize(details.localFocalPoint);
       return;
     }
@@ -1189,7 +1186,6 @@ class ProImageEditorState extends State<ProImageEditor>
   /// lines and flags.
   void _onScaleEnd(ScaleEndDetails details) async {
     mainEditorCallbacks?.handleScaleEnd(details);
-    _layerDragSelectionService.endDragging();
     layerInteractionManager.activeInteractionLayer = null;
 
     /// Check if layers should be removed.
@@ -1202,7 +1198,9 @@ class ProImageEditorState extends State<ProImageEditor>
     }
 
     if (!hasSelectedLayers) {
-      interactiveViewer.currentState?.onScaleEnd(details);
+      if (!_layerDragSelectionService.isActive) {
+        interactiveViewer.currentState?.onScaleEnd(details);
+      }
     } else {
       /// At this point, we only create a screenshot since the new history
       /// entry was already added in [_onScaleStart].
@@ -1216,6 +1214,7 @@ class ProImageEditorState extends State<ProImageEditor>
     _checkInteractiveViewer();
     _controllers.uiLayerCtrl.add(null);
     layerInteractionManager.onScaleEnd();
+    _layerDragSelectionService.endDragging();
     setState(() {});
   }
 
@@ -2591,6 +2590,7 @@ class ProImageEditorState extends State<ProImageEditor>
       onEditPaintLayer: _editPaintLayer,
       state: this,
       enableMultiSelectMode: enableMultiSelectMode,
+      mouseService: _mouseService,
       onContextMenuToggled: (isOpen) {
         _isContextMenuOpen = isOpen;
       },
