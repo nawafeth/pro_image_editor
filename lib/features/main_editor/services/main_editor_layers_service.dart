@@ -185,6 +185,8 @@ class MainEditorLayersService {
 
   /// Handles the tap-down event on a layer to begin selection or interaction.
   void handleTapDown(Layer layer, PointerDownEvent event) {
+    mouseService.onPointerDown(event);
+
     if (_isScaleInteractionActive ||
         state.isLayerBeingTransformed ||
         mouseService.validatePanAction()) {
