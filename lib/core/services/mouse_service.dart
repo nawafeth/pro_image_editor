@@ -49,11 +49,11 @@ class MouseService {
   bool get _isSpacePressed =>
       HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.space);
 
-  /// Handles a [PointerDownEvent] to update mouse button press states.
+  /// Handles a [PointerEvent] to update mouse button press states.
   ///
   /// This method should be called from the `onPointerDown` callback
   /// of a [Listener] widget.
-  void onPointerDown(PointerDownEvent event) {
+  void onPointerDown(PointerEvent event) {
     final buttons = event.buttons;
 
     _isPrimaryMousePressed = (buttons & kPrimaryMouseButton) != 0;
@@ -79,10 +79,22 @@ class MouseService {
     }
   }
 
-  bool _validateAction(MouseButtonAction action) {
-    return (_mouseButtonPrimaryAction == action && isPrimaryMousePressed) ||
-        (_mouseButtonSecondaryAction == action && isSecondaryMousePressed) ||
-        (_mouseButtonMiddleAction == action && isMiddleMousePressed);
+  bool _validateAction(MouseButtonAction action, {PointerEvent? event}) {
+    bool isPrimaryPressed = isPrimaryMousePressed;
+    bool isSecondaryPressed = isSecondaryMousePressed;
+    bool isMiddlePressed = isMiddleMousePressed;
+
+    if (event != null) {
+      final buttons = event.buttons;
+
+      isPrimaryPressed = (buttons & kPrimaryMouseButton) != 0;
+      isSecondaryPressed = (buttons & kSecondaryMouseButton) != 0;
+      isMiddlePressed = (buttons & kMiddleMouseButton) != 0;
+    }
+
+    return (_mouseButtonPrimaryAction == action && isPrimaryPressed) ||
+        (_mouseButtonSecondaryAction == action && isSecondaryPressed) ||
+        (_mouseButtonMiddleAction == action && isMiddlePressed);
   }
 
   /// Validates whether the pan action can be performed based on the current
@@ -96,12 +108,12 @@ class MouseService {
   /// `MouseButtonAction.pan`.
   ///
   /// Returns `true` if the pan action is valid, otherwise `false`.
-  bool validatePanAction() {
+  bool validatePanAction({PointerEvent? event}) {
     if (!configs.mainEditor.enableZoom) return false;
 
-    return _validateAction(MouseButtonAction.pan) ||
+    return _validateAction(MouseButtonAction.pan, event: event) ||
         (_isSpacePressed &&
-            _validateAction(MouseButtonAction.selectOrSpaceMove));
+            _validateAction(MouseButtonAction.selectOrSpaceMove, event: event));
   }
 
   /// Validates whether the drag action is allowed based on the current mouse
@@ -111,10 +123,10 @@ class MouseService {
   /// by delegating the validation logic to the `_validateAction` method.
   ///
   /// Returns `true` if the drag action is valid, otherwise `false`.
-  bool validateDragAction() {
+  bool validateDragAction({PointerEvent? event}) {
     return _validateAction(MouseButtonAction.dragSelect) ||
         (!_isSpacePressed &&
-            _validateAction(MouseButtonAction.selectOrSpaceMove));
+            _validateAction(MouseButtonAction.selectOrSpaceMove, event: event));
   }
 
   /// Validates whether the multi-select action is allowed.
@@ -123,7 +135,7 @@ class MouseService {
   /// is valid based on the current state or configuration.
   ///
   /// Returns `true` if the multi-select action is valid, otherwise `false`.
-  bool validateMultiSelectAction() {
-    return _validateAction(MouseButtonAction.multiSelect);
+  bool validateMultiSelectAction({PointerEvent? event}) {
+    return _validateAction(MouseButtonAction.multiSelect, event: event);
   }
 }

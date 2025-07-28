@@ -115,8 +115,8 @@ class MainEditorLayersService {
   }
 
   /// Handles tap events on a layer to manage selection or editing.
-  void handleLayerTap(Layer layer) {
-    if (mouseService.validatePanAction()) return;
+  void handleLayerTap(Layer layer, PointerEvent event) {
+    if (mouseService.validatePanAction(event: event)) return;
 
     // Only handle selection if selectable
     if (layer.interaction.enableSelection) {
@@ -185,11 +185,9 @@ class MainEditorLayersService {
 
   /// Handles the tap-down event on a layer to begin selection or interaction.
   void handleTapDown(Layer layer, PointerDownEvent event) {
-    mouseService.onPointerDown(event);
-
     if (_isScaleInteractionActive ||
         state.isLayerBeingTransformed ||
-        mouseService.validatePanAction()) {
+        mouseService.validatePanAction(event: event)) {
       return;
     }
     mouseService.onPointerDown(event);
@@ -198,7 +196,8 @@ class MainEditorLayersService {
     final selectedIds = layerInteraction.selectedLayerIds;
     _temporarySelectedIds = {...selectedIds};
     _helperIsPointerDownSelected = false;
-    _helperMouseDownMultiSelect = mouseService.validateMultiSelectAction();
+    _helperMouseDownMultiSelect =
+        mouseService.validateMultiSelectAction(event: event);
 
     /// If a user directly drags a layer, we first need to ensure the layer is
     /// selected when the pointer goes down.
@@ -349,7 +348,6 @@ class MainEditorLayersService {
     }
 
     _helperEnforceMultiSelect = true;
-
     final newIds = {..._temporarySelectedIds, layer.id};
     if (isSelected) newIds.remove(layer.id);
     layerInteraction.setSelectedLayers(newIds);

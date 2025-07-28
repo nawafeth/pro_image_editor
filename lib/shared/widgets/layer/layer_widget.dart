@@ -103,7 +103,7 @@ class _LayerWidgetState extends State<LayerWidget>
 
   final double _tapSlop = 18.0;
 
-  Offset? _downPosition;
+  PointerEvent? _lastDownEvent;
   Offset? _lastLayerOffset;
   int? _temporaryLayerHash;
 
@@ -175,8 +175,9 @@ class _LayerWidgetState extends State<LayerWidget>
   /// Handles a pointer down event on the layer.
   void _onPointerDown(PointerDownEvent event) {
     if (GestureManager.instance.isBlocked) return;
+    bool isLayerSelected = _isSelected;
 
-    _downPosition = event.position;
+    _lastDownEvent = event;
     _lastLayerOffset = _layer.offset;
     _temporaryLayerHash = _layer.hashCode;
     _tapDownTimestamp = DateTime.now();
@@ -185,11 +186,10 @@ class _LayerWidgetState extends State<LayerWidget>
     if (!isDesktop || event.buttons != kSecondaryMouseButton) {
       _layersService?.handleTapDown(_layer, event);
     }
-
     // Start long press detection
     _longPressTimer?.cancel();
     _longPressTimer = Timer(_longPressThreshold, () {
-      if (_downPosition == null ||
+      if (_lastDownEvent == null ||
           _lastLayerOffset == null ||
           _temporaryLayerHash != _layer.hashCode) {
         return;
@@ -200,7 +200,7 @@ class _LayerWidgetState extends State<LayerWidget>
       if (offsetDistance <= 0 && _layer.interaction.enableSelection) {
         _layersService?.handleLongPress(
           _layer,
-          isSelected: _isSelected,
+          isSelected: isLayerSelected,
           areLayersSelectable: _enableVisibleOverlay,
         );
       }
@@ -220,11 +220,12 @@ class _LayerWidgetState extends State<LayerWidget>
     /// issues with this, please open a new issue.
 
     // Cancel if down position is not set
-    if (_downPosition == null) return;
+    if (_lastDownEvent == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final interaction = _layer.interaction;
-      final offsetDistance = (event.position - _downPosition!).distance;
+      final offsetDistance =
+          (event.position - _lastDownEvent!.position).distance;
       final timeElapsed =
           DateTime.now().difference(_tapDownTimestamp).inMilliseconds;
 
@@ -237,7 +238,7 @@ class _LayerWidgetState extends State<LayerWidget>
       // Fire onTap only if selection/edit is enabled and pointer is inside hit box
       if ((interaction.enableSelection || interaction.enableEdit) &&
           !_isOutsideHitBox()) {
-        _layersService?.handleLayerTap(_layer);
+        _layersService?.handleLayerTap(_layer, _lastDownEvent!);
       }
     });
   }
