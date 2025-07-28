@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 
 import '../models/editor_configs/pro_image_editor_configs.dart';
 
@@ -44,6 +45,9 @@ class MouseService {
       _layerInteractionConfigs.mouseButtonSecondaryAction;
   MouseButtonAction get _mouseButtonMiddleAction =>
       _layerInteractionConfigs.mouseButtonMiddleAction;
+
+  bool get _isSpacePressed =>
+      HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.space);
 
   /// Handles a [PointerDownEvent] to update mouse button press states.
   ///
@@ -95,7 +99,9 @@ class MouseService {
   bool validatePanAction() {
     if (!configs.mainEditor.enableZoom) return false;
 
-    return _validateAction(MouseButtonAction.pan);
+    return _validateAction(MouseButtonAction.pan) ||
+        (_isSpacePressed &&
+            _validateAction(MouseButtonAction.selectOrSpaceMove));
   }
 
   /// Validates whether the drag action is allowed based on the current mouse
@@ -106,7 +112,9 @@ class MouseService {
   ///
   /// Returns `true` if the drag action is valid, otherwise `false`.
   bool validateDragAction() {
-    return _validateAction(MouseButtonAction.dragSelect);
+    return _validateAction(MouseButtonAction.dragSelect) ||
+        (!_isSpacePressed &&
+            _validateAction(MouseButtonAction.selectOrSpaceMove));
   }
 
   /// Validates whether the multi-select action is allowed.
