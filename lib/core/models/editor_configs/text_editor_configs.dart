@@ -44,7 +44,7 @@ class TextEditorConfigs implements BaseEditorLayerConfigs {
     this.showFontScaleButton = true,
     this.showBackgroundModeButton = true,
     this.enableMainEditorZoomFactor = false,
-    this.enableAutoOverflow = false,
+    this.enableAutoOverflow = true, // FIXME:
     this.initFontSize = 24.0,
     this.initialTextAlign = TextAlign.center,
     this.inputTextFieldAlign = Alignment.center,

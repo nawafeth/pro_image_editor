@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 const double kDefaultInnerRadius = 8.0;
@@ -278,258 +280,188 @@ class RoundedBackgroundTextPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final lineInfos = computeLines(text, textAlign);
+    if (lineInfos.isEmpty) return;
+    final metrics = text.computeLineMetrics();
 
-    for (final lineInfo in lineInfos) {
-      paintBackground(canvas, lineInfo);
-    }
-
-    text.paint(canvas, Offset(horizontalPadding, 0.0));
-  }
-
-  RRect _getRRect(LineMetricsHelper info) {
-    return RRect.fromLTRBR(
-      info.x + horizontalPadding,
-      info.y,
-      info.fullWidth + horizontalPadding,
-      info.fullHeight,
-      Radius.circular(info.outerRadius(outerRadius)),
-    );
-  }
-
-  void paintBackground(Canvas canvas, List<LineMetricsHelper> lineInfo) {
-    if (lineInfo.isEmpty) return;
-    if (lineInfo.length == 1) {
-      final info = lineInfo.first;
-      if (!info.isEmpty) {
-        canvas.drawRRect(_getRRect(info), Paint()..color = backgroundColor);
-      }
-      return;
-    }
-
-    // This ensures the normalization will be done for all lines in the
-    // paragraph and not only for the next one
-    for (final info in lineInfo) {
-      normalize(lineInfo.elementAtOrNull(lineInfo.indexOf(info) + 1), info);
-    }
-
+    final painter = Paint()..color = backgroundColor;
+    final cornerPainter = Paint()..color = Colors.white;
     final path = Path();
-    final firstInfo = lineInfo.elementAt(0);
-    final lastInfo = lineInfo.elementAt(lineInfo.length - 1);
+    final cornerPath = Path();
+    double endY = 0;
 
-    path.moveTo(
-        (firstInfo.x + horizontalPadding) + firstInfo.outerRadius(outerRadius),
-        firstInfo.y);
+    double maxWidth = 0;
+    EdgeInsets outsidePadding = EdgeInsets.zero;
+    bool isLeftAlign = textAlign == TextAlign.left;
+    bool isRightAlign = textAlign == TextAlign.right;
 
-    LineMetricsHelper previous = firstInfo;
+    final helpers = metrics.map((lineMetric) {
+      return LineMetricsHelper(lineMetric, metrics.length, textAlign);
+    }).toList();
 
-    for (final info in lineInfo) {
-      final next = lineInfo.elementAtOrNull(lineInfo.indexOf(info) + 1);
+    double? firstMaximalWidth;
 
-      final outerRadius = info.outerRadius(this.outerRadius);
-      final innerRadius = info.innerRadius(this.innerRadius);
+    /// Draw a simple rounded rect behind every text.
+    for (int index = 0; index < helpers.length; index++) {
+      final info = helpers[index];
+      if (info.isEmpty) continue;
 
-      void drawTopLeftCorner(LineMetricsHelper info) {
-        final x = info.x + horizontalPadding;
-        final previousX = previous.x + horizontalPadding;
+      final paddingHorizontal = info.rawHeight * 0.3;
+      final paddingVertical = info.rawHeight * 0.1;
 
-        final localOuterRadius = previous == info
-            ? outerRadius
-            : (previousX - x).clamp(0, outerRadius);
-        final controlPoint = Offset(x, info.y);
-        final endPoint = Offset(x, info.y + localOuterRadius);
+      final bool hasNoLineBefore = index == 0 || helpers[index - 1].isEmpty;
+      final bool hasNoLineAfter =
+          index == helpers.length - 1 || helpers[index + 1].isEmpty;
 
-        path
-          ..lineTo(x + localOuterRadius, info.y)
-          ..quadraticBezierTo(
-              controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
-      }
+      final double radius = info.innerRadius(innerRadius);
 
-      void drawBottomLeftCorner(LineMetricsHelper info) {
-        final x = info.x + horizontalPadding;
-        path.lineTo(x, info.fullHeight - outerRadius);
-
-        final iControlPoint = Offset(x, info.fullHeight);
-        final iEndPoint = Offset(x + outerRadius, info.fullHeight);
-
-        path.quadraticBezierTo(
-            iControlPoint.dx, iControlPoint.dy, iEndPoint.dx, iEndPoint.dy);
-      }
-
-      void drawInnerCorner(LineMetricsHelper info, [bool toLeft = true]) {
-        final x = info.x + horizontalPadding;
-        if (toLeft) {
-          final formattedHeight =
-              info.fullHeight - info._innerLinePadding.bottom;
-
-          final nextX = next!.x + horizontalPadding;
-          final localInnerRadius = (x - nextX).clamp(0, innerRadius);
-          path.lineTo(x, info.fullHeight - localInnerRadius);
-          final iControlPoint = Offset(x, formattedHeight);
-          final iEndPoint = Offset(x - localInnerRadius, formattedHeight);
-
-          path.quadraticBezierTo(
-              iControlPoint.dx, iControlPoint.dy, iEndPoint.dx, iEndPoint.dy);
-        } else {
-          final formattedY = next!.y + info._innerLinePadding.bottom;
-
-          final nextX = next.x + horizontalPadding;
-          final localInnerRadius = (nextX - x).clamp(0, innerRadius);
-          path.lineTo(nextX - localInnerRadius, formattedY);
-          final iControlPoint = Offset(nextX, formattedY);
-          final iEndPoint = Offset(nextX, formattedY + localInnerRadius);
-
-          path.quadraticBezierTo(
-              iControlPoint.dx, iControlPoint.dy, iEndPoint.dx, iEndPoint.dy);
-        }
-      }
-
-      if (next != null) {
-        final x = info.x + horizontalPadding;
-        final nextX = next.x + horizontalPadding;
-        final previousX = previous.x + horizontalPadding;
-
-        // If it's the first line OR the previous line is bigger than the
-        // current one, draw the top left corner
-        if (info == firstInfo || previousX > x) {
-          drawTopLeftCorner(info);
-        }
-        if (x > nextX) {
-          // If the current one is less than the next, draw the inner corner
-          drawInnerCorner(info);
-          // drawBottomLeftCorner(info);
-        } else
-        // If the next one is more to the right, draw the bottom left
-        if (x < nextX) {
-          // Draw bottom right corner
-          drawBottomLeftCorner(info);
-
-          // Otherwise draw the inverse inner corner
-          drawInnerCorner(info, false);
-        }
+      final double startX = info.startX - paddingHorizontal;
+      late final double endX;
+      if (isRightAlign) {
+        firstMaximalWidth ??= info.endX + paddingHorizontal;
+        endX = firstMaximalWidth;
       } else {
-        // If it's in the last one, draw the top and bottom corners
-        drawTopLeftCorner(info);
-        drawBottomLeftCorner(info);
+        endX = info.endX + paddingHorizontal;
       }
 
-      previous = info;
+      final double startY = info.startY - paddingVertical;
+      final double endY = info.endY + paddingVertical;
+
+      bool roundTopRight = !isRightAlign || hasNoLineBefore;
+      bool roundTopLeft = !isLeftAlign || hasNoLineBefore;
+      bool roundBottomRight = !isRightAlign || hasNoLineAfter;
+      bool roundBottomLeft = !isLeftAlign || hasNoLineAfter;
+
+      void generateBackgroundRectangle() {
+        path
+          ..moveTo(startX + (roundTopLeft ? radius : 0), startY)
+
+          /// Top-Right edge
+          ..lineTo(endX - radius, startY);
+        if (roundTopRight) {
+          path.arcToPoint(
+            Offset(endX, startY + radius),
+            radius: Radius.circular(radius),
+          );
+        } else {
+          path.lineTo(endX, startY);
+        }
+
+        /// Bottom-Right edge
+        path.lineTo(endX, endY - (roundBottomRight ? radius : 0));
+        if (roundBottomRight) {
+          path.arcToPoint(
+            Offset(endX - radius, endY),
+            radius: Radius.circular(radius),
+          );
+        } else {
+          path.lineTo(endX - radius, endY);
+        }
+
+        /// Bottom edge
+        path.lineTo(startX + (roundBottomLeft ? radius : 0), endY);
+        if (roundBottomLeft) {
+          path.arcToPoint(
+            Offset(startX, endY - radius),
+            radius: Radius.circular(radius),
+          );
+        } else {
+          path.lineTo(startX, endY);
+        }
+
+        /// Left edge
+        path.lineTo(startX, startY + (roundTopLeft ? radius : 0));
+        if (roundTopLeft) {
+          path.arcToPoint(
+            Offset(startX + radius, startY),
+            radius: Radius.circular(radius),
+          );
+        } else {
+          path.lineTo(startX, startY);
+        }
+
+        path.close();
+      }
+
+      void generateLeftOutlineFills() {
+        /*    cornerPath
+          ..moveTo(x + width, y + height)
+          ..lineTo(x + width + radius, y + height)
+          ..lineTo(x + width + radius, y + height + radius)
+          ..lineTo(x + width, y + height + radius)
+          ..lineTo(x + width, y + height)
+          ..close(); */
+      }
+
+      void generateRightOutlineFills() {
+        final lineBefore = helpers[index - 1];
+        if (lineBefore.isEmpty) return;
+
+        final beforeEndX = lineBefore.endX + paddingHorizontal;
+        final beforeY = lineBefore.endY + paddingVertical;
+        final endX = info.endX + paddingHorizontal;
+        final r = min(radius, (info.rawWidth - lineBefore.rawWidth).abs());
+
+        if (info.rawWidth > lineBefore.rawWidth) {
+          cornerPath
+            ..moveTo(beforeEndX, startY)
+            ..lineTo(beforeEndX + r, startY)
+            ..arcToPoint(
+              Offset(beforeEndX, startY - r),
+              radius: Radius.circular(r),
+            )
+            ..close();
+        } else {
+          cornerPath
+            ..moveTo(endX, beforeY)
+            ..lineTo(endX + radius, beforeY)
+            ..arcToPoint(
+              Offset(endX, beforeY + radius),
+              radius: Radius.circular(r),
+              clockwise: false,
+            )
+            ..close();
+        }
+      }
+
+      generateBackgroundRectangle();
+
+      if (!hasNoLineBefore) {
+        if (!isLeftAlign) generateLeftOutlineFills();
+        if (!isRightAlign) generateRightOutlineFills();
+      }
     }
 
-    // Draw the last line only to the half of it
-    path.lineTo(
-        (lastInfo.fullWidth + horizontalPadding) / 2, lastInfo.fullHeight);
-
-    final reversedInfo = lineInfo.reversed.toList(growable: false);
-    previous = reversedInfo.first;
-
-    // !Goes horizontal and up
-    for (final info in reversedInfo) {
-      final next = reversedInfo.elementAtOrNull(reversedInfo.indexOf(info) + 1);
-
-      final outerRadius = info.outerRadius(this.outerRadius);
-      final innerRadius = info.innerRadius(this.innerRadius);
-
-      void drawTopRightCorner(
-        LineMetricsHelper info, [
-        double? factor,
-      ]) {
-        final fullWidth = info.fullWidth + horizontalPadding;
-        factor ??= outerRadius;
-        final controlPoint = Offset(fullWidth, info.y);
-        final endPoint = Offset(fullWidth - factor, info.y);
-
-        path
-          ..lineTo(fullWidth, info.y + factor)
-          ..quadraticBezierTo(
-              controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
-      }
-
-      void drawBottomRightCorner(LineMetricsHelper info) {
-        final fullWidth = info.fullWidth + horizontalPadding;
-        path.lineTo(fullWidth - outerRadius, info.fullHeight);
-
-        final iControlPoint = Offset(fullWidth, info.fullHeight);
-        final iEndPoint = Offset(fullWidth, info.fullHeight - outerRadius);
-
-        path.quadraticBezierTo(
-            iControlPoint.dx, iControlPoint.dy, iEndPoint.dx, iEndPoint.dy);
-      }
-
-      void drawInnerCorner(LineMetricsHelper info, [bool toRight = true]) {
-        final fullWidth = info.fullWidth + horizontalPadding;
-        // To left
-        if (!toRight) {
-          final formattedHeight =
-              info.fullHeight - info._innerLinePadding.bottom;
-          path.lineTo(fullWidth + innerRadius, formattedHeight);
-
-          final controlPoint = Offset(fullWidth, formattedHeight);
-          final endPoint = Offset(fullWidth, formattedHeight - innerRadius);
-
-          path.quadraticBezierTo(
-              controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
-        } else {
-          final formattedY = info.y + info._innerLinePadding.bottom;
-          path.lineTo(fullWidth, formattedY + innerRadius);
-
-          final controlPoint = Offset(fullWidth, formattedY);
-          final endPoint = Offset(fullWidth + innerRadius, formattedY);
-
-          path.quadraticBezierTo(
-              controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
-        }
-      }
-
-      final fullWidth = info.fullWidth + horizontalPadding;
-      final previousFullWidth = previous.fullWidth + horizontalPadding;
-      if (text.textAlign == TextAlign.right) {
-        if (next != null) {
-          // if it's the last line
-          if (info == previous) {
-            drawBottomRightCorner(info);
-          }
-        } else {
-          // if it's the first line
-          drawTopRightCorner(info);
-        }
-      } else {
-        if (next != null) {
-          if (info == previous) {
-            // if it's the last line
-            drawBottomRightCorner(info);
-          } else if (fullWidth < previousFullWidth) {
-            // if the current one is less than the previous one
-            drawTopRightCorner(previous);
-            drawInnerCorner(info, false);
-          } else if (fullWidth > previousFullWidth) {
-            // if the current one is bigger than the previous one
-            drawInnerCorner(previous, true);
-            drawBottomRightCorner(info);
-          } else {
-            // if the current one is equal to the previous one, ignore it
-          }
-        } else {
-          // if it's the first line
-          if (previousFullWidth < fullWidth) {
-            // if the current one is bigger than the previous one
-            drawInnerCorner(previous);
-            drawBottomRightCorner(info);
-          } else if (previousFullWidth > fullWidth) {
-            drawTopRightCorner(previous);
-            drawInnerCorner(info, false);
-          }
-          drawTopRightCorner(info);
-        }
-      }
-
-      previous = info;
+    /// Close all outside holes where the text align.
+    switch (textAlign) {
+      case TextAlign.right:
+        canvas.drawRect(
+          Rect.fromLTRB(
+            maxWidth - outsidePadding.left,
+            outsidePadding.top,
+            maxWidth,
+            endY - outsidePadding.vertical,
+          ),
+          painter,
+        );
+        break;
+      case TextAlign.left:
+        canvas.drawRect(
+          Rect.fromLTRB(
+            -outsidePadding.left,
+            outsidePadding.top,
+            0,
+            endY - outsidePadding.vertical,
+          ),
+          painter,
+        );
+        break;
+      default:
     }
 
-    // First line horizontal
-    path
-      ..lineTo((firstInfo.fullWidth + horizontalPadding) / 2, firstInfo.y)
-      ..close();
-    canvas.drawPath(path, Paint()..color = backgroundColor);
+    canvas
+      ..drawPath(path, painter)
+      ..drawPath(cornerPath, cornerPainter);
+    text.paint(canvas, Offset(horizontalPadding, 0.0));
   }
 
   @override
@@ -545,52 +477,13 @@ class RoundedBackgroundTextPainter extends CustomPainter {
         oldDelegate.outerRadius != outerRadius;
   }
 
-  // Normalize the width of the next element based on the difference between
-  // the width of the current element and the next one. This is responsible
-  // to not let the next element go too little away from the current one
-  void normalize(LineMetricsHelper? next, LineMetricsHelper info) {
-    // There is no need to normalize the last element, since it'll have already
-    // been normalized
-    if (next != null) {
-      final outerRadius = info.outerRadius(this.outerRadius);
-      var difference = () {
-        final width = (info.rawWidth - next.rawWidth);
-        return width.roundToDouble();
-      }();
-
-      // If the difference is negative, it means that the next element is a
-      // little bigger than the current one. The current one takes the
-      //dimensions of the next one
-      if (difference.isNegative) {
-        difference = -difference;
-      }
-      final differenceBigger = difference > outerRadius;
-      if (!differenceBigger) {
-        info
-          .._overridenX = next.x + horizontalPadding
-          .._overridenWidth = next.fullWidth;
-      }
-      // If the difference is positive, it means that the current element is a
-      // little bigger than the next one. The next one takes the dimensions of
-      // the current one
-      else {
-        final differenceBigger = difference > outerRadius;
-        if (!differenceBigger) {
-          next
-            .._overridenX = info.x + horizontalPadding
-            .._overridenWidth = info.fullWidth;
-        }
-      }
-    }
-  }
-
   @override
   bool? hitTest(Offset position) {
     // Retrieve the line information
-    final lineInfos = computeLines(text, textAlign);
+    /*  final lineInfos = computeLines(text, textAlign);
 
     // Check each line
-    for (final lineInfo in lineInfos) {
+  for (final lineInfo in lineInfos) {
       for (final info in lineInfo) {
         // Construct the rounded rectangle for this line
         final rRect = _getRRect(info);
@@ -601,7 +494,7 @@ class RoundedBackgroundTextPainter extends CustomPainter {
           return true;
         }
       }
-    }
+    } */
 
     // If the position was not within any line's bounding box
     onHitTestResult?.call(false);
@@ -651,35 +544,21 @@ class LineMetricsHelper {
   /// Whether this line is the last line in the paragraph
   bool get isLast => metrics.lineNumber == length - 1;
 
-  static const _horizontalPaddingFactor = 0.3;
-  late final EdgeInsets _firstLinePadding = EdgeInsets.only(
-    left: height * _horizontalPaddingFactor,
-    right: height * _horizontalPaddingFactor,
-    top: height * 0.3,
-    bottom: height * 0.175 / 2,
-  );
-  late final EdgeInsets _innerLinePadding = EdgeInsets.only(
-    left: height * _horizontalPaddingFactor,
-    right: height * _horizontalPaddingFactor,
-    top: 0.0,
-    bottom: height * 0.175 / 2,
-  );
-  late final EdgeInsets _lastLinePadding = EdgeInsets.only(
-    left: height * _horizontalPaddingFactor,
-    right: height * _horizontalPaddingFactor,
-    top: 0.0,
-    bottom: height * 0.175 / 2,
-  );
-
   /// Dynamically calculate the outer factor based on the provided [outerRadius]
   double outerRadius(double outerRadius) {
-    return (height * outerRadius) / 35;
+    return (rawHeight * outerRadius) / 35;
   }
 
   /// Dynamically calculate the inner factor based on the provided [innerRadius]
   double innerRadius(double innerRadius) {
-    return (height * innerRadius) / 35;
+    return (rawHeight * innerRadius) / 35;
   }
+
+  double get startX => x;
+  double get endX => x + rawWidth;
+
+  double get startY => y;
+  double get endY => y + rawHeight;
 
   /// The x position of the line
   double get x {
@@ -693,71 +572,24 @@ class LineMetricsHelper {
 
     double result = metrics.left - alignHelper;
 
-    if (isFirst) {
-      return (result - _firstLinePadding.left).roundToDouble();
-    } else if (isLast) {
-      return (result - _lastLinePadding.left).roundToDouble();
-    } else {
-      return (result - _innerLinePadding.left).roundToDouble();
-    }
+    return result.roundToDouble();
   }
 
   /// The y position of the line
   double get y {
-    final y = metrics.baseline - metrics.ascent;
-    if (isFirst) {
-      return y;
-    } else if (isLast) {
-      return y + (_lastLinePadding.top / 2);
-    } else {
-      return y - _innerLinePadding.top;
-    }
-  }
-
-  /// The entire height of the line, including its [y] and padding
-  double get fullHeight {
-    final result = y + height;
-
-    if (isLast) {
-      return result + _lastLinePadding.bottom;
-    } else {
-      return result + _innerLinePadding.bottom;
-    }
+    return metrics.baseline - metrics.ascent;
   }
 
   /// The raw height of the line, without any additional padding
-  double get height => metrics.height;
+  double get rawHeight => metrics.ascent + metrics.descent;
 
   /// The raw width of the line, without any additional padding
   double get rawWidth => metrics.width;
 
-  /// The entire width of the line, including the padding
-  double get width {
-    if (metrics.lineNumber == 0) {
-      return (rawWidth + _firstLinePadding.right).roundToDouble();
-    } else if (isLast) {
-      return (rawWidth + _lastLinePadding.right).roundToDouble();
-    } else {
-      return (rawWidth + _innerLinePadding.right).roundToDouble();
-    }
-  }
-
   /// The entire width of the line, including the padding and its [x]
   double get fullWidth {
     if (_overridenWidth != null) return _overridenWidth!;
-    final result = x + width;
-
-    if (!isEmpty) {
-      // The padding is subtracted on [x]. Add it back in here
-      if (isFirst) {
-        return (result + _firstLinePadding.left).roundToDouble();
-      } else if (isLast) {
-        return (result + _lastLinePadding.left).roundToDouble();
-      } else {
-        return (result + _innerLinePadding.left).roundToDouble();
-      }
-    }
-    return (x + rawWidth).roundToDouble();
+    return x + rawWidth;
   }
 
   @override
@@ -777,10 +609,5 @@ class LineMetricsHelper {
         length.hashCode ^
         _overridenWidth.hashCode ^
         _overridenX.hashCode;
-  }
-
-  @override
-  String toString() {
-    return 'LineMetricsHelper(x: $x, y: $y, w: $fullWidth, h: $fullHeight)';
   }
 }
