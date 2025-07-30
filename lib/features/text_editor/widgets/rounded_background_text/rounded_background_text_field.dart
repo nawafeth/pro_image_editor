@@ -95,6 +95,8 @@ class _RoundedBackgroundTextFieldState
   late final _textController = widget.controller;
   final _scrollCtrl = ScrollController();
 
+  final _padding = const EdgeInsets.all(6.0);
+
   @override
   void initState() {
     super.initState();
@@ -119,14 +121,61 @@ class _RoundedBackgroundTextFieldState
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final TextSelectionThemeData selectionTheme =
-        TextSelectionTheme.of(context);
     final defaultTextStyle = DefaultTextStyle.of(context);
 
     final fontSize =
         (widget.style.fontSize ?? defaultTextStyle.style.fontSize ?? 16);
 
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: switch (widget.textAlign) {
+        TextAlign.end => AlignmentDirectional.centerEnd,
+        TextAlign.start => AlignmentDirectional.centerStart,
+        TextAlign.left => Alignment.centerLeft,
+        TextAlign.right => Alignment.centerRight,
+        TextAlign.center || _ => Alignment.topCenter,
+      },
+      children: [
+        if (_textController.text.isNotEmpty)
+          _buildBackgroundText()
+        else if (widget.hint != null)
+          _buildHint(fontSize: fontSize),
+        _buildEditableText(fontSize: fontSize),
+      ],
+    );
+  }
+
+  Widget _buildBackgroundText() {
+    final style = widget.style.copyWith(
+      color: Colors.transparent,
+      leadingDistribution: TextLeadingDistribution.proportional,
+    );
+
+    return Positioned(
+      top: _scrollCtrl.hasClients ? -_scrollCtrl.position.pixels : null,
+      left: 0,
+      right: 0,
+      child: IgnorePointer(
+        child: Padding(
+          padding: _padding,
+          child: RoundedBackgroundText.rich(
+            text: _textController.buildTextSpan(
+              context: context,
+              withComposing: true,
+              style: style,
+            ),
+            cursorWidth: widget.cursorWidth,
+            textAlign: widget.textAlign,
+            backgroundColor: widget.backgroundColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditableText({required double fontSize}) {
+    final theme = Theme.of(context);
+    final selectionTheme = TextSelectionTheme.of(context);
     TextSelectionControls? textSelectionControls;
     final bool paintCursorAboveText;
     final bool cursorOpacityAnimates;
@@ -137,7 +186,7 @@ class _RoundedBackgroundTextFieldState
 
     switch (theme.platform) {
       case TargetPlatform.iOS:
-        final CupertinoThemeData cupertinoTheme = CupertinoTheme.of(context);
+        final cupertinoTheme = CupertinoTheme.of(context);
         textSelectionControls ??= cupertinoTextSelectionControls;
         paintCursorAboveText = true;
         cursorOpacityAnimates = true;
@@ -150,7 +199,7 @@ class _RoundedBackgroundTextFieldState
         break;
 
       case TargetPlatform.macOS:
-        final CupertinoThemeData cupertinoTheme = CupertinoTheme.of(context);
+        final cupertinoTheme = CupertinoTheme.of(context);
         textSelectionControls ??= cupertinoDesktopTextSelectionControls;
         paintCursorAboveText = true;
         cursorOpacityAnimates = true;
@@ -180,114 +229,77 @@ class _RoundedBackgroundTextFieldState
         break;
     }
 
-    const padding = EdgeInsets.all(6.0);
-
-    final style = widget.style.copyWith(
-      color: Colors.transparent,
-      leadingDistribution: TextLeadingDistribution.proportional,
-    );
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: switch (widget.textAlign) {
-        TextAlign.end => AlignmentDirectional.centerEnd,
-        TextAlign.start => AlignmentDirectional.centerStart,
-        TextAlign.left => Alignment.centerLeft,
-        TextAlign.right => Alignment.centerRight,
-        TextAlign.center || _ => Alignment.topCenter,
-      },
-      children: [
-        if (_textController.text.isNotEmpty)
-          Positioned(
-            top: _scrollCtrl.hasClients ? -_scrollCtrl.position.pixels : null,
-            left: 0,
-            right: 0,
-            child: IgnorePointer(
-              child: Padding(
-                padding: padding,
-                child: RoundedBackgroundText.rich(
-                  text: _textController.buildTextSpan(
-                    context: context,
-                    withComposing: true,
-                    style: style,
-                  ),
-                  cursorWidth: widget.cursorWidth,
-                  textAlign: widget.textAlign,
-                  backgroundColor: widget.backgroundColor,
-                ),
-              ),
-            ),
-          )
-        else if (widget.hint != null)
-          Positioned(
-            child: Padding(
-              padding: padding,
-              child: Text(
-                widget.hint!,
-                style: (widget.hintStyle ?? TextStyle(color: theme.hintColor))
-                    .copyWith(
-                  fontSize: fontSize,
-                  // height: calculateHeight(fontSize),
-                ),
-                textAlign: widget.textAlign,
-              ),
-            ),
+    return Padding(
+      padding: _padding,
+      child: Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: _textController.text.isEmpty
+            ? (_) {
+                if (View.of(context).viewInsets.bottom <= 0) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  widget.focusNode.requestFocus();
+                }
+              }
+            : null,
+        child: EditableText(
+          autofocus: widget.autofocus,
+          controller: _textController,
+          focusNode: widget.focusNode,
+          scrollPhysics: const NeverScrollableScrollPhysics(),
+          scrollController: _scrollCtrl,
+          scrollPadding: EdgeInsets.zero,
+          style: widget.style.copyWith(
+            fontSize: fontSize,
+            leadingDistribution: TextLeadingDistribution.proportional,
           ),
-        Padding(
-          padding: padding,
-          child: Listener(
-            behavior: HitTestBehavior.translucent,
-            onPointerDown: _textController.text.isEmpty
-                ? (_) {
-                    if (View.of(context).viewInsets.bottom <= 0) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      widget.focusNode.requestFocus();
-                    }
-                  }
-                : null,
-            child: EditableText(
-              autofocus: widget.autofocus,
-              controller: _textController,
-              focusNode: widget.focusNode,
-              scrollPhysics: const NeverScrollableScrollPhysics(),
-              scrollController: _scrollCtrl,
-              scrollPadding: EdgeInsets.zero,
-              style: widget.style.copyWith(
-                fontSize: fontSize,
-                leadingDistribution: TextLeadingDistribution.proportional,
-              ),
-              textAlign: widget.textAlign,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              backgroundCursorColor: CupertinoColors.inactiveGray,
-              cursorColor: widget.configs.style.inputCursorColor,
-              cursorWidth: widget.cursorWidth,
-              cursorHeight: widget.cursorHeight,
-              cursorRadius: widget.cursorRadius,
-              paintCursorAboveText: paintCursorAboveText,
-              cursorOpacityAnimates: cursorOpacityAnimates,
-              cursorOffset: cursorOffset,
-              autocorrectionTextRectColor: autocorrectionTextRectColor,
-              textCapitalization: TextCapitalization.sentences,
-              enableInteractiveSelection: true,
-              selectionColor: selectionColor,
-              selectionControls: textSelectionControls,
-              showSelectionHandles: widget.showSelectionHandles,
-              showCursor: true,
-              autocorrect: widget.configs.enableAutocorrect,
-              smartDashesType: SmartDashesType.enabled,
-              smartQuotesType: SmartQuotesType.enabled,
-              enableSuggestions: widget.configs.enableSuggestions,
-              clipBehavior: Clip.hardEdge,
-              textInputAction: TextInputAction.newline,
-              onSelectionChanged: widget.onSelectionChanged,
-              magnifierConfiguration: const TextMagnifierConfiguration(),
-              onChanged: widget.onChanged,
-              onEditingComplete: widget.onEditingComplete,
-              onSubmitted: widget.onSubmitted,
-            ),
-          ),
+          textAlign: widget.textAlign,
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
+          backgroundCursorColor: CupertinoColors.inactiveGray,
+          cursorColor: widget.configs.style.inputCursorColor,
+          cursorWidth: widget.cursorWidth,
+          cursorHeight: widget.cursorHeight,
+          cursorRadius: widget.cursorRadius,
+          paintCursorAboveText: paintCursorAboveText,
+          cursorOpacityAnimates: cursorOpacityAnimates,
+          cursorOffset: cursorOffset,
+          autocorrectionTextRectColor: autocorrectionTextRectColor,
+          textCapitalization: TextCapitalization.sentences,
+          enableInteractiveSelection: true,
+          selectionColor: selectionColor,
+          selectionControls: textSelectionControls,
+          showSelectionHandles: widget.showSelectionHandles,
+          showCursor: true,
+          autocorrect: widget.configs.enableAutocorrect,
+          smartDashesType: SmartDashesType.enabled,
+          smartQuotesType: SmartQuotesType.enabled,
+          enableSuggestions: widget.configs.enableSuggestions,
+          clipBehavior: Clip.hardEdge,
+          textInputAction: TextInputAction.newline,
+          onSelectionChanged: widget.onSelectionChanged,
+          magnifierConfiguration: const TextMagnifierConfiguration(),
+          onChanged: widget.onChanged,
+          onEditingComplete: widget.onEditingComplete,
+          onSubmitted: widget.onSubmitted,
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildHint({required double fontSize}) {
+    final style =
+        (widget.hintStyle ?? TextStyle(color: Theme.of(context).hintColor))
+            .copyWith(fontSize: fontSize);
+
+    return Positioned(
+      child: Padding(
+        padding: _padding,
+        child: Text(
+          widget.hint!,
+          style: style,
+          textAlign: widget.textAlign,
+        ),
+      ),
     );
   }
 }
