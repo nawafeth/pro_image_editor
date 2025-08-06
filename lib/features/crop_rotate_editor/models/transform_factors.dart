@@ -9,6 +9,7 @@ import '/features/crop_rotate_editor/utils/rotate_angle.dart';
 import '/pro_image_editor.dart';
 import '/shared/extensions/export_bool_extension.dart';
 import '/shared/extensions/num_extension.dart';
+import '/shared/utils/parser/bool_parser.dart';
 
 /// A class representing configuration settings for image transformation.
 ///
@@ -75,8 +76,8 @@ class TransformConfigs {
       scaleUser: safeParseDouble(map['scaleUser'], fallback: 1),
       scaleRotation: safeParseDouble(map['scaleRotation'], fallback: 1),
       aspectRatio: safeParseDouble(map['aspectRatio'], fallback: -1),
-      flipX: map['flipX'] ?? false,
-      flipY: map['flipY'] ?? false,
+      flipX: safeParseBool(map['flipX']),
+      flipY: safeParseBool(map['flipY']),
       cropMode: cropMode,
       offset: Offset(
         safeParseDouble(map['offset']?['dx']),
