@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.1.2
+- **REFACTOR**(text-layer): Remove `colorPickerPosition` from `TextLayer` and related widgets.
+
 ## 11.1.1
 - **FIX**(web-build): Fix web-build failure caused by int64 values. This resolves issue [#612](https://github.com/hm21/pro_image_editor/issues/612).
 
