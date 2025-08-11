@@ -1031,6 +1031,7 @@ class ProImageEditorState extends State<ProImageEditor>
     }
 
     await decodeImage();
+    _rebuildController.add(null);
   }
 
   @override
