@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.5.2
+- **FEAT**(style): Add missing `editSheetColor` to paint-editor styles.
+
 ## 11.5.1
 - **FIX**(recorder): Fix slow image generation after transforming layers when layer-selection is disabled.
 - **FIX**(emoji-picker): Fix null error in the console from the emoji picker. Resolves issue [#642](https://github.com/hm21/pro_image_editor/issues/642).
