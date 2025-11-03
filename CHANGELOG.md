@@ -1,7 +1,8 @@
 # Changelog
 
-## X.X.X
-- **FEAT**(text-editor): Added `enableTapOutsideToSave` configuration to `TextEditorConfigs` to control whether tapping outside the text field saves the text annotation. When set to `false`, users must use the done button or other explicit save actions. Defaults to `true` for backward compatibility.
+## 11.12.0
+- **FEAT**(text-editor): Added `enableTapOutsideToSave` configuration to `TextEditorConfigs` to control whether tapping outside the text field saves the text annotation. 
+- **FIX**(paint-editor): Resolve draw delay in the freestyle mode. Resolves issue [#696](https://github.com/hm21/pro_image_editor/issues/696).
 
 ## 11.11.0
 - **FEAT**(dashDotLine): Added new paint-mode "dashDotLine".
