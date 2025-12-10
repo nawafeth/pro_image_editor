@@ -1,6 +1,6 @@
 # Changelog
 
-## XX.XX.X
+## 11.14.1
 - **FIX**(main-editor): Prevent dual editor opening (paint and text) when a text layer that is inside a paint layer is tapped with Apple pencil.
 
 ## 11.14.0
