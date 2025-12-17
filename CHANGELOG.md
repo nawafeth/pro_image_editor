@@ -1,5 +1,8 @@
 # Changelog
 
+## X.X.X
+- **FIX**(main-editor): prevent `get selectedLayer` from throwing exception when layer is not found
+
 ## 11.14.1
 - **FIX**(main-editor): Prevent dual editor opening (paint and text) when a text layer that is inside a paint layer is tapped with Apple pencil.
 
