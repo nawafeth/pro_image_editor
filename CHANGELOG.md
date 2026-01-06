@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.15.5
+- **FEAT**(network-image): Added optional `networkHeaders` to the `EditorImage`. More details in PR [#729](https://github.com/hm21/pro_image_editor/pull/729).
+
 ## 11.15.4
 - **FIX**(widget-layer): Resolve the issue of the optional `width` being applied incorrectly.
 
