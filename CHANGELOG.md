@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.16.0
+- **FIX**(text-editor): Persist text shadow properties when exporting and importing state history. More details in PR [#733](https://github.com/hm21/pro_image_editor/pull/733).
+
 ## 11.15.6
 - **FEAT**(text-editor): Add an optional background and borders to the text editor input field. More details in PR [#735](https://github.com/hm21/pro_image_editor/pull/735).
 
