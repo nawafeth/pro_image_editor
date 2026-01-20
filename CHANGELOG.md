@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.17.0
+- **FEAT**(paint-editor): Add hexagon shape tool. More details in PR [#738](https://github.com/hm21/pro_image_editor/pull/738).
+
 ## 11.16.0
 - **FIX**(text-editor): Persist text shadow properties when exporting and importing state history. More details in PR [#733](https://github.com/hm21/pro_image_editor/pull/733).
 
