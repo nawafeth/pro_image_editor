@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.18.0
+- **FEAT**(filter-editor): Restore previously applied filter when `enableMultiSelection` is disabled, allowing users to toggle between filters instant of stacking filters.
+
 ## 11.17.0
 - **FEAT**(paint-editor): Add hexagon shape tool. More details in PR [#738](https://github.com/hm21/pro_image_editor/pull/738).
 
