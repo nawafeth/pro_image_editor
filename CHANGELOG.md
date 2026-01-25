@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.18.1
+- **FIX**(filter-editor): Ensure that the applied filters can also be removed.
+
 ## 11.18.0
 - **FEAT**(filter-editor): Restore previously applied filter when `enableMultiSelection` is disabled, allowing users to toggle between filters instant of stacking filters.
 
