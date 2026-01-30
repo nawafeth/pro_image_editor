@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.18.4
+- **FEAT**(CompleteParameters): Add serialization methods (`toMap`, `fromMap`, `toJson`, `fromJson`).
+
 ## 11.18.3
 - **FEAT**(paint-editor): Add freestyle arrow modes (`freeStyleArrowStart`, `freeStyleArrowEnd`, `freeStyleArrowStartEnd`) to draw freehand paths with arrowheads at the start, end, or both ends.
 
