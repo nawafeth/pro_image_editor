@@ -1657,19 +1657,26 @@ class ProImageEditorState extends State<ProImageEditor>
     /// Small Duration is important for a smooth hero animation
     Duration duration = const Duration(milliseconds: 150),
   }) async {
-    TextLayer? layer = await openPage(
-      TextEditor(
-        key: textEditor,
-        configs: configs,
-        theme: _theme,
-        callbacks: callbacks,
-        scaleFactor: textEditorConfigs.enableMainEditorZoomFactor
-            ? interactiveViewer.currentState?.scaleFactor ?? 1.0
-            : 1.0,
-        imageSize: sizesManager.decodedImageSize,
-      ),
-      duration: duration,
-    );
+    final customCallback = mainEditorCallbacks?.onCreateTextLayer;
+    TextLayer? layer;
+
+    if (customCallback != null) {
+      layer = await customCallback();
+    } else {
+      layer = await openPage(
+        TextEditor(
+          key: textEditor,
+          configs: configs,
+          theme: _theme,
+          callbacks: callbacks,
+          scaleFactor: textEditorConfigs.enableMainEditorZoomFactor
+              ? interactiveViewer.currentState?.scaleFactor ?? 1.0
+              : 1.0,
+          imageSize: sizesManager.decodedImageSize,
+        ),
+        duration: duration,
+      );
+    }
 
     if (layer == null || !mounted) return;
 
