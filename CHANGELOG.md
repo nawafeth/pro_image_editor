@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.21.3
+- **FEAT**(video-editor): Add `videoSetupLoadingIndicator` widget to `VideoEditorWidgets` to allow customizing the loading indicator shown while the video player is initializing.
+
 ## 11.21.2
 - **FEAT**(video-editor): Add `showControls` config to `VideoEditorConfigs` to allow hiding the video editor controls UI.
 

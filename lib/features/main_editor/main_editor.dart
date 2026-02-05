@@ -2641,7 +2641,7 @@ class ProImageEditorState extends State<ProImageEditor>
     return LayoutBuilder(builder: (context, constraints) {
       sizesManager.bodySize = constraints.biggest;
       return !_isVideoPlayerReady
-          ? _buildSetupSpinner()
+          ? _buildVideoSetupSpinner()
           : Listener(
               behavior: HitTestBehavior.translucent,
               onPointerDown: (details) {
@@ -2827,16 +2827,17 @@ class ProImageEditorState extends State<ProImageEditor>
     );
   }
 
-  Widget _buildSetupSpinner() {
-    return Center(
-      child: SizedBox(
-        width: 48,
-        height: 48,
-        child: FittedBox(
-          child: PlatformCircularProgressIndicator(configs: configs),
-        ),
-      ),
-    );
+  Widget _buildVideoSetupSpinner() {
+    return configs.videoEditor.widgets.videoSetupLoadingIndicator ??
+        Center(
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: FittedBox(
+              child: PlatformCircularProgressIndicator(configs: configs),
+            ),
+          ),
+        );
   }
 
   Widget _buildImage() {
