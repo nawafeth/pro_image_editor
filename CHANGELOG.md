@@ -2,6 +2,7 @@
 
 ## 11.22.0
 - **FEAT**(image-generation): Add `captureImageByteFormat` config to `ImageGenerationConfigs` to control the byte format used when capturing images. Defaults to `ImageByteFormat.rawStraightRgba` which prevents black border artifacts around transparent edges when exporting to PNG.
+- **FEAT**(main-editor): Add `enableKeyboardShortcuts` config to `MainEditorConfigs` to optionally disable library-side keyboard shortcuts, allowing apps to implement their own key bindings without conflicts.
 
 ## 11.21.3
 - **FEAT**(video-editor): Add `videoSetupLoadingIndicator` widget to `VideoEditorWidgets` to allow customizing the loading indicator shown while the video player is initializing.
