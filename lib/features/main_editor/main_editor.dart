@@ -30,6 +30,11 @@ import '/shared/utils/transparent_image_generator_utils.dart';
 import '/shared/widgets/adaptive_dialog.dart';
 import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
 import '/shared/widgets/screen_resize_detector.dart';
+import '../audio_editor/audio_editor_page.dart';
+import '../audio_editor/models/audio_editor_response.dart';
+import '../audio_editor/widgets/audio_main_bottom_bar.dart';
+import '../clips_editor/models/video_clip_editor_response.dart';
+import '../clips_editor/pages/clips_editor_page.dart';
 import '../filter_editor/widgets/filter_generator.dart';
 import '../paint_editor/models/paint_editor_response_model.dart';
 import '../paint_editor/widgets/paint_editor_layer_editor.dart';
@@ -540,8 +545,10 @@ class ProImageEditorState extends State<ProImageEditor>
   /// Determines whether redo actions can be performed on the current state.
   bool get canRedo => stateManager.canRedo;
 
+  ProVideoController? get _videoController => widget.videoController;
+
   /// Indicates whether video editor is enabled.
-  late final bool _isVideoEditor = widget.videoController != null;
+  late final bool _isVideoEditor = _videoController != null;
 
   /// Determines whether multi-select mode is always enabled.
   ///
@@ -572,11 +579,13 @@ class ProImageEditorState extends State<ProImageEditor>
 
   PointerEvent? _lastDownEvent;
   DateTime _tapDownTimestamp = DateTime.now();
+  final _audioBottomBarNotifier = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
-    _initializeVideoEditor();
+    initializeVideoEditor();
+    _videoController?.resolutionNotifier.addListener(_onVideoResolutionChanged);
 
     _rebuildController = StreamController.broadcast();
     _controllers = MainEditorControllers(configs, callbacks, _isVideoEditor);
@@ -624,8 +633,11 @@ class ProImageEditorState extends State<ProImageEditor>
 
   @override
   void dispose() {
+    _videoController?.resolutionNotifier
+        .removeListener(_onVideoResolutionChanged);
     _rebuildController.close();
     _controllers.dispose();
+    _audioBottomBarNotifier.dispose();
     layerInteractionManager.scaleDebounce.dispose();
     SystemChrome.setSystemUIOverlayStyle(
       _theme.brightness == Brightness.dark
@@ -895,27 +907,47 @@ class ProImageEditorState extends State<ProImageEditor>
     setState(() {});
   }
 
-  void _initializeVideoEditor() async {
+  /// Initializes the video editor functionality.
+  void initializeVideoEditor() async {
     if (!_isVideoEditor) return;
 
     _isVideoPlayerReady = false;
 
-    widget.videoController!.initialize(
+    _videoController!.initialize(
       configsFunction: () => configs.videoEditor,
+      callbacksAudioFunction: () =>
+          audioEditorCallbacks ?? const AudioEditorCallbacks(),
       callbacksFunction: () =>
           callbacks.videoEditorCallbacks ?? VideoEditorCallbacks(),
     );
 
-    final resolution = widget.videoController!.initialResolution;
+    final resolution = _videoController!.initialResolution;
     stateManager.activeBackgroundImage = EditorImage(
       byteArray: await createTransparentImage(resolution),
     );
-    _isVideoPlayerReady = true;
 
     if (!mounted) return;
 
     setState(() {});
     await decodeImage();
+    _isVideoPlayerReady = true;
+    setState(() {});
+  }
+
+  /// Called when the video resolution changes (e.g., after merging clips).
+  void _onVideoResolutionChanged() {
+    final newSize = _videoController!.initialResolution;
+    _imageInfos = ImageInfos(
+      rawSize: newSize,
+      renderedSize: newSize,
+      originalRenderedSize: newSize,
+      cropRectSize: newSize,
+      pixelRatio: newSize.width / sizesManager.editorSize.width,
+      isRotated: false,
+    );
+    sizesManager.originalImageSize = newSize;
+    sizesManager.decodedImageSize = newSize;
+    if (mounted) setState(() {});
   }
 
   void _initializeWithTransformations() {
@@ -959,7 +991,7 @@ class ProImageEditorState extends State<ProImageEditor>
       );
     }
     if (!_isVideoPlayerReady && _isVideoEditor) {
-      var initSize = widget.videoController!.initialResolution;
+      var initSize = _videoController!.initialResolution;
       _imageInfos = ImageInfos(
         rawSize: initSize,
         renderedSize: initSize,
@@ -1478,6 +1510,10 @@ class ProImageEditorState extends State<ProImageEditor>
       editorName = SubEditor.blur;
     } else if (page is EmojiEditor) {
       editorName = SubEditor.emoji;
+    } else if (page is AudioEditorPage) {
+      editorName = SubEditor.audio;
+    } else if (page is ClipsEditorPage) {
+      editorName = SubEditor.clips;
     }
 
     mainEditorCallbacks?.handleOpenSubEditor(editorName);
@@ -1596,7 +1632,7 @@ class ProImageEditorState extends State<ProImageEditor>
         editorImage: widget.blankSize == null
             ? editorImage
             : EditorImage(byteArray: kImageEditorTransparentBytes),
-        videoController: widget.videoController,
+        videoController: _videoController,
         initConfigs: PaintEditorInitConfigs(
           configs: configs,
           callbacks: callbacks.copyWith(
@@ -1705,7 +1741,7 @@ class ProImageEditorState extends State<ProImageEditor>
         editorImage: widget.blankSize == null
             ? editorImage
             : EditorImage(byteArray: kImageEditorTransparentBytes),
-        videoController: widget.videoController,
+        videoController: _videoController,
         initConfigs: CropRotateEditorInitConfigs(
           configs: configs,
           callbacks: callbacks,
@@ -1773,7 +1809,7 @@ class ProImageEditorState extends State<ProImageEditor>
           editorImage: widget.blankSize == null
               ? editorImage
               : EditorImage(byteArray: kImageEditorTransparentBytes),
-          videoController: widget.videoController,
+          videoController: _videoController,
           initConfigs: TuneEditorInitConfigs(
             theme: _theme,
             configs: configs,
@@ -1817,7 +1853,7 @@ class ProImageEditorState extends State<ProImageEditor>
         editorImage: widget.blankSize == null
             ? editorImage
             : EditorImage(byteArray: kImageEditorTransparentBytes),
-        videoController: widget.videoController,
+        videoController: _videoController,
         initConfigs: FilterEditorInitConfigs(
           theme: _theme,
           configs: configs,
@@ -1851,7 +1887,7 @@ class ProImageEditorState extends State<ProImageEditor>
         editorImage: widget.blankSize == null
             ? editorImage
             : EditorImage(byteArray: kImageEditorTransparentBytes),
-        videoController: widget.videoController,
+        videoController: _videoController,
         initConfigs: BlurEditorInitConfigs(
           theme: _theme,
           mainImageSize: widget.blankSize ?? sizesManager.decodedImageSize,
@@ -1984,6 +2020,99 @@ class ProImageEditorState extends State<ProImageEditor>
 
     setState(() {});
     mainEditorCallbacks?.handleUpdateUI();
+  }
+
+  /// Opens the audio editor page to select or adjust an audio track.
+  ///
+  /// Throws an [ArgumentError] if called while editing an image
+  /// instead of a video.
+  ///
+  /// After the editor closes, updates the current video controller
+  /// with the selected [AudioTrack] and its start time.
+  void openAudioEditor({bool enforceChooseTrackPage = false}) async {
+    if (!_isVideoEditor) {
+      throw ArgumentError(
+        'This editor can only be opened when editing videos, not images.',
+      );
+    }
+
+    bool isEditSheetAvailable = audioEditorConfigs.enableEditBalance ||
+        audioEditorConfigs.enableEditStartTime;
+
+    if (!enforceChooseTrackPage &&
+        _videoController!.audioTrack != null &&
+        isEditSheetAvailable) {
+      _audioBottomBarNotifier.value = true;
+      return;
+    }
+
+    _videoController!.pause();
+
+    if (!mounted) return;
+    AudioEditorResponse? response = await openPage(
+      AudioEditorPage(
+        key: audioEditor,
+        configs: configs,
+        callbacks: callbacks,
+        theme: _theme,
+        initialSelectedTrack: _videoController!.audioTrack,
+        videoDuration: _videoController!.videoDuration,
+      ),
+      duration: Duration.zero,
+    );
+
+    if (response == null) {
+      return;
+    }
+
+    _videoController!.audioTrack = response.track;
+    if (_audioBottomBarNotifier.value) {
+      setState(() {});
+    } else if (isEditSheetAvailable) {
+      _audioBottomBarNotifier.value = true;
+    }
+
+    if (_videoController!.isPlayingNotifier.value && response.track != null) {
+      await audioEditorCallbacks!.onPlay!(response.track!);
+    }
+  }
+
+  /// Opens the clips editor page to trim or merge video segments.
+  ///
+  /// Allows users to adjust the start and end times of the video
+  /// and optionally merge multiple clips or audio tracks into one.
+  ///
+  /// Throws an [ArgumentError] if called while editing an image
+  /// instead of a video.
+  ///
+  /// After the editor closes, updates the current video configuration
+  /// with the trimmed or merged result.
+  void openClipsEditor() async {
+    if (!_isVideoEditor) {
+      throw ArgumentError(
+        'This editor can only be opened when editing videos, not images.',
+      );
+    }
+    _videoController!.pause();
+
+    if (!mounted) return;
+    VideoClipEditorResponse? response = await openPage(
+      ClipsEditorPage(
+        key: audioEditor,
+        configs: configs,
+        callbacks: callbacks,
+        theme: _theme,
+        videoDuration: _videoController!.videoDuration,
+        initialClips: _videoController!.clips,
+      ),
+      duration: Duration.zero,
+    );
+
+    if (response == null) {
+      return;
+    }
+
+    _videoController!.clips = response.videoClips;
   }
 
   /// Moves a layer in the list to a new position.
@@ -2194,8 +2323,8 @@ class ProImageEditorState extends State<ProImageEditor>
             matrixTuneAdjustmentsList: stateManager.activeTuneAdjustments
                 .map((item) => item.matrix)
                 .toList(),
-            startTime: widget.videoController?.startTime,
-            endTime: widget.videoController?.endTime,
+            startTime: _videoController?.startTime,
+            endTime: _videoController?.endTime,
             cropWidth: isTransformed ? outputSize.width.round() : null,
             cropHeight: isTransformed ? outputSize.height.round() : null,
             cropX: isTransformed ? outputOffset.dx.round() : null,
@@ -2206,6 +2335,8 @@ class ProImageEditorState extends State<ProImageEditor>
             image: bytes,
             isTransformed: isTransformed,
             layers: activeLayers,
+            customAudioTrack: _videoController?.audioTrack,
+            videoClips: _videoController?.clips ?? [],
           ),
         );
       }
@@ -2577,7 +2708,47 @@ class ProImageEditorState extends State<ProImageEditor>
                         resizeToAvoidBottomInset: false,
                         appBar: _buildAppBar(),
                         body: _buildBody(),
-                        bottomNavigationBar: _buildBottomNavBar(),
+                        bottomNavigationBar: ValueListenableBuilder(
+                          valueListenable: _audioBottomBarNotifier,
+                          builder: (_, showAudioBar, __) {
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 220),
+                              switchInCurve: Curves.ease,
+                              switchOutCurve: Curves.ease,
+                              transitionBuilder: (child, animation) {
+                                return SizeTransition(
+                                  sizeFactor: animation,
+                                  axisAlignment: -1,
+                                  child: child,
+                                );
+                              },
+                              layoutBuilder: (currentChild, previousChildren) {
+                                return Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: <Widget>[
+                                    ...previousChildren,
+                                    if (currentChild != null) currentChild,
+                                  ],
+                                );
+                              },
+                              child: showAudioBar
+                                  ? AudioMainBottomBar(
+                                      configs: configs,
+                                      controller: _videoController!,
+                                      audioEditorCallbacks:
+                                          audioEditorCallbacks,
+                                      onSelectAudioTrack: () => openAudioEditor(
+                                        enforceChooseTrackPage: true,
+                                      ),
+                                      onConfirmChanges: () {
+                                        _audioBottomBarNotifier.value = false;
+                                      },
+                                    )
+                                  : _buildBottomNavBar() ??
+                                      const SizedBox.shrink(),
+                            );
+                          },
+                        ),
                       );
 
                       if (mainEditorConfigs.enableSubEditorPage) {
@@ -2659,6 +2830,8 @@ class ProImageEditorState extends State<ProImageEditor>
                 mainEditorCallbacks?.onDoubleTap?.call();
               },
               onPointerUp: (event) {
+                if (GestureManager.instance.isBlocked) return;
+
                 _mouseService.onPointerUp(event);
                 onPointerUp(event);
 
@@ -2676,7 +2849,7 @@ class ProImageEditorState extends State<ProImageEditor>
                   if (timeElapsed > tapTimeElapsed) return;
 
                   if (!configs.videoEditor.enablePlayButton) {
-                    widget.videoController?.togglePlayState();
+                    _videoController?.togglePlayState();
                   }
                   mainEditorCallbacks?.onTap?.call();
                 });
@@ -2740,7 +2913,7 @@ class ProImageEditorState extends State<ProImageEditor>
       stateManager: stateManager,
       interactiveViewerKey: interactiveViewer,
       state: this,
-      videoController: widget.videoController,
+      videoController: _videoController,
       isVideoEditor: _isVideoEditor,
       layerDragSelectionService: _layerDragSelectionService,
     );
@@ -2772,6 +2945,8 @@ class ProImageEditorState extends State<ProImageEditor>
             openBlurEditor: openBlurEditor,
             openEmojiEditor: openEmojiEditor,
             openStickerEditor: openStickerEditor,
+            openAudioEditor: openAudioEditor,
+            openClipsEditor: openClipsEditor,
           );
   }
 
@@ -2863,7 +3038,7 @@ class ProImageEditorState extends State<ProImageEditor>
       isInitialized: _isInitialized,
       sizesManager: sizesManager,
       stateManager: stateManager,
-      videoPlayer: widget.videoController!.videoPlayer,
+      videoPlayer: _videoController!.videoPlayer,
     );
   }
 }

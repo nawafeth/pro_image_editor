@@ -1,6 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-// TODO: Remove the deprecated values when releasing version 12.0.0.
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -46,6 +43,8 @@ class MainEditorBottombar extends StatelessWidget {
     required this.openBlurEditor,
     required this.openEmojiEditor,
     required this.openStickerEditor,
+    required this.openAudioEditor,
+    required this.openClipsEditor,
   });
 
   /// Manages the main editor's controllers.
@@ -87,6 +86,12 @@ class MainEditorBottombar extends StatelessWidget {
   /// Callback for opening the sticker editor.
   final Function() openStickerEditor;
 
+  /// Callback for opening the audio editor.
+  final Function() openAudioEditor;
+
+  /// Callback for opening the clips editor.
+  final Function() openClipsEditor;
+
   final double _bottomIconSize = 22.0;
   Color get _foregroundColor => configs.mainEditor.style.bottomBarColor;
   TextStyle get _bottomTextStyle => TextStyle(
@@ -117,8 +122,8 @@ class MainEditorBottombar extends StatelessWidget {
                           sizesManager.lastScreenSize.width != 0
                               ? sizesManager.lastScreenSize.width
                               : constraints.maxWidth,
-                          600),
-                      maxWidth: 600,
+                          700),
+                      maxWidth: 700,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -144,7 +149,6 @@ class MainEditorBottombar extends StatelessWidget {
         .map((tool) {
           switch (tool) {
             case SubEditorMode.paint:
-              if (!configs.paintEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-paint-editor-btn'),
                 label: configs.i18n.paintEditor.bottomNavigationBarText,
@@ -153,7 +157,6 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.text:
-              if (!configs.textEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-text-editor-btn'),
                 label: configs.i18n.textEditor.bottomNavigationBarText,
@@ -162,7 +165,6 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.cropRotate:
-              if (!configs.cropRotateEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-crop-rotate-editor-btn'),
                 label: configs.i18n.cropRotateEditor.bottomNavigationBarText,
@@ -171,7 +173,6 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.tune:
-              if (!configs.tuneEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-tune-editor-btn'),
                 label: configs.i18n.tuneEditor.bottomNavigationBarText,
@@ -180,7 +181,6 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.filter:
-              if (!configs.filterEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-filter-editor-btn'),
                 label: configs.i18n.filterEditor.bottomNavigationBarText,
@@ -189,7 +189,6 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.blur:
-              if (!configs.blurEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-blur-editor-btn'),
                 label: configs.i18n.blurEditor.bottomNavigationBarText,
@@ -198,7 +197,6 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.emoji:
-              if (!configs.emojiEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-emoji-editor-btn'),
                 label: configs.i18n.emojiEditor.bottomNavigationBarText,
@@ -207,12 +205,25 @@ class MainEditorBottombar extends StatelessWidget {
               );
 
             case SubEditorMode.sticker:
-              if (!configs.stickerEditor.enabled) return null;
               return _buildActionButton(
                 key: const ValueKey('open-sticker-editor-btn'),
                 label: configs.i18n.stickerEditor.bottomNavigationBarText,
                 icon: configs.stickerEditor.icons.bottomNavBar,
                 onPressed: openStickerEditor,
+              );
+            case SubEditorMode.audio:
+              return _buildActionButton(
+                key: const ValueKey('open-audio-editor-btn'),
+                label: configs.i18n.audioEditor.bottomNavigationBarText,
+                icon: configs.audioEditor.icons.bottomNavBar,
+                onPressed: openAudioEditor,
+              );
+            case SubEditorMode.videoClips:
+              return _buildActionButton(
+                key: const ValueKey('open-clips-editor-btn'),
+                label: configs.i18n.clipsEditor.bottomNavigationBarText,
+                icon: configs.clipsEditor.icons.bottomNavBar,
+                onPressed: openClipsEditor,
               );
           }
         })

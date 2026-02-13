@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.0.0
+- **FEAT**(audio-editor): Added a new Audio Editor to the Video Editor, allowing users to add background music. Users can set the audio start time and adjust the balance between the original and overlay tracks.
+- **FEAT**(clips-editor): Introduced a new Clips Editor that lets users combine multiple video clips into a single merged video.
+
 ## 11.23.0
 - **FEAT**(paint-editor): Add `customPathBuilders` to `PaintEditorConfigs`, allowing users to register custom `PathBuilderBase` implementations for any paint mode.
 - **FEAT**(paint-editor): Add `custom1`, `custom2`, `custom3` paint modes that require custom path builders to be registered. These can be fully customized with custom icons and i18n labels.

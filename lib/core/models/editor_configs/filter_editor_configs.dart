@@ -1,6 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-// TODO: Remove the deprecated values when releasing version 12.0.0.
-
 import '/features/filter_editor/utils/filter_generator/filter_model.dart';
 import '../custom_widgets/filter_editor_widgets.dart';
 import '../icons/filter_editor_icons.dart';
@@ -34,11 +31,6 @@ class FilterEditorConfigs implements BaseSubEditorConfigs {
   /// filters.
   const FilterEditorConfigs({
     this.enableGesturePop = true,
-    @Deprecated(
-      'Use tools inside MainEditorConfigs instead, e.g. tools: '
-      '[SubEditorMode.filter]',
-    )
-    this.enabled = true,
     this.showLayers = true,
     this.enableMultiSelection = true,
     this.filterList,
@@ -53,13 +45,6 @@ class FilterEditorConfigs implements BaseSubEditorConfigs {
   /// {@macro enableGesturePop}
   @override
   final bool enableGesturePop;
-
-  /// Indicates whether the filter editor is enabled.
-  @Deprecated(
-    'Use tools inside MainEditorConfigs instead, e.g. tools: '
-    '[SubEditorMode.filter]',
-  )
-  final bool enabled;
 
   /// Show also layers in the editor.
   final bool showLayers;
@@ -106,7 +91,6 @@ class FilterEditorConfigs implements BaseSubEditorConfigs {
   /// others unchanged.
   FilterEditorConfigs copyWith({
     bool? enableGesturePop,
-    bool? enabled,
     bool? showLayers,
     bool? enableMultiSelection,
     List<FilterModel>? filterList,
@@ -119,7 +103,6 @@ class FilterEditorConfigs implements BaseSubEditorConfigs {
   }) {
     return FilterEditorConfigs(
       enableGesturePop: enableGesturePop ?? this.enableGesturePop,
-      enabled: enabled ?? this.enabled,
       showLayers: showLayers ?? this.showLayers,
       enableMultiSelection: enableMultiSelection ?? this.enableMultiSelection,
       filterList: filterList ?? this.filterList,
