@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.0.1
+- **FIX**(layers): Resolve issue where layer interaction button tooltips would absorb pointer events in Flutter 3.41+, preventing scale and rotate gestures from working.
+- **CHORE**: Update minimum Flutter version to 3.41.0 and Dart SDK to 3.11.0.
+
 ## 12.0.0
 - **FEAT**(audio-editor): Added a new Audio Editor to the Video Editor, allowing users to add background music. Users can set the audio start time and adjust the balance between the original and overlay tracks.
 - **FEAT**(clips-editor): Introduced a new Clips Editor that lets users combine multiple video clips into a single merged video.
