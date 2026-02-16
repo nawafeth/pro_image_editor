@@ -109,7 +109,7 @@ class MainEditorCallbacks extends StandaloneEditorCallbacks {
   /// Callback that is triggered whenever the state history of the editor
   /// changes.
   final Function(StateManager stateHistory, ProImageEditorState editor)?
-      onStateHistoryChange;
+  onStateHistoryChange;
 
   /// Callback that is triggered after the image has been successfully decoded.
   final Function()? onImageDecoded;
@@ -207,7 +207,7 @@ class MainEditorCallbacks extends StandaloneEditorCallbacks {
   /// [state] provides the current state of the ProImageEditor.
   /// [import] contains information about the import operation.
   final Function(ProImageEditorState state, ImportStateHistory import)?
-      onImportHistoryStart;
+  onImportHistoryStart;
 
   /// Callback triggered when the import of the editor's history is done.
   ///
@@ -219,7 +219,7 @@ class MainEditorCallbacks extends StandaloneEditorCallbacks {
   /// [state] provides the current state of the ProImageEditor.
   /// [import] contains information about the import operation.
   final Function(ProImageEditorState state, ImportStateHistory import)?
-      onImportHistoryEnd;
+  onImportHistoryEnd;
 
   /// A callback function that is triggered when a scaling gesture starts.
   ///
@@ -481,12 +481,12 @@ class MainEditorCallbacks extends StandaloneEditorCallbacks {
     Future<TextLayer?> Function(TextLayer layer)? onEditTextLayer,
     Future<TextLayer?> Function()? onCreateTextLayer,
     Function(ProImageEditorState state, ImportStateHistory import)?
-        onImportHistoryStart,
+    onImportHistoryStart,
     Function(ProImageEditorState state, ImportStateHistory import)?
-        onImportHistoryEnd,
+    onImportHistoryEnd,
     Function(bool isPointerInside)? onHoverRemoveAreaChange,
     Function(StateManager stateHistory, ProImageEditorState editor)?
-        onStateHistoryChange,
+    onStateHistoryChange,
   }) {
     return MainEditorCallbacks(
       onLayerTapDown: onLayerTapDown ?? this.onLayerTapDown,

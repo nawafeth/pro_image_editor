@@ -123,10 +123,10 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
         },
         pageBuilder: (context, animation, secondaryAnimation) =>
             ClipsEditorEditPage(
-          configs: configs,
-          callbacks: callbacks,
-          videoClip: clip,
-        ),
+              configs: configs,
+              callbacks: callbacks,
+              videoClip: clip,
+            ),
       ),
     );
 
@@ -160,12 +160,11 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
         _progress = 0.0;
       });
       try {
-        await callbacks.clipsEditorCallbacks?.onMergeClips?.call(
-          _videoClips,
-          (progress) {
-            if (mounted) setState(() => _progress = progress);
-          },
-        );
+        await callbacks.clipsEditorCallbacks?.onMergeClips?.call(_videoClips, (
+          progress,
+        ) {
+          if (mounted) setState(() => _progress = progress);
+        });
       } finally {
         if (mounted) setState(() => _isProcessing = false);
       }
@@ -176,10 +175,7 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
     if (!mounted) return;
 
     callbacks.clipsEditorCallbacks?.onDone?.call();
-    Navigator.pop(
-      context,
-      VideoClipEditorResponse(videoClips: _videoClips),
-    );
+    Navigator.pop(context, VideoClipEditorResponse(videoClips: _videoClips));
   }
 
   Future<void> _animatedPageLeave() async {
@@ -204,16 +200,18 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
             bottom: safeArea.bottom,
             left: safeArea.left,
             right: safeArea.right,
-            child: LayoutBuilder(builder: (context, constraints) {
-              return Scaffold(
-                resizeToAvoidBottomInset: false,
-                backgroundColor: clipsEditorConfigs.style.background,
-                appBar: _buildAppBar(constraints),
-                body: _buildBody(),
-                bottomNavigationBar: clipsEditorConfigs.widgets.bottomBar
-                    ?.call(this, _rebuildController.stream),
-              );
-            }),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: clipsEditorConfigs.style.background,
+                  appBar: _buildAppBar(constraints),
+                  body: _buildBody(),
+                  bottomNavigationBar: clipsEditorConfigs.widgets.bottomBar
+                      ?.call(this, _rebuildController.stream),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -316,17 +314,18 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
                             SizedBox(
                               width: 200,
                               child: LinearProgressIndicator(
-                                  value: animatedProgress),
+                                value: animatedProgress,
+                              ),
                             ),
                             Text(
                               '${i18n.clipsEditor.processingClips} '
                               '${(animatedProgress * 100).toInt()}%',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontFeatures: [
-                                const FontFeature.tabularFigures()
-                              ]),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontFeatures: [
+                                      const FontFeature.tabularFigures(),
+                                    ],
+                                  ),
                             ),
                           ],
                         );
@@ -342,8 +341,11 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
   Widget _buildAddButton() {
     final style = clipsEditorConfigs.style;
 
-    return clipsEditorConfigs.widgets.addVideoClipButton
-            ?.call(this, _rebuildController.stream, addClip) ??
+    return clipsEditorConfigs.widgets.addVideoClipButton?.call(
+          this,
+          _rebuildController.stream,
+          addClip,
+        ) ??
         Padding(
           padding: const EdgeInsetsGeometry.fromLTRB(16, 24, 16, 12),
           child: OutlinedButton(
@@ -357,10 +359,7 @@ class ClipsEditorPageState extends State<ClipsEditorPage>
                 borderRadius: BorderRadius.circular(8),
               ),
               backgroundColor: style.addClipsButtonBackground,
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-                horizontal: 24,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
             ),
             onPressed: addClip,
             child: Text(

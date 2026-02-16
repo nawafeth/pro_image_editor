@@ -12,20 +12,16 @@ class EditorAudio {
   ///
   /// At least one of `byteArray`, `file`, `networkUrl`, or `assetPath`
   /// must not be null.
-  EditorAudio({
-    this.bytes,
-    this.networkUrl,
-    this.assetPath,
-    dynamic file,
-  })  : file = file == null ? null : ensureFileInstance(file),
-        assert(
-          bytes != null ||
-              file != null ||
-              networkUrl != null ||
-              assetPath != null,
-          'At least one of bytes, file, networkUrl, or assetPath must not '
-          'be null.',
-        );
+  EditorAudio({this.bytes, this.networkUrl, this.assetPath, dynamic file})
+    : file = file == null ? null : ensureFileInstance(file),
+      assert(
+        bytes != null ||
+            file != null ||
+            networkUrl != null ||
+            assetPath != null,
+        'At least one of bytes, file, networkUrl, or assetPath must not '
+        'be null.',
+      );
 
   /// Creates an [EditorAudio] from raw memory bytes.
   factory EditorAudio.memory(Uint8List bytes) {

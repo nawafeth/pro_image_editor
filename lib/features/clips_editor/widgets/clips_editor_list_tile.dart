@@ -87,23 +87,24 @@ class _ClipsListTileState extends State<ClipsListTile> {
         width: 50,
         height: 50,
         child: FutureBuilder(
-            future: _thumbnailFuture,
-            builder: (_, snapshot) {
-              final image = snapshot.data;
+          future: _thumbnailFuture,
+          builder: (_, snapshot) {
+            final image = snapshot.data;
 
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: image == null
-                    ? _buildFallbackThumbnail()
-                    : AutoImage(
-                        image,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        configs: widget.configs,
-                      ),
-              );
-            }),
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: image == null
+                  ? _buildFallbackThumbnail()
+                  : AutoImage(
+                      image,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      configs: widget.configs,
+                    ),
+            );
+          },
+        ),
       ),
     );
   }

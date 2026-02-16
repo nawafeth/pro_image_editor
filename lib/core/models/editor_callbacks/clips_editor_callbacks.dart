@@ -39,11 +39,12 @@ class ClipsEditorCallbacks {
   final Future<void> Function(
     List<VideoClip> videoClips,
     void Function(double progress) onProgress,
-  )? onMergeClips;
+  )?
+  onMergeClips;
 
   /// Called to build a custom video player widget for previewing clips.
   final Widget Function(ProVideoController controller, VideoClip videoClip)?
-      onBuildPlayer;
+  onBuildPlayer;
 
   /// Creates a copy with modified callbacks.
   ClipsEditorCallbacks copyWith({
@@ -55,9 +56,10 @@ class ClipsEditorCallbacks {
     Future<void> Function(
       List<VideoClip> videoClips,
       void Function(double progress) onProgress,
-    )? onMergeClips,
+    )?
+    onMergeClips,
     Widget Function(ProVideoController controller, VideoClip videoClip)?
-        onBuildPlayer,
+    onBuildPlayer,
   }) {
     return ClipsEditorCallbacks(
       onDone: onDone ?? this.onDone,

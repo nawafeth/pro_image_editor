@@ -109,8 +109,9 @@ class _GroundedCropRotateBarState extends State<GroundedCropRotateBar>
               children: <Widget>[
                 ..._buildConfigs(),
                 if (cropRotateEditorConfigs.aspectRatios.isNotEmpty &&
-                    cropRotateEditorConfigs.tools
-                        .contains(CropRotateTool.aspectRatio)) ...[
+                    cropRotateEditorConfigs.tools.contains(
+                      CropRotateTool.aspectRatio,
+                    )) ...[
                   const SizedBox(width: 5),
                   _buildDivider(),
                   ...List.generate(
@@ -162,10 +163,7 @@ class _GroundedCropRotateBarState extends State<GroundedCropRotateBar>
       FlatIconTextButton(
         label: Text(
           i18n.cropRotateEditor.rotate,
-          style: TextStyle(
-            fontSize: 10.0,
-            color: _foreGroundColorAccent,
-          ),
+          style: TextStyle(fontSize: 10.0, color: _foreGroundColorAccent),
         ),
         icon: Icon(
           cropRotateEditorConfigs.icons.rotate,
@@ -178,15 +176,9 @@ class _GroundedCropRotateBarState extends State<GroundedCropRotateBar>
       FlatIconTextButton(
         label: Text(
           i18n.cropRotateEditor.flip,
-          style: TextStyle(
-            fontSize: 10.0,
-            color: _foreGroundColorAccent,
-          ),
+          style: TextStyle(fontSize: 10.0, color: _foreGroundColorAccent),
         ),
-        icon: Icon(
-          cropRotateEditorConfigs.icons.flip,
-          color: _foreGroundColor,
-        ),
+        icon: Icon(cropRotateEditorConfigs.icons.flip, color: _foreGroundColor),
         onPressed: () {
           widget.editor.flip();
         },

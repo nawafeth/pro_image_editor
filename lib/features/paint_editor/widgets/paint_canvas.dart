@@ -336,11 +336,8 @@ class PaintCanvasState extends State<PaintCanvas> {
   void _processEraserInputAt(Offset focalPoint) {
     List<String> removeIds = [];
     final double stackScale = widget.layerStackScaleFactor;
-    final Offset editorHalfSize = Offset(
-          widget.editorBodySize.width,
-          widget.editorBodySize.height,
-        ) /
-        2;
+    final Offset editorHalfSize =
+        Offset(widget.editorBodySize.width, widget.editorBodySize.height) / 2;
     final bool useRoundCensor =
         widget.paintEditorConfigs.censorConfigs.enableRoundArea;
 
@@ -360,14 +357,19 @@ class PaintCanvasState extends State<PaintCanvas> {
         final double rotation = paintLayer.rotation;
         final Offset center =
             Offset(scaledRawSize.width, scaledRawSize.height) / 2;
-        final Offset rotatedPosition =
-            _rotatePoint(position, center, -rotation);
+        final Offset rotatedPosition = _rotatePoint(
+          position,
+          center,
+          -rotation,
+        );
 
         layer.item.erasedOffsets
-          ..add(ErasedOffset(
-            offset: rotatedPosition / layerScale,
-            radius: widget.eraserRadius,
-          ))
+          ..add(
+            ErasedOffset(
+              offset: rotatedPosition / layerScale,
+              radius: widget.eraserRadius,
+            ),
+          )
           ..toSet()
           ..toList();
         layer.item = layer.item.copy();
@@ -448,10 +450,7 @@ class PaintCanvasState extends State<PaintCanvas> {
   Widget build(BuildContext context) {
     return AbsorbPointer(
       absorbing: _paintCtrl.mode == PaintMode.moveAndZoom,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [_buildActiveItem()],
-      ),
+      child: Stack(fit: StackFit.expand, children: [_buildActiveItem()]),
     );
   }
 
@@ -471,25 +470,23 @@ class PaintCanvasState extends State<PaintCanvas> {
           onPointerCancel: _onPointerCancel,
           child: _paintCtrl.busy
               ? _paintCtrl.mode == PaintMode.blur ||
-                      _paintCtrl.mode == PaintMode.pixelate
-                  ? Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        _buildCensorItem(_paintCtrl.paintedModel),
-                      ],
-                    )
-                  : Opacity(
-                      opacity: _paintCtrl.opacity,
-                      child: CustomPaint(
-                        size: widget.drawAreaSize,
-                        willChange: true,
-                        isComplex: true,
-                        painter: DrawPaintItem(
-                          item: _paintCtrl.paintedModel,
-                          paintEditorConfigs: widget.paintEditorConfigs,
+                        _paintCtrl.mode == PaintMode.pixelate
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: [_buildCensorItem(_paintCtrl.paintedModel)],
+                      )
+                    : Opacity(
+                        opacity: _paintCtrl.opacity,
+                        child: CustomPaint(
+                          size: widget.drawAreaSize,
+                          willChange: true,
+                          isComplex: true,
+                          painter: DrawPaintItem(
+                            item: _paintCtrl.paintedModel,
+                            paintEditorConfigs: widget.paintEditorConfigs,
+                          ),
                         ),
-                      ),
-                    )
+                      )
               : const SizedBox.expand(),
         );
       },

@@ -16,9 +16,11 @@ class PathBuilderFreestyle extends PathBuilderBase {
   Path build() {
     if (offsets.isEmpty) return path;
 
-    final bool hasArrowStart = item.mode == PaintMode.freeStyleArrowStart ||
+    final bool hasArrowStart =
+        item.mode == PaintMode.freeStyleArrowStart ||
         item.mode == PaintMode.freeStyleArrowStartEnd;
-    final bool hasArrowEnd = item.mode == PaintMode.freeStyleArrowEnd ||
+    final bool hasArrowEnd =
+        item.mode == PaintMode.freeStyleArrowEnd ||
         item.mode == PaintMode.freeStyleArrowStartEnd;
 
     final double dotRadius = painter.strokeWidth / 2;
@@ -53,16 +55,22 @@ class PathBuilderFreestyle extends PathBuilderBase {
       final minDistance = 20.0 * scale;
 
       if (hasArrowStart) {
-        final (startPoint, directionPoint) =
-            _findPointsWithMinDistance(scaled, minDistance, fromStart: true);
+        final (startPoint, directionPoint) = _findPointsWithMinDistance(
+          scaled,
+          minDistance,
+          fromStart: true,
+        );
         if (startPoint != null && directionPoint != null) {
           _addArrowHead(startPoint, directionPoint, strokeFactor);
         }
       }
 
       if (hasArrowEnd) {
-        final (endPoint, directionPoint) =
-            _findPointsWithMinDistance(scaled, minDistance, fromStart: false);
+        final (endPoint, directionPoint) = _findPointsWithMinDistance(
+          scaled,
+          minDistance,
+          fromStart: false,
+        );
         if (endPoint != null && directionPoint != null) {
           _addArrowHead(endPoint, directionPoint, strokeFactor);
         }
@@ -133,7 +141,10 @@ class PathBuilderFreestyle extends PathBuilderBase {
 
   /// Adds an arrowhead at [anchorPoint] pointing away from [directionPoint].
   void _addArrowHead(
-      Offset anchorPoint, Offset directionPoint, double strokeFactor) {
+    Offset anchorPoint,
+    Offset directionPoint,
+    double strokeFactor,
+  ) {
     // Open arrowhead (two lines instead of closed triangle)
     // Size is proportional to strokeWidth for consistent look
     final arrowHead = Path()

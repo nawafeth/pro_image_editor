@@ -9,9 +9,7 @@ class VideoClipEditorResponse {
   ///
   /// The [videoClips] parameter contains the list of modified or
   /// newly created video clips from the editor.
-  const VideoClipEditorResponse({
-    required this.videoClips,
-  });
+  const VideoClipEditorResponse({required this.videoClips});
 
   /// The list of video clips resulting from the editing session.
   ///

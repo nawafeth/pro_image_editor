@@ -37,8 +37,9 @@ class VideoEditorControlsWidget extends StatelessWidget {
         player.widgets.headerToolbar ??
             Column(
               spacing: 10,
-              verticalDirection:
-                  alignTop ? VerticalDirection.down : VerticalDirection.up,
+              verticalDirection: alignTop
+                  ? VerticalDirection.down
+                  : VerticalDirection.up,
               children: [
                 if (enableTrimBar)
                   Padding(
@@ -57,19 +58,21 @@ class VideoEditorControlsWidget extends StatelessWidget {
                     top: alignTop ? 0 : null,
                     bottom: alignTop ? null : 0,
                   ),
-                  child: LayoutBuilder(builder: (_, constraints) {
-                    return Row(
-                      spacing: constraints.maxWidth < 340 ? 6 : 12,
-                      children: [
-                        if (enablePlayButton) const VideoEditorPlayButton(),
-                        if (isAudioSupported) const VideoEditorMuteButton(),
-                        const Spacer(),
-                        if (constraints.maxWidth >= 300)
-                          const VideoEditorTrimInfoWidget(),
-                        const VideoEditorInfoBanner(),
-                      ],
-                    );
-                  }),
+                  child: LayoutBuilder(
+                    builder: (_, constraints) {
+                      return Row(
+                        spacing: constraints.maxWidth < 340 ? 6 : 12,
+                        children: [
+                          if (enablePlayButton) const VideoEditorPlayButton(),
+                          if (isAudioSupported) const VideoEditorMuteButton(),
+                          const Spacer(),
+                          if (constraints.maxWidth >= 300)
+                            const VideoEditorTrimInfoWidget(),
+                          const VideoEditorInfoBanner(),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

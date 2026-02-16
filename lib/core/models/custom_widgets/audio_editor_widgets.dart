@@ -9,67 +9,70 @@ import '/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
 import 'utils/custom_widgets_typedef.dart';
 
 /// Builder signature for creating an audio editor app bar.
-typedef AudioEditorAppBarBuilder = ReactiveAppbar? Function(
-  AudioEditorPageState editorState,
-  Stream<void> rebuildStream,
-);
+typedef AudioEditorAppBarBuilder =
+    ReactiveAppbar? Function(
+      AudioEditorPageState editorState,
+      Stream<void> rebuildStream,
+    );
 
 /// Builder signature for creating an audio editor bottom bar.
-typedef AudioEditorBottomBarBuilder = ReactiveWidget? Function(
-  AudioEditorPageState editorState,
-  Stream<void> rebuildStream,
-);
+typedef AudioEditorBottomBarBuilder =
+    ReactiveWidget? Function(
+      AudioEditorPageState editorState,
+      Stream<void> rebuildStream,
+    );
 
 /// Builder signature for rendering an individual audio track widget.
-typedef AudioEditorTrackBuilder = Widget Function(
-  AudioTrack audioTrack,
-  Function()? onTap,
-);
+typedef AudioEditorTrackBuilder =
+    Widget Function(AudioTrack audioTrack, Function()? onTap);
 
 /// A typedef for building custom audio waveform widgets in the audio editor.
 ///
 /// This function type is used to create custom visual representations of audio
 /// waveforms within the audio editor interface.
-typedef AudioEditorWaveBuilder = Widget Function(
-  AudioTrack audioTrack,
-  ValueChanged<Duration>? updateStartTime,
-);
+typedef AudioEditorWaveBuilder =
+    Widget Function(
+      AudioTrack audioTrack,
+      ValueChanged<Duration>? updateStartTime,
+    );
 
 /// Builder signature for creating an audio editor edit sheet.
-typedef AudioEditorEditSheetBuilder = Widget Function(
-  AudioMainBottomBarState editorState,
-  ProVideoController controller,
-  ValueChanged<Duration> updateStartTime,
-  ValueChanged<double> updateBalance,
-  VoidCallback openSelectTrack,
-  VoidCallback confirm,
-);
+typedef AudioEditorEditSheetBuilder =
+    Widget Function(
+      AudioMainBottomBarState editorState,
+      ProVideoController controller,
+      ValueChanged<Duration> updateStartTime,
+      ValueChanged<double> updateBalance,
+      VoidCallback openSelectTrack,
+      VoidCallback confirm,
+    );
 
 /// Builder signature for creating an audio editor edit track button.
-typedef AudioEditorEditTrackButtonBuilder = Widget Function(
-  AudioMainBottomBarState editorState,
-  VoidCallback openSelectTrack,
-);
+typedef AudioEditorEditTrackButtonBuilder =
+    Widget Function(
+      AudioMainBottomBarState editorState,
+      VoidCallback openSelectTrack,
+    );
 
 /// Builder signature for creating an audio editor confirm button.
-typedef AudioEditorConfirmButtonBuilder = Widget Function(
-  AudioMainBottomBarState editorState,
-  VoidCallback confirm,
-);
+typedef AudioEditorConfirmButtonBuilder =
+    Widget Function(AudioMainBottomBarState editorState, VoidCallback confirm);
 
 /// Builder signature for creating an audio editor start time selector.
-typedef AudioEditorStartTimeSelectorBuilder = Widget Function(
-  AudioMainBottomBarState editorState,
-  ProVideoController controller,
-  ValueChanged<Duration> updateStartTime,
-);
+typedef AudioEditorStartTimeSelectorBuilder =
+    Widget Function(
+      AudioMainBottomBarState editorState,
+      ProVideoController controller,
+      ValueChanged<Duration> updateStartTime,
+    );
 
 /// Builder signature for creating an audio editor balance chooser.
-typedef AudioEditorBalanceChooserBuilder = Widget Function(
-  AudioMainBottomBarState editorState,
-  ProVideoController controller,
-  ValueChanged<double> updateBalance,
-);
+typedef AudioEditorBalanceChooserBuilder =
+    Widget Function(
+      AudioMainBottomBarState editorState,
+      ProVideoController controller,
+      ValueChanged<double> updateBalance,
+    );
 
 /// A collection of customizable widgets used in the audio editor UI.
 ///
@@ -146,7 +149,7 @@ class AudioEditorWidgets {
   /// It receives a rebuild stream to update reactively when the start time
   /// changes.
   final ReactiveWidget Function(Stream<void> rebuildStream, int startTimeMs)?
-      startTimeDisplay;
+  startTimeDisplay;
 
   /// {@macro customBodyItem}
   final CustomBodyItems<AudioEditorPageState>? bodyItems;

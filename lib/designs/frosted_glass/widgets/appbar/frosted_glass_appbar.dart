@@ -68,8 +68,9 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
                         child: IconButton(
                           tooltip: widget.editor.configs.i18n.cancel,
                           onPressed: widget.editor.closeEditor,
-                          icon: Icon(widget
-                              .editor.mainEditorConfigs.icons.closeEditor),
+                          icon: Icon(
+                            widget.editor.mainEditorConfigs.icons.closeEditor,
+                          ),
                           color: _foregroundColor,
                         ),
                       ),
@@ -87,7 +88,10 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
                               onPressed: widget.editor.undoAction,
                               icon: Icon(
                                 widget
-                                    .editor.mainEditorConfigs.icons.undoAction,
+                                    .editor
+                                    .mainEditorConfigs
+                                    .icons
+                                    .undoAction,
                                 color: widget.editor.canUndo
                                     ? _foregroundColor
                                     : _foregroundColor.withAlpha(80),
@@ -101,7 +105,10 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
                               onPressed: widget.editor.redoAction,
                               icon: Icon(
                                 widget
-                                    .editor.mainEditorConfigs.icons.redoAction,
+                                    .editor
+                                    .mainEditorConfigs
+                                    .icons
+                                    .redoAction,
                                 color: widget.editor.canRedo
                                     ? _foregroundColor
                                     : _foregroundColor.withAlpha(80),
@@ -156,7 +163,7 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
@@ -171,7 +178,11 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
             case SubEditorMode.paint:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.paintEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .paintEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.editor.openPaintEditor,
                 icon: Icon(widget.editor.paintEditorConfigs.icons.bottomNavBar),
               );
@@ -179,7 +190,11 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
             case SubEditorMode.text:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.textEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .textEditor
+                    .bottomNavigationBarText,
                 onPressed: () => widget.editor.openTextEditor(
                   duration: const Duration(milliseconds: 150),
                 ),
@@ -188,17 +203,26 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
 
             case SubEditorMode.cropRotate:
               return IconButton(
-                tooltip: widget.editor.configs.i18n.cropRotateEditor
+                tooltip: widget
+                    .editor
+                    .configs
+                    .i18n
+                    .cropRotateEditor
                     .bottomNavigationBarText,
                 onPressed: widget.editor.openCropRotateEditor,
                 icon: Icon(
-                    widget.editor.cropRotateEditorConfigs.icons.bottomNavBar),
+                  widget.editor.cropRotateEditorConfigs.icons.bottomNavBar,
+                ),
               );
 
             case SubEditorMode.tune:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.tuneEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .tuneEditor
+                    .bottomNavigationBarText,
                 onPressed: () =>
                     widget.editor.openTuneEditor(enableHero: false),
                 icon: Icon(widget.editor.tuneEditorConfigs.icons.bottomNavBar),
@@ -207,16 +231,25 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
             case SubEditorMode.filter:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.filterEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .filterEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.editor.openFilterEditor,
-                icon:
-                    Icon(widget.editor.filterEditorConfigs.icons.bottomNavBar),
+                icon: Icon(
+                  widget.editor.filterEditorConfigs.icons.bottomNavBar,
+                ),
               );
 
             case SubEditorMode.blur:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.blurEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .blurEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.editor.openBlurEditor,
                 icon: Icon(widget.editor.blurEditorConfigs.icons.bottomNavBar),
               );
@@ -224,24 +257,37 @@ class _FrostedGlassActionBarState extends State<FrostedGlassActionBar> {
             case SubEditorMode.emoji:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.stickerEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .stickerEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.openStickerEditor,
-                icon:
-                    Icon(widget.editor.stickerEditorConfigs.icons.bottomNavBar),
+                icon: Icon(
+                  widget.editor.stickerEditorConfigs.icons.bottomNavBar,
+                ),
               );
             case SubEditorMode.sticker:
               return null;
             case SubEditorMode.audio:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.audioEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .audioEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.editor.openAudioEditor,
                 icon: Icon(widget.editor.audioEditorConfigs.icons.bottomNavBar),
               );
             case SubEditorMode.videoClips:
               return IconButton(
                 tooltip: widget
-                    .editor.configs.i18n.clipsEditor.bottomNavigationBarText,
+                    .editor
+                    .configs
+                    .i18n
+                    .clipsEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.editor.openClipsEditor,
                 icon: Icon(widget.editor.clipsEditorConfigs.icons.bottomNavBar),
               );

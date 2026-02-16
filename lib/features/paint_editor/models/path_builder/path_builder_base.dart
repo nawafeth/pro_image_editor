@@ -20,9 +20,9 @@ abstract class PathBuilderBase {
     required this.item,
     required this.scale,
   }) : painter = Paint()
-          ..color = item.paint.color
-          ..style = item.paint.style
-          ..strokeWidth = item.paint.strokeWidth * scale;
+         ..color = item.paint.color
+         ..style = item.paint.style
+         ..strokeWidth = item.paint.strokeWidth * scale;
 
   /// Factory that returns the appropriate PathBuilder for a given PaintMode.
   ///
@@ -255,30 +255,20 @@ abstract class PathBuilderBase {
   bool hitTestLine(Offset position) {
     final vector = end - start;
     final normalizedVector = vector / vector.distance;
-    final perpendicularVector =
-        Offset(-normalizedVector.dy, normalizedVector.dx);
+    final perpendicularVector = Offset(
+      -normalizedVector.dy,
+      normalizedVector.dx,
+    );
 
     final strokeHalfWidth = painter.strokeWidth / 2;
     double x = perpendicularVector.dx * strokeHalfWidth;
     double y = perpendicularVector.dy * strokeHalfWidth;
 
     final path = Path()
-      ..moveTo(
-        start.dx + x,
-        start.dy + y,
-      )
-      ..lineTo(
-        end.dx + x,
-        end.dy + y,
-      )
-      ..lineTo(
-        end.dx - x,
-        end.dy - y,
-      )
-      ..lineTo(
-        start.dx - x,
-        start.dy - y,
-      )
+      ..moveTo(start.dx + x, start.dy + y)
+      ..lineTo(end.dx + x, end.dy + y)
+      ..lineTo(end.dx - x, end.dy - y)
+      ..lineTo(start.dx - x, start.dy - y)
       ..close();
 
     // Check if the position is inside the stroke path

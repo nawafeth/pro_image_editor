@@ -74,11 +74,7 @@ class ImageConverterService {
         }
 
         return await threadManager.send(
-          await _generateSendImageData(
-            id: id,
-            image: image,
-            format: format,
-          ),
+          await _generateSendImageData(id: id, image: image, format: format),
         );
       } catch (e) {
         // Fallback to the main thread.
@@ -99,9 +95,7 @@ class ImageConverterService {
   ///
   /// Returns a `Uint8List` containing the converted image data or `null`
   /// if the conversion fails.
-  Future<Uint8List?> _convertOnMainThread({
-    required ui.Image image,
-  }) async {
+  Future<Uint8List?> _convertOnMainThread({required ui.Image image}) async {
     if (configs.cropToDrawingBounds) {
       image = await dartUiRemoveTransparentImgAreas(image) ?? image;
     }

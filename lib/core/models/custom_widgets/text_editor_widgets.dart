@@ -78,10 +78,8 @@ class TextEditorWidgets extends CustomWidgetsStandaloneEditor<TextEditorState> {
   ///   );
   /// },
   /// ```
-  final Widget Function(
-    TextEditorState editorState,
-    Function() tap,
-  )? fontSizeCloseButton;
+  final Widget Function(TextEditorState editorState, Function() tap)?
+  fontSizeCloseButton;
 
   /// A custom slider widget for the font-size.
   ///
@@ -91,17 +89,21 @@ class TextEditorWidgets extends CustomWidgetsStandaloneEditor<TextEditorState> {
   @override
   TextEditorWidgets copyWith({
     ReactiveAppbar? Function(
-            TextEditorState editorState, Stream<void> rebuildStream)?
-        appBar,
+      TextEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    appBar,
     ReactiveWidget? Function(
-            TextEditorState editorState, Stream<void> rebuildStream)?
-        bottomBar,
+      TextEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    bottomBar,
     CustomBodyItems<TextEditorState>? bodyItems,
     CustomBodyItems<TextEditorState>? bodyItemsOverlay,
     CustomColorPicker<TextEditorState>? colorPicker,
     CustomSlider<TextEditorState>? sliderFontSize,
     Widget Function(TextEditorState editorState, Function() tap)?
-        fontSizeCloseButton,
+    fontSizeCloseButton,
   }) {
     return TextEditorWidgets(
       appBar: appBar ?? this.appBar,

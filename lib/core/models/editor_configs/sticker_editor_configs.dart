@@ -39,9 +39,11 @@ class StickerEditorConfigs
     this.maxScale = double.infinity,
     this.style = const StickerEditorStyle(),
     this.icons = const StickerEditorIcons(),
-  })  : assert(initWidth > 0, 'initWidth must be positive'),
-        assert(maxScale >= minScale,
-            'maxScale must be greater than or equal to minScale');
+  }) : assert(initWidth > 0, 'initWidth must be positive'),
+       assert(
+         maxScale >= minScale,
+         'maxScale must be greater than or equal to minScale',
+       );
 
   /// {@macro layerFractionalOffset}
   @override
@@ -113,20 +115,20 @@ class StickerEditorConfigs
 /// This typedef defines a function that builds a widget for stickers in an
 /// editor, allowing customization of how stickers are displayed and
 /// manipulated within the user interface.
-typedef BuildStickers = Widget Function(
-  Function(
-    Widget widget, {
-    WidgetLayerExportConfigs? exportConfigs,
-  }) setLayer,
-  ScrollController scrollController,
-);
+typedef BuildStickers =
+    Widget Function(
+      Function(Widget widget, {WidgetLayerExportConfigs? exportConfigs})
+      setLayer,
+      ScrollController scrollController,
+    );
 
 /// A typedef representing a function signature for building sticker widgets.
 ///
 /// This typedef defines a function that builds a widget for stickers in an
 /// editor, allowing customization of how stickers are displayed and
 /// manipulated within the user interface.
-typedef StickerBuilder = Widget Function(
-  Function(WidgetLayer widgetLayer) setLayer,
-  ScrollController scrollController,
-);
+typedef StickerBuilder =
+    Widget Function(
+      Function(WidgetLayer widgetLayer) setLayer,
+      ScrollController scrollController,
+    );

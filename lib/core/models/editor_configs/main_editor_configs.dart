@@ -190,10 +190,7 @@ class MainEditorTransformSetup {
   ///
   /// - [transformConfigs]: The configuration settings for the transformation.
   /// - [imageInfos]: The information about the image to be edited.
-  MainEditorTransformSetup({
-    required this.transformConfigs,
-    this.imageInfos,
-  });
+  MainEditorTransformSetup({required this.transformConfigs, this.imageInfos});
 
   /// The configuration settings for the transformation applied in the main
   /// editor.

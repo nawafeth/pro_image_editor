@@ -8,10 +8,7 @@ import '../frosted_glass_effect.dart';
 /// A frosted glass-style app bar for the clips editor.
 class FrostedGlassClipsAppbar extends StatelessWidget {
   /// Creates a [FrostedGlassClipsAppbar].
-  const FrostedGlassClipsAppbar({
-    super.key,
-    required this.editorState,
-  });
+  const FrostedGlassClipsAppbar({super.key, required this.editorState});
 
   /// The current clips editor state.
   final ClipsEditorPageState editorState;

@@ -193,7 +193,7 @@ class AudioEditorStyle {
           startTimeSelectorWaveColor ?? this.startTimeSelectorWaveColor,
       startTimeSelectorSelectionBorderColor:
           startTimeSelectorSelectionBorderColor ??
-              this.startTimeSelectorSelectionBorderColor,
+          this.startTimeSelectorSelectionBorderColor,
       startTimeWaveMaxHeight:
           startTimeWaveMaxHeight ?? this.startTimeWaveMaxHeight,
       startTimeWaveItemWidth:
@@ -206,10 +206,10 @@ class AudioEditorStyle {
           startTimeSelectorBorderRadius ?? this.startTimeSelectorBorderRadius,
       startTimeSelectorSelectionBorderWidth:
           startTimeSelectorSelectionBorderWidth ??
-              this.startTimeSelectorSelectionBorderWidth,
+          this.startTimeSelectorSelectionBorderWidth,
       startTimeSelectorSelectionBorderRadius:
           startTimeSelectorSelectionBorderRadius ??
-              this.startTimeSelectorSelectionBorderRadius,
+          this.startTimeSelectorSelectionBorderRadius,
       buttonEditTrackBorderRadius:
           buttonEditTrackBorderRadius ?? this.buttonEditTrackBorderRadius,
       buttonConfirmBorderRadius:

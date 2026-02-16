@@ -84,20 +84,18 @@ class GroundedMainBarState extends State<GroundedMainBar>
   }
 
   void _openEmojiEditor() async {
-    Layer? layer = await widget.editor.openPage(GroundedEmojiEditor(
-      configs: configs,
-      callbacks: callbacks,
-    ));
+    Layer? layer = await widget.editor.openPage(
+      GroundedEmojiEditor(configs: configs, callbacks: callbacks),
+    );
     if (layer == null || !mounted) return;
     layer.scale = configs.emojiEditor.initScale;
     widget.editor.addLayer(layer);
   }
 
   void _openStickerEditor() async {
-    Layer? layer = await widget.editor.openPage(GroundedStickerEditor(
-      configs: configs,
-      callbacks: callbacks,
-    ));
+    Layer? layer = await widget.editor.openPage(
+      GroundedStickerEditor(configs: configs, callbacks: callbacks),
+    );
     if (layer == null || !mounted) return;
     widget.editor.addLayer(layer);
   }
@@ -161,7 +159,8 @@ class GroundedMainBarState extends State<GroundedMainBar>
               );
             },
             switchInCurve: Curves.ease,
-            child: widget.editor.isSubEditorOpen &&
+            child:
+                widget.editor.isSubEditorOpen &&
                     !widget.editor.isSubEditorClosing
                 ? SizedBox(width: _contentWidth)
                 : ConstrainedBox(
@@ -192,11 +191,7 @@ class GroundedMainBarState extends State<GroundedMainBar>
     return FlatIconTextButton(
       spacing: 7,
       label: Text(label, style: _bottomTextStyle),
-      icon: Icon(
-        icon,
-        size: _bottomIconSize,
-        color: _foreGroundColor,
-      ),
+      icon: Icon(icon, size: _bottomIconSize, color: _foreGroundColor),
       onPressed: onPressed,
     );
   }

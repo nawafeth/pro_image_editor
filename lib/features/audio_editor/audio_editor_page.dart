@@ -137,10 +137,7 @@ class AudioEditorPageState extends State<AudioEditorPage>
     final track = _selectedTrackNotifier.value;
     await stopTrack(track);
     if (mounted) {
-      Navigator.pop(
-        context,
-        AudioEditorResponse(track: track),
-      );
+      Navigator.pop(context, AudioEditorResponse(track: track));
     }
 
     callbacks.audioEditorCallbacks?.onDone?.call();
@@ -168,16 +165,18 @@ class AudioEditorPageState extends State<AudioEditorPage>
             bottom: safeArea.bottom,
             left: safeArea.left,
             right: safeArea.right,
-            child: LayoutBuilder(builder: (context, constraints) {
-              return Scaffold(
-                resizeToAvoidBottomInset: false,
-                backgroundColor: audioEditorConfigs.style.background,
-                appBar: _buildAppBar(constraints),
-                body: _buildBody(),
-                bottomNavigationBar: audioEditorConfigs.widgets.bottomBar
-                    ?.call(this, _rebuildController.stream),
-              );
-            }),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: audioEditorConfigs.style.background,
+                  appBar: _buildAppBar(constraints),
+                  body: _buildBody(),
+                  bottomNavigationBar: audioEditorConfigs.widgets.bottomBar
+                      ?.call(this, _rebuildController.stream),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -226,27 +225,26 @@ class AudioEditorPageState extends State<AudioEditorPage>
           child: Container(
             color: Colors.black45,
             child: ValueListenableBuilder(
-                valueListenable: _selectedTrackNotifier,
-                builder: (_, selectedTrack, __) {
-                  return ListView.builder(
-                    reverse: audioEditorConfigs.style.reversedTrackList,
-                    padding: audioEditorConfigs.style.bodyPadding,
-                    itemCount: _audioTracks.length,
-                    itemBuilder: (context, index) {
-                      final audioTrack = _audioTracks[index];
+              valueListenable: _selectedTrackNotifier,
+              builder: (_, selectedTrack, _) {
+                return ListView.builder(
+                  reverse: audioEditorConfigs.style.reversedTrackList,
+                  padding: audioEditorConfigs.style.bodyPadding,
+                  itemCount: _audioTracks.length,
+                  itemBuilder: (context, index) {
+                    final audioTrack = _audioTracks[index];
 
-                      return AudioTrackListTile(
-                        isSelected: audioTrack == selectedTrack,
-                        videoDuration: widget.videoDuration,
-                        audioTrack: audioTrack,
-                        configs: configs,
-                        onTap: () => selectTrack(
-                          audioTrack,
-                        ),
-                      );
-                    },
-                  );
-                }),
+                    return AudioTrackListTile(
+                      isSelected: audioTrack == selectedTrack,
+                      videoDuration: widget.videoDuration,
+                      audioTrack: audioTrack,
+                      configs: configs,
+                      onTap: () => selectTrack(audioTrack),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
         ...(audioEditorConfigs.widgets.bodyItems?.call(

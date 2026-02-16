@@ -149,8 +149,9 @@ class _LayerInteractionButtonState extends State<LayerInteractionButton> {
                 child: Container(
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(widget.buttonRadius * 2),
+                    borderRadius: BorderRadius.circular(
+                      widget.buttonRadius * 2,
+                    ),
                     color: widget.background,
                   ),
                   child: Icon(

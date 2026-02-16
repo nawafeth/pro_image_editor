@@ -58,7 +58,8 @@ class AudioEditorCallbacks {
     AudioTrack audio,
     Duration videoDuration,
     ValueChanged<Duration> onStartTimeChanged,
-  )? onBuildWaveformSelector;
+  )?
+  onBuildWaveformSelector;
 
   /// Creates a copy with modified editor callbacks.
   AudioEditorCallbacks copyWith({
@@ -73,7 +74,8 @@ class AudioEditorCallbacks {
       AudioTrack audio,
       Duration videoDuration,
       ValueChanged<Duration> onStartTimeChanged,
-    )? onBuildWaveformSelector,
+    )?
+    onBuildWaveformSelector,
   }) {
     return AudioEditorCallbacks(
       onPlay: onPlay ?? this.onPlay,

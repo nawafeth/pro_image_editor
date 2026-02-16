@@ -11,10 +11,7 @@ const Map<String, String> kMinifiedMainKeys = {
 };
 
 /// A constant map containing minified size keys for import/export services.
-const Map<String, String> kMinifiedSizeKeys = {
-  'width': 'w',
-  'height': 'h',
-};
+const Map<String, String> kMinifiedSizeKeys = {'width': 'w', 'height': 'h'};
 
 /// A constant map containing minified history keys for import/export services.
 const Map<String, String> kMinifiedHistoryKeys = {

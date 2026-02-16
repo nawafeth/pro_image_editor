@@ -87,15 +87,15 @@ class EditorImage {
     this.networkHeaders,
     this.assetPath,
     dynamic file,
-  })  : file = file == null ? null : ensureFileInstance(file),
-        assert(
-          byteArray != null ||
-              file != null ||
-              networkUrl != null ||
-              assetPath != null,
-          'At least one of bytes, file, networkUrl, or assetPath must not '
-          'be null.',
-        );
+  }) : file = file == null ? null : ensureFileInstance(file),
+       assert(
+         byteArray != null ||
+             file != null ||
+             networkUrl != null ||
+             assetPath != null,
+         'At least one of bytes, file, networkUrl, or assetPath must not '
+         'be null.',
+       );
 
   /// Creates an [EditorImage] from raw memory bytes.
   factory EditorImage.memory(Uint8List bytes) {
@@ -343,5 +343,5 @@ enum EditorImageType {
   memory,
 
   /// Represents an image loaded from an asset path.
-  asset
+  asset,
 }

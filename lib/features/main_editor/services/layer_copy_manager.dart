@@ -123,10 +123,7 @@ class LayerCopyManager {
         alpha: layer.color.a,
       ),
       colorMode: layer.colorMode,
-      offset: Offset(
-        layer.offset.dx + offset.dx,
-        layer.offset.dy + offset.dy,
-      ),
+      offset: Offset(layer.offset.dx + offset.dx, layer.offset.dy + offset.dy),
       rotation: layer.rotation,
       textStyle: layer.textStyle,
       scale: layer.scale,
@@ -151,10 +148,7 @@ class LayerCopyManager {
       id: enableCopyId ? layer.id : null,
       key: enableCopyKey ? layer.key : null,
       emoji: layer.emoji,
-      offset: Offset(
-        layer.offset.dx + offset.dx,
-        layer.offset.dy + offset.dy,
-      ),
+      offset: Offset(layer.offset.dx + offset.dx, layer.offset.dy + offset.dy),
       rotation: layer.rotation,
       scale: layer.scale,
       flipX: layer.flipX,
@@ -176,10 +170,7 @@ class LayerCopyManager {
       id: enableCopyId ? layer.id : null,
       key: enableCopyKey ? layer.key : null,
       widget: layer.widget,
-      offset: Offset(
-        layer.offset.dx + offset.dx,
-        layer.offset.dy + offset.dy,
-      ),
+      offset: Offset(layer.offset.dx + offset.dx, layer.offset.dy + offset.dy),
       rotation: layer.rotation,
       scale: layer.scale,
       flipX: layer.flipX,
@@ -202,10 +193,7 @@ class LayerCopyManager {
     return PaintLayer(
       id: enableCopyId ? layer.id : null,
       key: enableCopyKey ? layer.key : null,
-      offset: Offset(
-        layer.offset.dx + offset.dx,
-        layer.offset.dy + offset.dy,
-      ),
+      offset: Offset(layer.offset.dx + offset.dx, layer.offset.dy + offset.dy),
       rotation: layer.rotation,
       scale: layer.scale,
       flipX: layer.flipX,

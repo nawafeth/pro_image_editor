@@ -116,7 +116,8 @@ class ProVideoController {
     initialTrimSpan ??
         TrimDurationSpan(
           start: Duration.zero,
-          end: configs.maxTrimDuration == null ||
+          end:
+              configs.maxTrimDuration == null ||
                   configs.maxTrimDuration! > videoDuration
               ? videoDuration
               : configs.maxTrimDuration!,

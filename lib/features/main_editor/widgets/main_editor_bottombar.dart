@@ -94,52 +94,53 @@ class MainEditorBottombar extends StatelessWidget {
 
   final double _bottomIconSize = 22.0;
   Color get _foregroundColor => configs.mainEditor.style.bottomBarColor;
-  TextStyle get _bottomTextStyle => TextStyle(
-        fontSize: 10.0,
-        color: _foregroundColor,
-      );
+  TextStyle get _bottomTextStyle =>
+      TextStyle(fontSize: 10.0, color: _foregroundColor);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       key: bottomBarKey,
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Theme(
-          data: theme,
-          child: EditorScrollbar(
-            controller: controllers.bottomBarScrollCtrl,
-            child: BottomAppBar(
-              height: kBottomNavigationBarHeight,
-              color: configs.mainEditor.style.bottomBarBackground,
-              padding: EdgeInsets.zero,
-              child: Center(
-                child: SingleChildScrollView(
-                  controller: controllers.bottomBarScrollCtrl,
-                  scrollDirection: Axis.horizontal,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: min(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Theme(
+            data: theme,
+            child: EditorScrollbar(
+              controller: controllers.bottomBarScrollCtrl,
+              child: BottomAppBar(
+                height: kBottomNavigationBarHeight,
+                color: configs.mainEditor.style.bottomBarBackground,
+                padding: EdgeInsets.zero,
+                child: Center(
+                  child: SingleChildScrollView(
+                    controller: controllers.bottomBarScrollCtrl,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: min(
                           sizesManager.lastScreenSize.width != 0
                               ? sizesManager.lastScreenSize.width
                               : constraints.maxWidth,
-                          700),
-                      maxWidth: 700,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.min,
-                        children: _buildEditorButtons(),
+                          700,
+                        ),
+                        maxWidth: 700,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
+                          children: _buildEditorButtons(),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 

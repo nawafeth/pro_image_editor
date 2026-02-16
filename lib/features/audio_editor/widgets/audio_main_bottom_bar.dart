@@ -106,7 +106,8 @@ class AudioMainBottomBarState extends State<AudioMainBottomBar> {
         Container(
           decoration: BoxDecoration(
             color: _style.editSheetBackgroundColor,
-            boxShadow: _style.editSheetShadow ??
+            boxShadow:
+                _style.editSheetShadow ??
                 [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.3),
@@ -137,11 +138,13 @@ class AudioMainBottomBarState extends State<AudioMainBottomBar> {
                   data: SliderTheme.of(context).copyWith(
                     padding: EdgeInsets.zero,
                     activeTrackColor: balanceSliderBackground,
-                    inactiveTrackColor:
-                        balanceSliderBackground.withValues(alpha: 0.3),
+                    inactiveTrackColor: balanceSliderBackground.withValues(
+                      alpha: 0.3,
+                    ),
                     thumbColor: balanceSliderBackground,
-                    thumbShape:
-                        const RoundSliderThumbShape(enabledThumbRadius: 12),
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 12,
+                    ),
                     trackHeight: 4,
                     valueIndicatorShape:
                         const PaddleSliderValueIndicatorShape(),
@@ -152,23 +155,25 @@ class AudioMainBottomBarState extends State<AudioMainBottomBar> {
                     ),
                     showValueIndicator: ShowValueIndicator.onlyForContinuous,
                   ),
-                  child: StatefulBuilder(builder: (_, setState) {
-                    return Slider(
-                      value: _audioTrack.volumeBalance,
-                      min: -1.0,
-                      max: 1.0,
-                      label: _balanceLabel,
-                      onChanged: (value) {
-                        updateBalance(value);
-                        setState(() {});
-                      },
-                    );
-                  }),
+                  child: StatefulBuilder(
+                    builder: (_, setState) {
+                      return Slider(
+                        value: _audioTrack.volumeBalance,
+                        min: -1.0,
+                        max: 1.0,
+                        label: _balanceLabel,
+                        onChanged: (value) {
+                          updateBalance(value);
+                          setState(() {});
+                        },
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
-              // Audio waveform selector
 
+              // Audio waveform selector
               if (_customWidgets.startTimeSelector != null)
                 _customWidgets.startTimeSelector!(
                   this,
@@ -200,8 +205,9 @@ class AudioMainBottomBarState extends State<AudioMainBottomBar> {
                           label: Text(_i18n.editTrack),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: _style.buttonEditTrackColor,
-                            side:
-                                BorderSide(color: _style.buttonEditTrackColor),
+                            side: BorderSide(
+                              color: _style.buttonEditTrackColor,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(

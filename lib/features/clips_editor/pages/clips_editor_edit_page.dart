@@ -134,8 +134,10 @@ class ClipsEditorEditPageState extends State<ClipsEditorEditPage>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            callbacks.clipsEditorCallbacks?.onBuildPlayer
-                    ?.call(_controller, widget.videoClip) ??
+            callbacks.clipsEditorCallbacks?.onBuildPlayer?.call(
+                  _controller,
+                  widget.videoClip,
+                ) ??
                 const SizedBox.shrink(),
             Padding(
               padding: widget.configs.clipsEditor.style.editPageBodyPadding,

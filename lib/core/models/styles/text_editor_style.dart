@@ -54,8 +54,9 @@ class TextEditorStyle {
   const TextEditorStyle({
     this.textHeight = 0.0,
     this.fontSizeBottomSheetTitle,
-    this.textFieldMargin =
-        const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+    this.textFieldMargin = const EdgeInsets.only(
+      bottom: kBottomNavigationBarHeight,
+    ),
     this.textFieldPadding = EdgeInsets.zero,
     this.appBarBackground = kImageEditorAppBarBackground,
     this.appBarColor = kImageEditorAppBarColor,
@@ -67,8 +68,9 @@ class TextEditorStyle {
     this.fontScaleBottomSheetBackground = const Color(0xFF252728),
     this.inputTextFieldBackground = Colors.transparent,
     this.inputTextFieldBorderColor = Colors.transparent,
-    this.inputTextFieldBorderRadius =
-        const BorderRadius.all(Radius.circular(4)),
+    this.inputTextFieldBorderRadius = const BorderRadius.all(
+      Radius.circular(4),
+    ),
     this.inputTextFieldPadding = EdgeInsets.zero,
   });
 

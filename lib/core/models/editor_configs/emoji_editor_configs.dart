@@ -54,9 +54,11 @@ class EmojiEditorConfigs
     this.emojiSet,
     this.style = const EmojiEditorStyle(),
     this.icons = const EmojiEditorIcons(),
-  })  : assert(initScale > 0, 'initScale must be positive'),
-        assert(maxScale >= minScale,
-            'maxScale must be greater than or equal to minScale');
+  }) : assert(initScale > 0, 'initScale must be positive'),
+       assert(
+         maxScale >= minScale,
+         'maxScale must be greater than or equal to minScale',
+       );
 
   /// {@macro layerFractionalOffset}
   @override

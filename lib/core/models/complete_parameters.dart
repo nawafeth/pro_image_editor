@@ -82,9 +82,9 @@ class CompleteParameters {
 
   /// All active color filters including both tuning and filter matrices.
   List<List<double>> get colorFilters => [
-        ...matrixTuneAdjustmentsList,
-        ...matrixFilterList,
-      ];
+    ...matrixTuneAdjustmentsList,
+    ...matrixFilterList,
+  ];
 
   /// Combined color filter matrix from all filters and adjustments.
   List<double> get colorFiltersCombined {
@@ -196,7 +196,9 @@ class CompleteParameters {
         other.blur == blur &&
         listEquals(other.matrixFilterList, matrixFilterList) &&
         listEquals(
-            other.matrixTuneAdjustmentsList, matrixTuneAdjustmentsList) &&
+          other.matrixTuneAdjustmentsList,
+          matrixTuneAdjustmentsList,
+        ) &&
         other.startTime == startTime &&
         other.endTime == endTime &&
         other.cropWidth == cropWidth &&

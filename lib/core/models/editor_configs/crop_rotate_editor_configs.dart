@@ -65,8 +65,9 @@ class CropRotateEditorConfigs implements BaseSubEditorConfigs {
     this.rotateDirection = RotateDirection.left,
     this.opacityOutsideCropAreaDuration = const Duration(milliseconds: 100),
     this.animationDuration = const Duration(milliseconds: 250),
-    this.fadeInOutsideCropAreaAnimationDuration =
-        const Duration(milliseconds: 350),
+    this.fadeInOutsideCropAreaAnimationDuration = const Duration(
+      milliseconds: 350,
+    ),
     this.cropDragAnimationDuration = const Duration(milliseconds: 400),
     this.maxScale = 7,
     this.mouseScaleFactor = 0.1,
@@ -78,24 +79,30 @@ class CropRotateEditorConfigs implements BaseSubEditorConfigs {
       AspectRatioItem(text: '4*3', value: 4.0 / 3.0),
       AspectRatioItem(text: '3*4', value: 3.0 / 4.0),
       AspectRatioItem(text: '16*9', value: 16.0 / 9.0),
-      AspectRatioItem(text: '9*16', value: 9.0 / 16.0)
+      AspectRatioItem(text: '9*16', value: 9.0 / 16.0),
     ],
     this.safeArea = const EditorSafeArea(),
     this.style = const CropRotateEditorStyle(),
     this.icons = const CropRotateEditorIcons(),
     this.widgets = const CropRotateEditorWidgets(),
     this.maxWidthFactor,
-  })  : assert(maxScale >= 1, 'maxScale must be greater than or equal to 1'),
-        assert(desktopCornerDragArea > 0,
-            'desktopCornerDragArea must be positive'),
-        assert(
-            mobileCornerDragArea > 0, 'mobileCornerDragArea must be positive'),
-        assert(
-            maxWidthFactor == null ||
-                (maxWidthFactor > 0 && maxWidthFactor <= 1),
-            'maxWidthFactor must be greater than 0 and less than 1'),
-        assert(doubleTapScaleFactor > 1,
-            'doubleTapScaleFactor must be greater than 1');
+  }) : assert(maxScale >= 1, 'maxScale must be greater than or equal to 1'),
+       assert(
+         desktopCornerDragArea > 0,
+         'desktopCornerDragArea must be positive',
+       ),
+       assert(
+         mobileCornerDragArea > 0,
+         'mobileCornerDragArea must be positive',
+       ),
+       assert(
+         maxWidthFactor == null || (maxWidthFactor > 0 && maxWidthFactor <= 1),
+         'maxWidthFactor must be greater than 0 and less than 1',
+       ),
+       assert(
+         doubleTapScaleFactor > 1,
+         'doubleTapScaleFactor must be greater than 1',
+       );
 
   /// {@macro enableGesturePop}
   @override
@@ -301,7 +308,7 @@ class CropRotateEditorConfigs implements BaseSubEditorConfigs {
           cropDragAnimationDuration ?? this.cropDragAnimationDuration,
       fadeInOutsideCropAreaAnimationDuration:
           fadeInOutsideCropAreaAnimationDuration ??
-              this.fadeInOutsideCropAreaAnimationDuration,
+          this.fadeInOutsideCropAreaAnimationDuration,
       opacityOutsideCropAreaDuration:
           opacityOutsideCropAreaDuration ?? this.opacityOutsideCropAreaDuration,
       rotateAnimationCurve: rotateAnimationCurve ?? this.rotateAnimationCurve,
@@ -311,7 +318,7 @@ class CropRotateEditorConfigs implements BaseSubEditorConfigs {
           cropDragAnimationCurve ?? this.cropDragAnimationCurve,
       fadeInOutsideCropAreaAnimationCurve:
           fadeInOutsideCropAreaAnimationCurve ??
-              this.fadeInOutsideCropAreaAnimationCurve,
+          this.fadeInOutsideCropAreaAnimationCurve,
       rotateDirection: rotateDirection ?? this.rotateDirection,
       desktopCornerDragArea:
           desktopCornerDragArea ?? this.desktopCornerDragArea,

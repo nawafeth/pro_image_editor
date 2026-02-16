@@ -117,8 +117,10 @@ class _TextEditorInputState extends State<TextEditorInput> {
       animation.addStatusListener(animationStatusListener);
     }
 
-    final shuttleChild =
-        InheritedTheme.captureAll(fromHeroContext, toHero.child);
+    final shuttleChild = InheritedTheme.captureAll(
+      fromHeroContext,
+      toHero.child,
+    );
 
     return isOpening
         ? SingleChildScrollView(
@@ -188,8 +190,9 @@ class _TextEditorInputState extends State<TextEditorInput> {
             },
             onEditingComplete: widget.callbacks?.handleEditingComplete,
             onSubmitted: widget.callbacks?.handleSubmitted,
-            textAlign:
-                widget.textCtrl.text.isEmpty ? TextAlign.center : widget.align,
+            textAlign: widget.textCtrl.text.isEmpty
+                ? TextAlign.center
+                : widget.align,
             configs: widget.configs,
             cursorHeight: widget.textFontSize,
             cursorWidth: widget.cursorWidth,

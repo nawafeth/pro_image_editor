@@ -46,10 +46,10 @@ class EditorSafeArea {
 
   /// Creates an [EditorSafeArea] with no safe area padding on any edge.
   const EditorSafeArea.none()
-      : top = false,
-        left = false,
-        right = false,
-        bottom = false;
+    : top = false,
+      left = false,
+      right = false,
+      bottom = false;
 
   /// Creates an [EditorSafeArea] with symmetric safe area padding.
   ///
@@ -58,21 +58,16 @@ class EditorSafeArea {
   const EditorSafeArea.symmetric({
     bool vertical = false,
     bool horizontal = false,
-  })  : top = vertical,
-        bottom = vertical,
-        left = horizontal,
-        right = horizontal;
+  }) : top = vertical,
+       bottom = vertical,
+       left = horizontal,
+       right = horizontal;
 
   /// Creates an [EditorSafeArea] with the specified padding for each edge.
   ///
   /// Similar to [EdgeInsets.fromLTRB], this constructor allows you to specify
   /// the safe area padding for each edge individually.
-  const EditorSafeArea.fromLTRB(
-    this.left,
-    this.top,
-    this.right,
-    this.bottom,
-  );
+  const EditorSafeArea.fromLTRB(this.left, this.top, this.right, this.bottom);
 
   /// If `true`, applies safe area padding to the top edge.
   final bool top;

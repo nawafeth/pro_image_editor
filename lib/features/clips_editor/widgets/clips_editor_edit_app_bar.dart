@@ -60,10 +60,7 @@ class ClipsEditorEditAppBar extends StatelessWidget
         iconSize: 28,
         onPressed: onRemove,
       ),
-      const VerticalDivider(
-        indent: 10,
-        endIndent: 10,
-      ),
+      const VerticalDivider(indent: 10, endIndent: 10),
       IconButton(
         tooltip: i18n.done,
         padding: const EdgeInsets.symmetric(horizontal: 8),

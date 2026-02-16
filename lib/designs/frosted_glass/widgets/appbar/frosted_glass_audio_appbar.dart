@@ -8,10 +8,7 @@ import '../frosted_glass_effect.dart';
 /// A frosted glass-style app bar for the audio editor.
 class FrostedGlassAudioAppbar extends StatelessWidget {
   /// Creates a [FrostedGlassAudioAppbar].
-  const FrostedGlassAudioAppbar({
-    super.key,
-    required this.editorState,
-  });
+  const FrostedGlassAudioAppbar({super.key, required this.editorState});
 
   /// The current audio editor state.
   final AudioEditorPageState editorState;

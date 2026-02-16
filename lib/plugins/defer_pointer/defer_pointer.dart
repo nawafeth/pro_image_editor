@@ -65,7 +65,9 @@ class _DeferPointerRenderObjectWidget extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, DeferPointerRenderObject renderObject) {
+    BuildContext context,
+    DeferPointerRenderObject renderObject,
+  ) {
     renderObject
       ..link = link
       ..deferPaint = deferPaint;

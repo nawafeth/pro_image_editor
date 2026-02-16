@@ -10,9 +10,7 @@ import 'package:flutter/services.dart';
 /// and mouse events on desktop platforms.
 class CropDesktopInteractionManager {
   /// Manages user interactions for the crop desktop interface.
-  CropDesktopInteractionManager({
-    required this.context,
-  });
+  CropDesktopInteractionManager({required this.context});
 
   /// Build context for the interaction manager.
   final BuildContext context;

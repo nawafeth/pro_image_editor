@@ -69,8 +69,9 @@ class LayerWidgetTextItem extends StatelessWidget {
 
     return RoundedBackgroundText(
       enableHitBoxCorrection: true,
-      maxTextWidth:
-          maxTextWidth == null ? double.infinity : maxTextWidth * layer.scale,
+      maxTextWidth: maxTextWidth == null
+          ? double.infinity
+          : maxTextWidth * layer.scale,
       onHitTestResult: _handleLayerHit,
       layer.text.toString(),
       backgroundColor: layer.background,

@@ -14,10 +14,10 @@ class AudioTrack {
     this.startTime,
     this.volumeBalance = 0.0,
   }) : assert(
-          volumeBalance >= -1 && volumeBalance <= 1,
-          '[volumeBalance] must be greater than or equal to -1.0 and '
-          'less than or equal to 1.0.',
-        );
+         volumeBalance >= -1 && volumeBalance <= 1,
+         '[volumeBalance] must be greater than or equal to -1.0 and '
+         'less than or equal to 1.0.',
+       );
 
   /// Unique identifier for the audio track.
   final String id;

@@ -95,8 +95,9 @@ class DesktopInteractionManager {
 
     final key = event.logicalKey.keyLabel;
 
-    bool? stopPropagate =
-        callbacks.mainEditorCallbacks?.onKeyboardEvent?.call(event);
+    bool? stopPropagate = callbacks.mainEditorCallbacks?.onKeyboardEvent?.call(
+      event,
+    );
 
     if (stopPropagate == true) return true;
 

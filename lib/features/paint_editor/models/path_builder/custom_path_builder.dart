@@ -30,8 +30,9 @@ export '../painted_model.dart';
 ///   );
 /// }
 /// ```
-typedef CustomPathBuilderFactory = PathBuilderBase Function({
-  required PaintedModel item,
-  required double scale,
-  required PaintEditorConfigs paintEditorConfigs,
-});
+typedef CustomPathBuilderFactory =
+    PathBuilderBase Function({
+      required PaintedModel item,
+      required double scale,
+      required PaintEditorConfigs paintEditorConfigs,
+    });

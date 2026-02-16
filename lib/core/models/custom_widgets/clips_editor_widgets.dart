@@ -7,47 +7,50 @@ import '/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
 import 'utils/custom_widgets_typedef.dart';
 
 /// Builder signature for creating an clips editor app bar.
-typedef ClipsEditorAppBarBuilder = ReactiveAppbar? Function(
-  ClipsEditorPageState editorState,
-  Stream<void> rebuildStream,
-);
+typedef ClipsEditorAppBarBuilder =
+    ReactiveAppbar? Function(
+      ClipsEditorPageState editorState,
+      Stream<void> rebuildStream,
+    );
 
 /// Builder signature for creating an clips editor bottom bar.
-typedef ClipsEditorBottomBarBuilder = ReactiveWidget? Function(
-  ClipsEditorPageState editorState,
-  Stream<void> rebuildStream,
-);
+typedef ClipsEditorBottomBarBuilder =
+    ReactiveWidget? Function(
+      ClipsEditorPageState editorState,
+      Stream<void> rebuildStream,
+    );
 
 /// Signature for building a custom "Add Clip" button widget.
 ///
 /// Provides access to the current [ClipsEditorPageState], a [rebuildStream]
 /// that triggers UI updates, and the [addClip] function to add new clips.
-typedef ClipsEditorAddClipButton = ReactiveWidget? Function(
-  ClipsEditorPageState editorState,
-  Stream<void> rebuildStream,
-  VoidCallback addClip,
-);
+typedef ClipsEditorAddClipButton =
+    ReactiveWidget? Function(
+      ClipsEditorPageState editorState,
+      Stream<void> rebuildStream,
+      VoidCallback addClip,
+    );
 
 /// Builder signature for creating a clips editor edit page app bar.
-typedef ClipsEditorEditAppBarBuilder = ReactiveAppbar? Function(
-  ClipsEditorEditPageState editorState,
-  Stream<void> rebuildStream,
-);
+typedef ClipsEditorEditAppBarBuilder =
+    ReactiveAppbar? Function(
+      ClipsEditorEditPageState editorState,
+      Stream<void> rebuildStream,
+    );
 
 /// Builder signature for creating a clips editor edit page bottom bar.
-typedef ClipsEditorEditBottomBarBuilder = ReactiveWidget? Function(
-  ClipsEditorEditPageState editorState,
-  Stream<void> rebuildStream,
-);
+typedef ClipsEditorEditBottomBarBuilder =
+    ReactiveWidget? Function(
+      ClipsEditorEditPageState editorState,
+      Stream<void> rebuildStream,
+    );
 
 /// Builder signature for creating a custom processing overlay widget.
 ///
 /// Displayed when video clips are being merged. The [progress] value
 /// ranges from 0.0 to 1.0 indicating the merge progress.
-typedef ClipsEditorProcessingOverlayBuilder = Widget Function(
-  ClipsEditorPageState editorState,
-  double progress,
-);
+typedef ClipsEditorProcessingOverlayBuilder =
+    Widget Function(ClipsEditorPageState editorState, double progress);
 
 /// A collection of customizable widgets used in the clips editor UI.
 ///

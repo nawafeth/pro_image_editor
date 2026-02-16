@@ -58,13 +58,13 @@ class _WhatsAppAppBarState extends State<WhatsAppAppBar> {
       top: 10,
       left: 10,
       right: 10,
-      child: LayoutBuilder(builder: (context, constraints) {
-        return widget.openEditor
-            ? const SizedBox.shrink()
-            : Row(
-                children: _buildToolList(constraints.maxWidth),
-              );
-      }),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return widget.openEditor
+              ? const SizedBox.shrink()
+              : Row(children: _buildToolList(constraints.maxWidth));
+        },
+      ),
     );
   }
 
@@ -116,7 +116,10 @@ class _WhatsAppAppBarState extends State<WhatsAppAppBar> {
             GestureInterceptor(
               child: IconButton(
                 tooltip: widget
-                    .configs.i18n.cropRotateEditor.bottomNavigationBarText,
+                    .configs
+                    .i18n
+                    .cropRotateEditor
+                    .bottomNavigationBarText,
                 onPressed: widget.onTapCropRotateEditor,
                 icon: Icon(widget.configs.cropRotateEditor.icons.bottomNavBar),
                 style: whatsAppButtonStyle,
