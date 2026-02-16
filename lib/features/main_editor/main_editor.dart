@@ -2742,8 +2742,8 @@ class ProImageEditorState extends State<ProImageEditor>
                               },
                               layoutBuilder: (currentChild, previousChildren) {
                                 return Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: <Widget>[
+                                  alignment: .bottomCenter,
+                                  children: [
                                     ...previousChildren,
                                     ?currentChild,
                                   ],

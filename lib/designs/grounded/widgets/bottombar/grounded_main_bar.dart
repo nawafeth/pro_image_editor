@@ -140,10 +140,7 @@ class GroundedMainBarState extends State<GroundedMainBar>
             layoutBuilder: (currentChild, previousChildren) => Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                ...previousChildren,
-                ?currentChild,
-              ],
+              children: <Widget>[...previousChildren, ?currentChild],
             ),
             duration: kGroundedFadeInDuration * 2,
             reverseDuration: const Duration(milliseconds: 0),

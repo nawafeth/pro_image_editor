@@ -6,6 +6,7 @@ analyzer:
 
 linter:
   rules:
+    - use_null_aware_elements
     - avoid_double_and_int_checks
     - no_logic_in_create_state
     - avoid_implementing_value_types
