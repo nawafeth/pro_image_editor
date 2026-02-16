@@ -2745,7 +2745,7 @@ class ProImageEditorState extends State<ProImageEditor>
                                   alignment: Alignment.bottomCenter,
                                   children: <Widget>[
                                     ...previousChildren,
-                                    if (currentChild != null) currentChild,
+                                    ?currentChild,
                                   ],
                                 );
                               },
