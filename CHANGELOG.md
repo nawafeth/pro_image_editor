@@ -1,5 +1,11 @@
 # Changelog
 
+## 12.0.11
+- **FEAT**(text-editor): Add `inputLetterSpacing` and `inputShadows` to `TextEditorStyle` for customizing letter spacing and text shadows.
+- **FEAT**(callbacks): Add `onLayerInteractionEnd` callback to `MainEditorCallbacks`, triggered when layer interaction ends.
+- **FEAT**(helper-lines): Allow helper lines to be overridden via custom configurations.
+- **FIX**(sub-editors): Remove hidden `BottomAppBar` `SafeArea` gap in sub-editors.
+
 ## 12.0.10
 - **FIX**(iOS, macOS): Restore CocoaPods compatibility for the native Darwin plugin alongside Swift Package Manager support.
 
