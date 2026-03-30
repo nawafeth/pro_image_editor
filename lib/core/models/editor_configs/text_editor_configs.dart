@@ -67,6 +67,7 @@ class TextEditorConfigs
     this.widgets = const TextEditorWidgets(),
     this.enableImageBoundaryTextWrap = false,
     this.resizeToAvoidBottomInset = true,
+    this.composingTextDecoration = TextDecoration.none,
     this.spellCheckConfiguration,
   }) : assert(initFontSize > 0, 'initFontSize must be positive'),
        assert(
@@ -211,6 +212,14 @@ class TextEditorConfigs
   /// the content.
   final bool resizeToAvoidBottomInset;
 
+  /// The text decoration applied to the composing region while the user is
+  /// typing with IME/suggestions active.
+  ///
+  /// By default this is [TextDecoration.none] so no underline is shown.
+  /// Set to [TextDecoration.underline] to restore the default Flutter
+  /// behavior.
+  final TextDecoration composingTextDecoration;
+
   /// The spell check configuration for the text input field.
   ///
   /// When provided, enables spell checking with the given configuration.
@@ -256,6 +265,7 @@ class TextEditorConfigs
     bool? showFontScaleButton,
     bool? showTextAlignButton,
     bool? resizeToAvoidBottomInset,
+    TextDecoration? composingTextDecoration,
     SpellCheckConfiguration? spellCheckConfiguration,
   }) {
     return TextEditorConfigs(
@@ -301,6 +311,8 @@ class TextEditorConfigs
       showTextAlignButton: showTextAlignButton ?? this.showTextAlignButton,
       resizeToAvoidBottomInset:
           resizeToAvoidBottomInset ?? this.resizeToAvoidBottomInset,
+      composingTextDecoration:
+          composingTextDecoration ?? this.composingTextDecoration,
       spellCheckConfiguration:
           spellCheckConfiguration ?? this.spellCheckConfiguration,
     );

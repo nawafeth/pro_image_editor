@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.0.13
+- **FEAT**(text-editor): Add `composingTextDecoration` to `TextEditorConfigs` to control the text decoration of the IME composing region. Defaults to `TextDecoration.none` to remove the underline shown when `enableSuggestions` is active.
+
 ## 12.0.12
 - **FEAT**(text-editor): Add `spellCheckConfiguration` to `TextEditorConfigs` for enabling spell checking in the text input field.
 
