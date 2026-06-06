@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.4.7
+- **FIX**(example): Update Supabase initialization to use publishable key and upgrade `supabase_flutter` dependency to 2.14.1.
+
 ## 12.4.6
 - **FEAT**(ios/macos): Add Swift Package Manager (SPM) support.
 
