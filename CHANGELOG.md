@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.4.6
+- **FEAT**(ios/macos): Add Swift Package Manager (SPM) support.
+
 ## 12.4.5
 - **FIX**(layers): Improve text quality by applying `FilterQuality.high` when rendering layer images with transforms.
 
