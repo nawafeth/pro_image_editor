@@ -50,6 +50,7 @@ class MainEditorConfigs extends ZoomConfigs {
     this.icons = const MainEditorIcons(),
     this.widgets = const MainEditorWidgets(),
     this.safeArea = const EditorSafeArea(),
+    this.interactiveViewerClipBehavior = Clip.hardEdge,
   });
 
   /// Determines whether the close button is displayed on the widget.
@@ -99,6 +100,11 @@ class MainEditorConfigs extends ZoomConfigs {
 
   /// Defines the safe area configuration for the editor.
   final EditorSafeArea safeArea;
+
+  /// Defines the clip behavior of the editor's interactive content area.
+  ///
+  /// Defaults to [Clip.hardEdge].
+  final Clip interactiveViewerClipBehavior;
 
   /// Whether to capture all active layers as images when [doneEditing] is
   /// called and include them in [CompleteParameters.capturedLayers].
@@ -169,6 +175,7 @@ class MainEditorConfigs extends ZoomConfigs {
     bool? enableSubEditorPage,
     bool? captureImageOnDone,
     bool? captureLayersOnDone,
+    Clip? interactiveViewerClipBehavior,
   }) {
     return MainEditorConfigs(
       enableSubEditorPage: enableSubEditorPage ?? this.enableSubEditorPage,
@@ -198,6 +205,8 @@ class MainEditorConfigs extends ZoomConfigs {
       boundaryMargin: boundaryMargin ?? this.boundaryMargin,
       safeArea: safeArea ?? this.safeArea,
       tools: tools ?? this.tools,
+      interactiveViewerClipBehavior:
+          interactiveViewerClipBehavior ?? this.interactiveViewerClipBehavior,
     );
   }
 }
