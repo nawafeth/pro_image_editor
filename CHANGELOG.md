@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.5.3
+- **CHORE**(main-editor): Refactor the layer-scale regression test for readability.
+
 ## 12.5.2
 - **FIX**(main-editor): Prevent layer scale from compounding (layers shrinking) when a single paint session adds multiple layers. Shared layer instances reused across history entries are now rescaled at most once per resize/import recalculation.
 
