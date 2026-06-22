@@ -23,11 +23,8 @@ void main() {
   const initialScale = 2.0;
   const initialOffset = Offset(40, 60);
 
-  TextLayer buildTextLayer() => TextLayer(
-    text: 'Hello',
-    scale: initialScale,
-    offset: initialOffset,
-  );
+  TextLayer buildTextLayer() =>
+      TextLayer(text: 'Hello', scale: initialScale, offset: initialOffset);
 
   PaintLayer buildPaintLayer() => PaintLayer(
     scale: 1.0,
@@ -59,9 +56,7 @@ void main() {
     ];
     for (var i = 0; i < paintLayerCount; i++) {
       runningLayers.add(buildPaintLayer());
-      history.add(
-        EditorStateHistory(layers: List<Layer>.of(runningLayers)),
-      );
+      history.add(EditorStateHistory(layers: List<Layer>.of(runningLayers)));
     }
     return history;
   }
@@ -143,10 +138,7 @@ void main() {
             resizeEvent: resizeEvent,
           );
 
-        expect(
-          manySessionLayer.scale,
-          closeTo(singleSessionLayer.scale, 1e-9),
-        );
+        expect(manySessionLayer.scale, closeTo(singleSessionLayer.scale, 1e-9));
         expect(
           manySessionLayer.scale,
           closeTo(initialScale / scaleFactor, 1e-9),
