@@ -35,6 +35,7 @@ import '../audio_editor/models/audio_editor_response.dart';
 import '../audio_editor/widgets/audio_main_bottom_bar.dart';
 import '../clips_editor/models/video_clip_editor_response.dart';
 import '../clips_editor/pages/clips_editor_page.dart';
+import '../filter_editor/utils/merge_filter_states.dart';
 import '../filter_editor/widgets/filter_generator.dart';
 import '../paint_editor/models/paint_editor_response_model.dart';
 import '../paint_editor/widgets/paint_editor_layer_editor.dart';
@@ -46,6 +47,7 @@ import 'services/layer_copy_manager.dart';
 import 'services/layer_drag_selection_service.dart';
 import 'services/layer_interaction_manager.dart';
 import 'services/main_editor_state_history_service.dart';
+import 'services/paint_layer_merge_manager.dart';
 import 'services/sizes_manager.dart';
 import 'widgets/main_editor_interactive_content.dart';
 
@@ -1043,6 +1045,32 @@ class ProImageEditorState extends State<ProImageEditor>
     setState(() {});
   }
 
+  /// Whether the active filters can be flattened into a single [FilterState].
+  ///
+  /// True when at least two filters are active and none carry video-timeline
+  /// scheduling metadata (which a static combined matrix cannot reproduce).
+  /// Host apps can use this to enable/disable a "Combine filters" action.
+  bool get canMergeFilters => canMergeFilterStates(stateManager.activeFilters);
+
+  /// Flattens all active filters into a single [FilterState] and records it as
+  /// a single history entry.
+  ///
+  /// Filters are pure color matrices that the editor already renders as one
+  /// combined `ColorFilter.matrix`, so the merged result is appearance-
+  /// identical to the original stack. Tune adjustments are left untouched and
+  /// keep composing on top unchanged. Returns the merged [FilterState], or
+  /// `null` when [canMergeFilters] is `false`.
+  FilterState? mergeFilters() {
+    final filters = stateManager.activeFilters;
+    if (!canMergeFilterStates(filters)) return null;
+
+    final merged = mergeFilterStates(filters);
+    addHistory(filters: [merged]);
+    setState(() {});
+
+    return merged;
+  }
+
   /// Updates the timeline properties and/or metadata of the filter at the
   /// given [index] and records the change in the state history.
   ///
@@ -1687,7 +1715,7 @@ class ProImageEditorState extends State<ProImageEditor>
   ///
   /// - [layer]: The existing [PaintLayer] to edit.
   void editPaintLayer(PaintLayer layer) async {
-    if (layer.isPaintLayer && layer.item.isCensorArea) return;
+    if (layer.isPaintLayer && layer.isCensor) return;
 
     PaintLayer? result =
         await (callbacks.paintEditorCallbacks?.onEditLayer?.call(layer) ??
@@ -3039,6 +3067,73 @@ class ProImageEditorState extends State<ProImageEditor>
   void unselectAllLayers() {
     layerInteractionManager.clearSelectedLayers();
     _controllers.uiLayerCtrl.add(null);
+  }
+
+  /// Whether the current selection can be combined into a single paint layer.
+  ///
+  /// Returns `true` when at least two of the selected layers are non-censor
+  /// [PaintLayer]s. Host apps can use this to enable/disable a "Combine"
+  /// action. See [mergeSelectedLayers].
+  bool get canMergeSelectedLayers =>
+      PaintLayerMergeManager.canMerge(selectedLayers);
+
+  /// Combines the currently selected non-censor paint layers into a single
+  /// [PaintLayer].
+  ///
+  /// Every selected [PaintLayer] that is not a censor area is baked (offset,
+  /// scale, rotation, flip and layer opacity) into one merged layer that keeps
+  /// each stroke's own color/mode/stroke width/opacity, so the drawing looks
+  /// identical before and after merging. The merged layer is inserted at the
+  /// z-index of the top-most source layer, the originals are removed, the new
+  /// layer is selected and the whole operation is recorded as a single
+  /// undo entry.
+  ///
+  /// Non-paint and censor layers in the selection are ignored. Returns the
+  /// merged [PaintLayer], or `null` when fewer than two mergeable layers are
+  /// selected.
+  PaintLayer? mergeSelectedLayers() {
+    final selectedIds = layerInteractionManager.selectedLayerIds;
+
+    // Collect the mergeable source layers in z-order (bottom-most first) so the
+    // stroke stacking order is preserved inside the merged layer.
+    final List<PaintLayer> sources = activeLayers
+        .whereType<PaintLayer>()
+        .where(
+          (layer) =>
+              selectedIds.contains(layer.id) &&
+              PaintLayerMergeManager.isMergeable(layer),
+        )
+        .toList();
+
+    if (sources.length < 2) return null;
+
+    final PaintLayer mergedLayer = PaintLayerMergeManager.merge(sources);
+
+    final Set<String> sourceIds = sources.map((layer) => layer.id).toSet();
+    final String topMostSourceId = sources.last.id;
+
+    // Rebuild the layer list: drop every source and drop the merged layer in at
+    // the position the top-most source occupied. All other layers are copied so
+    // the previous history entry keeps its own instances (clean undo).
+    final List<Layer> newLayers = [];
+    for (final layer in activeLayers) {
+      if (layer.id == topMostSourceId) {
+        newLayers.add(mergedLayer);
+      } else if (sourceIds.contains(layer.id)) {
+        // Skip the remaining source layers.
+        continue;
+      } else {
+        newLayers.add(_layerCopyManager.copyLayer(layer));
+      }
+    }
+
+    layerInteractionManager.clearSelectedLayers();
+    addHistory(layers: newLayers);
+    layerInteractionManager.addSelectedLayer(mergedLayer.id);
+    _controllers.uiLayerCtrl.add(null);
+    setState(() {});
+
+    return mergedLayer;
   }
 
   @override
