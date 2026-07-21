@@ -134,9 +134,19 @@ class MainEditorLayersService {
 
       // Handle individual layer selection (no group)
       if (!_enableMultiSelect && !_helperMouseDownMultiSelect) {
-        layerInteraction.clearSelectedLayers();
-        _deselectGroup(layer);
-        if (!isAlreadySelected) {
+        if (isAlreadySelected) {
+          // Second tap on a selected text layer opens the editor.
+          if (layer.isTextLayer &&
+              layer.interaction.enableEdit &&
+              configs.textEditor.enableEdit) {
+            onTextLayerTap(layer as TextLayer);
+          } else {
+            layerInteraction.clearSelectedLayers();
+            _deselectGroup(layer);
+          }
+        } else {
+          layerInteraction.clearSelectedLayers();
+          _deselectGroup(layer);
           layerInteraction.addSelectedLayer(layer.id);
           _selectGroup(layer);
         }

@@ -5,6 +5,8 @@ import 'dart:ui';
 import 'draggable_sheet_style.dart';
 import 'types/style_types.dart';
 
+export 'draggable_sheet_style.dart';
+
 /// The `StickerEditorStyle` class defines the style for the sticker editor in
 /// the image editor.
 /// It includes properties such as colors for the background, category

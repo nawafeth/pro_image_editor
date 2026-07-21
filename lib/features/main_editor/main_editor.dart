@@ -20,6 +20,7 @@ import '/features/main_editor/widgets/main_editor_bottombar.dart';
 import '/features/main_editor/widgets/main_editor_helper_lines.dart';
 import '/features/main_editor/widgets/main_editor_layers.dart';
 import '/features/main_editor/widgets/main_editor_remove_layer_area.dart';
+import '/features/sticker_editor/sticker_sheet_extent_scope.dart';
 import '/pro_image_editor.dart';
 import '/shared/mixins/editor_zoom.mixin.dart';
 import '/shared/services/content_recorder/widgets/content_recorder.dart';
@@ -2334,32 +2335,90 @@ class ProImageEditorState extends State<ProImageEditor>
         .editorBoxConstraintsBuilder
         ?.call(context, configs);
     var sheetTheme = stickerEditorConfigs.style.draggableSheetStyle;
+    final sheetController = DraggableScrollableController();
+    final extentNotifier = ValueNotifier<double>(sheetTheme.initialChildSize);
+
     WidgetLayer? layer = await showModalBottomSheet(
       context: context,
-      backgroundColor: stickerEditorConfigs.style.bottomSheetBackgroundColor,
+      // Transparent so the canvas stays visible; frosted chrome is in the builder.
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.transparent,
       constraints: effectiveBoxConstraints,
       showDragHandle: stickerEditorConfigs.style.showDragHandle,
       isScrollControlled: true,
-      useSafeArea: true,
-      builder: (_) => SafeArea(
-        child: DraggableScrollableSheet(
-          expand: sheetTheme.expand,
-          initialChildSize: sheetTheme.initialChildSize,
-          maxChildSize: sheetTheme.maxChildSize,
-          minChildSize: sheetTheme.minChildSize,
-          shouldCloseOnMinExtent: sheetTheme.shouldCloseOnMinExtent,
-          snap: sheetTheme.snap,
-          snapAnimationDuration: sheetTheme.snapAnimationDuration,
-          snapSizes: sheetTheme.snapSizes,
-          builder: (_, controller) {
-            return StickerEditor(
-              configs: configs,
-              scrollController: controller,
-            );
-          },
-        ),
-      ),
+      isDismissible: true,
+      // Sheet resize/dismiss must come from DraggableScrollableSheet only.
+      // Modal enableDrag steals handle/chrome drags and dismisses immediately.
+      enableDrag: false,
+      useSafeArea: false,
+      builder: (sheetContext) {
+        final keyboardInset = MediaQuery.viewInsetsOf(sheetContext).bottom;
+        final safeBottom = MediaQuery.paddingOf(sheetContext).bottom;
+        return Padding(
+          // Push the sheet above the keyboard when search is focused.
+          padding: EdgeInsets.only(bottom: keyboardInset),
+          child: Stack(
+            children: [
+              // Tap the image / area above the sheet to dismiss (Figma).
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => Navigator.of(sheetContext).pop(),
+                ),
+              ),
+              NotificationListener<DraggableScrollableNotification>(
+                onNotification: (notification) {
+                  extentNotifier.value = notification.extent;
+                  return false;
+                },
+                child: DraggableScrollableSheet(
+                  controller: sheetController,
+                  expand: true,
+                  initialChildSize: sheetTheme.initialChildSize,
+                  maxChildSize: sheetTheme.maxChildSize,
+                  minChildSize: sheetTheme.minChildSize,
+                  shouldCloseOnMinExtent:
+                      sheetTheme.shouldCloseOnMinExtent,
+                  snap: sheetTheme.snap,
+                  snapAnimationDuration:
+                      sheetTheme.snapAnimationDuration ??
+                      const Duration(milliseconds: 280),
+                  snapSizes: sheetTheme.snapSizes,
+                  builder: (_, scrollController) {
+                    final collapsedSize =
+                        sheetTheme.snapSizes?.isNotEmpty == true
+                            ? sheetTheme.snapSizes!.first
+                            : sheetTheme.minChildSize;
+                    return ValueListenableBuilder<double>(
+                      valueListenable: extentNotifier,
+                      builder: (context, extent, child) {
+                        return StickerSheetExtentScope(
+                          extent: extent,
+                          collapsedSize: collapsedSize,
+                          expandedSize: sheetTheme.initialChildSize,
+                          maxSize: sheetTheme.maxChildSize,
+                          sheetController: sheetController,
+                          child: child!,
+                        );
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: safeBottom),
+                        child: StickerEditor(
+                          configs: configs,
+                          scrollController: scrollController,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
+    extentNotifier.dispose();
+    sheetController.dispose();
     ServicesBinding.instance.keyboard.addHandler(_onKeyEvent);
     if (layer == null || !mounted) return;
 
@@ -3214,6 +3273,7 @@ class ProImageEditorState extends State<ProImageEditor>
                       var scaffold = Scaffold(
                         backgroundColor: mainEditorConfigs.style.background,
                         resizeToAvoidBottomInset: false,
+                        extendBody: true,
                         appBar: _buildAppBar(),
                         body: _buildBody(),
                         bottomNavigationBar: ValueListenableBuilder(

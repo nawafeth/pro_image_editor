@@ -13,6 +13,7 @@ export '../../enums/editor_mode.dart';
 export '../custom_widgets/main_editor_widgets.dart';
 export '../icons/main_editor_icons.dart';
 export '../styles/main_editor_style.dart';
+export '../styles/sub_editor_page_style.dart';
 
 /// Configuration options for a main editor.
 class MainEditorConfigs extends ZoomConfigs {

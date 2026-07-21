@@ -356,7 +356,7 @@ class TextEditorState extends State<TextEditor>
               ),
             ),
             child: SafeArea(
-              top: textEditorConfigs.safeArea.top,
+              top: false,
               bottom: textEditorConfigs.safeArea.bottom,
               left: textEditorConfigs.safeArea.left,
               right: textEditorConfigs.safeArea.right,

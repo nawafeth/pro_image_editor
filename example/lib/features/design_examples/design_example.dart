@@ -4,6 +4,7 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 
 import '/core/constants/example_constants.dart';
 import '/core/mixin/example_helper.dart';
+import '/features/design_examples/dagiga_example.dart';
 import '/features/design_examples/frosted_glass_example.dart';
 import '/features/design_examples/grounded_example.dart';
 import '/features/design_examples/highly_configurable_example.dart';
@@ -23,6 +24,7 @@ class _DesignExampleState extends State<DesignExample>
   final String _urlWhatsApp = 'https://picsum.photos/id/350/1500/3000';
   final String _urlFrostedGlass = 'https://picsum.photos/id/28/1500/3000';
   final String _urlGrounded = 'https://picsum.photos/id/28/1500/3000';
+  final String _urlDagiga = 'https://picsum.photos/id/292/1500/3000';
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,17 @@ class _DesignExampleState extends State<DesignExample>
         shrinkWrap: true,
         padding: const EdgeInsets.symmetric(vertical: 20),
         children: <Widget>[
+          ListTile(
+            leading: const Icon(Icons.brush_outlined),
+            title: const Text('Dagiga'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              _openExample(
+                DagigaDesignExample(url: _urlDagiga),
+                _urlDagiga,
+              );
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.grass_outlined),
             title: const Text('Grounded'),

@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.5.4
   vector_math: ^2.2.0
   web: ^1.1.1
+  flutter_svg: ^2.0.10
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,17 @@ flutter:
       platforms: [web]
     - path: lib/web/web_worker.dart.js.map
       platforms: [web]
+    - lib/designs/dagiga/assets/dagiga_color_ring.png
+    - lib/designs/dagiga/assets/dagiga_color_close.svg
+    - lib/designs/dagiga/assets/dagiga_color_eyedropper.svg
+    - lib/designs/dagiga/assets/dagiga_tool_text.svg
+    - lib/designs/dagiga/assets/dagiga_tool_sticker.svg
+    - lib/designs/dagiga/assets/dagiga_tool_pen.svg
+    - lib/designs/dagiga/assets/dagiga_menu_bold.svg
+    - lib/designs/dagiga/assets/dagiga_menu_italic.svg
+    - lib/designs/dagiga/assets/dagiga_menu_underline.svg
+    - lib/designs/dagiga/assets/dagiga_menu_duplicate.svg
+    - lib/designs/dagiga/assets/dagiga_menu_delete.svg
   shaders:
     - lib/shared/shaders/pixelate.frag
   fonts:
