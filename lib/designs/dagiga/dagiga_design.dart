@@ -7,6 +7,7 @@ export 'widgets/bottombar/dagiga_text_bar.dart';
 export 'widgets/bottombar/dagiga_tune_bar.dart';
 export 'widgets/dagiga_app_bar.dart';
 export 'widgets/dagiga_bottom_sheet.dart';
+export 'widgets/dagiga_color_ring_button.dart';
 export 'widgets/dagiga_color_swatch_bar.dart';
 export 'widgets/dagiga_emoji_editor.dart';
 export 'widgets/dagiga_icons.dart';

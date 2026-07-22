@@ -16,6 +16,8 @@ class DagigaTextBar extends StatefulWidget with SimpleConfigsAccess {
     required this.showColorPicker,
     this.arabicTextStyles,
     this.initialMode = DagigaTextBarMode.styles,
+    this.colorRingAsset,
+    this.colorRingPackage,
   });
 
   /// Text editor state.
@@ -40,6 +42,12 @@ class DagigaTextBar extends StatefulWidget with SimpleConfigsAccess {
 
   /// Initial strip mode (defaults to fonts).
   final DagigaTextBarMode initialMode;
+
+  /// Optional host-app asset for the color ring (e.g. marketplace bundle).
+  final String? colorRingAsset;
+
+  /// Package for [colorRingAsset]. Leave null when the asset is in the app.
+  final String? colorRingPackage;
 
   @override
   State<DagigaTextBar> createState() => DagigaTextBarState();
@@ -226,111 +234,55 @@ class DagigaTextBarState extends State<DagigaTextBar>
       height: kDagigaSubBarHeight,
       child: Row(
         children: [
-          _ColorModeButton(onPressed: openTextColorPicker),
-          const SizedBox(width: 16),
-          Expanded(
-            child: styles.isEmpty
-                ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
-                      onPressed: openBackgroundColorPicker,
-                      icon: Icon(
-                        textEditorConfigs.icons.backgroundMode,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      label: Text(
-                        i18n.textEditor.backgroundMode,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  )
-                : ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: styles.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 16),
-                    itemBuilder: (context, index) {
-                      final item = styles[index];
-                      final isSelected = widget.editor.selectedTextStyle
-                              .hashCode ==
+          DagigaColorRingButton(
+            onPressed: openTextColorPicker,
+            assetPath: widget.colorRingAsset,
+            package: widget.colorRingPackage,
+          ),
+          if (styles.isNotEmpty) ...[
+            const SizedBox(width: kDagigaColorStripGap),
+            Expanded(
+              child: SizedBox(height: 35,child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: styles.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 16),
+                itemBuilder: (context, index) {
+                  final item = styles[index];
+                  final isSelected =
+                      widget.editor.selectedTextStyle.hashCode ==
                           item.hashCode;
-                      return Material(
-                        color: isSelected ? Colors.white : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () => widget.editor.setTextStyle(item),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            child: Center(
-                              child: Text(
-                                label,
-                                style: item.copyWith(
-                                  color: isSelected
-                                      ? const Color(0xFF111111)
-                                      : kDagigaFontChipForeground,
-                                  fontSize: 16,
-                                  height: 1.1,
-                                ),
-                              ),
+                  return Material(
+                    color: isSelected ? Colors.white : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () => widget.editor.setTextStyle(item),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        child: Center(
+                          child: Text(
+                            label,
+                            style: item.copyWith(
+                              color: isSelected
+                                  ? const Color(0xFF111111)
+                                  : kDagigaFontChipForeground,
+                              fontSize: 16,
+                              // height: 1.1,
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Circular color entry control that opens the color swatch strip.
-class _ColorModeButton extends StatelessWidget {
-  const _ColorModeButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: ClipOval(
-          child: Image.asset(
-            kDagigaColorRingAsset,
-            width: kDagigaControlSize,
-            height: kDagigaControlSize,
-            fit: BoxFit.cover,
-            errorBuilder: (_, _, _) => Container(
-              width: kDagigaControlSize,
-              height: kDagigaControlSize,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: SweepGradient(
-                  colors: [
-                    Color(0xFFE53935),
-                    Color(0xFFFFEB3B),
-                    Color(0xFF43A047),
-                    Color(0xFF1E88E5),
-                    Color(0xFF8E24AA),
-                    Color(0xFFE53935),
-                  ],
-                ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-        ),
+            ),
+          ],
+        ],
       ),
     );
   }

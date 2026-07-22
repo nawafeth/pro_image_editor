@@ -16,7 +16,11 @@ class DagigaAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backLabel = 'Image',
     this.saveLabel = 'Save',
     this.saveEnabled = true,
+    this.onUndo,
+    this.undoEnabled = false,
+    this.undoTooltip = 'Undo',
     this.backgroundColor = kDagigaBackground,
+    required this.isArabic,
   });
 
   /// Center title (e.g. "Add text").
@@ -30,6 +34,18 @@ class DagigaAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// When false, Save matches Figma’s 50% opacity disabled state.
   final bool saveEnabled;
+
+  /// When set, shows an undo control beside Save.
+  final VoidCallback? onUndo;
+
+  /// When false, undo matches Save’s 50% opacity disabled state.
+  final bool undoEnabled;
+
+  /// Tooltip for the undo control.
+  final String undoTooltip;
+
+  /// When detects app language.
+  final bool isArabic;
 
   /// Called when back is tapped.
   final VoidCallback onBack;
@@ -56,10 +72,8 @@ class DagigaAppBar extends StatelessWidget implements PreferredSizeWidget {
       // Gives enough horizontal room for the back button & text label
 
       // 1. LEFT SLOT
-      leading: Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 12),
+      leading:  Padding(
+          padding: const EdgeInsetsDirectional.only(start: 16),
           child: InkWell(
             onTap: onBack,
             borderRadius: BorderRadius.circular(8),
@@ -68,7 +82,7 @@ class DagigaAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  DagigaIcons.chevronBack(width: 11, height: 7),
+                  DagigaIcons.chevronBack(width: 20, height: 16,isArabic: isArabic),
                   const SizedBox(width: 6),
                   Flexible(
                     child: Text(
@@ -88,7 +102,6 @@ class DagigaAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         ),
-      ),
 
       // 2. CENTER SLOT
       title: Text(
@@ -107,14 +120,39 @@ class DagigaAppBar extends StatelessWidget implements PreferredSizeWidget {
       // 3. RIGHT SLOT
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 16),
+          padding: const EdgeInsetsDirectional.only(end: 16),
           child: Center(
-            child: Opacity(
-              opacity: saveEnabled ? 1 : 0.5,
-              child: _SavePillButton(
-                label: saveLabel,
-                onPressed: saveEnabled ? onSave : null,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (onUndo != null) ...[
+                  Opacity(
+                    opacity: undoEnabled ? 1 : 0.5,
+                    child: IconButton(
+                      tooltip: undoTooltip,
+                      onPressed: undoEnabled ? onUndo : null,
+                      icon: const Icon(
+                        Icons.undo_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                ],
+                Opacity(
+                  opacity: saveEnabled ? 1 : 0.5,
+                  child: _SavePillButton(
+                    label: saveLabel,
+                    onPressed: saveEnabled ? onSave : null,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

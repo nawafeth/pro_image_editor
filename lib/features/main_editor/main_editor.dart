@@ -1434,6 +1434,7 @@ class ProImageEditorState extends State<ProImageEditor>
     if (hasSelectedLayers) addHistory(blockCaptureScreenshot: true);
     _checkInteractiveViewer();
     isLayerBeingTransformed = hasSelectedLayers;
+    if (hasSelectedLayers) _controllers.uiLayerCtrl.add(null);
     layerInteractionManager.onScaleStart(
       details: details,
       selectedLayers: selectedLayers,

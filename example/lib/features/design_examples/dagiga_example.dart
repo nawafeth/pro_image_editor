@@ -139,11 +139,16 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
               appBar: (editor, rebuildStream) => ReactiveAppbar(
                 stream: rebuildStream,
                 builder: (_) => DagigaAppBar(
+                  isArabic: false,
+
                   title: 'Edit Image',
                   backLabel: 'Image',
                   saveLabel: editor.configs.i18n.done,
                   onBack: editor.closeEditor,
                   onSave: editor.doneEditing,
+                  onUndo: editor.undoAction,
+                  undoEnabled: editor.canUndo,
+                  undoTooltip: editor.configs.i18n.undo,
                 ),
               ),
               bottomBar: (editor, rebuildStream, key) => ReactiveWidget(
@@ -179,11 +184,15 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
               appBar: (paintEditor, rebuildStream) => ReactiveAppbar(
                 stream: rebuildStream,
                 builder: (_) => DagigaAppBar(
+                  isArabic: false,
                   title: 'Paint',
                   backLabel: 'Edit Image',
                   saveLabel: paintEditor.configs.i18n.done,
                   onBack: paintEditor.close,
                   onSave: paintEditor.done,
+                  onUndo: paintEditor.undoAction,
+                  undoEnabled: paintEditor.canUndo,
+                  undoTooltip: paintEditor.configs.i18n.undo,
                 ),
               ),
               colorPicker:
@@ -233,6 +242,7 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
               appBar: (textEditor, rebuildStream) => ReactiveAppbar(
                 stream: rebuildStream,
                 builder: (_) => DagigaAppBar(
+                  isArabic: false,
                   title: 'Add text',
                   backLabel: 'Edit Image',
                   saveLabel: textEditor.configs.i18n.done,
@@ -276,6 +286,7 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
                 ReactiveWidget(
                   stream: rebuildStream,
                   builder: (_) => DagigaTextFloatingControls(
+                    isArabic: false,
                     editor: editorState,
                     onAlternateStyle: () {
                       _textBarKey.currentState?.openBackgroundColorPicker();
@@ -299,11 +310,15 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
               appBar: (cropRotateEditor, rebuildStream) => ReactiveAppbar(
                 stream: rebuildStream,
                 builder: (_) => DagigaAppBar(
+                  isArabic: false,
                   title: 'Crop',
                   backLabel: 'Edit Image',
                   saveLabel: cropRotateEditor.configs.i18n.done,
                   onBack: cropRotateEditor.close,
                   onSave: cropRotateEditor.done,
+                  onUndo: cropRotateEditor.undoAction,
+                  undoEnabled: cropRotateEditor.canUndo,
+                  undoTooltip: cropRotateEditor.configs.i18n.undo,
                 ),
               ),
               bottomBar: (cropRotateEditor, rebuildStream) => ReactiveWidget(
@@ -330,6 +345,7 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
               appBar: (editorState, rebuildStream) => ReactiveAppbar(
                 stream: rebuildStream,
                 builder: (_) => DagigaAppBar(
+                  isArabic: false,
                   title: 'Filter',
                   backLabel: 'Edit Image',
                   saveLabel: editorState.configs.i18n.done,
@@ -373,11 +389,15 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
               appBar: (editor, rebuildStream) => ReactiveAppbar(
                 stream: rebuildStream,
                 builder: (_) => DagigaAppBar(
+                  isArabic: false,
                   title: 'Tune',
                   backLabel: 'Edit Image',
                   saveLabel: editor.configs.i18n.done,
                   onBack: editor.close,
                   onSave: editor.done,
+                  onUndo: editor.undo,
+                  undoEnabled: editor.canUndo,
+                  undoTooltip: editor.configs.i18n.undo,
                 ),
               ),
               bottomBar: (editorState, rebuildStream) {

@@ -86,6 +86,9 @@ class _DagigaTextLayerOverlayState extends State<DagigaTextLayerOverlay> {
         decoration.contains(TextDecoration.underline);
   }
 
+  bool get _hideMenuWhileDragging =>
+      _editor?.isLayerBeingTransformed ?? false;
+
   void _updateTextStyle(TextStyle Function(TextStyle base) transform) {
     final editor = _editor;
     final layer = _textLayer;
@@ -216,6 +219,8 @@ class _DagigaTextLayerOverlayState extends State<DagigaTextLayerOverlay> {
         OverlayPortal(
           controller: _overlayCtrl,
           overlayChildBuilder: (context) {
+            if (_hideMenuWhileDragging) return const SizedBox.shrink();
+
             final offset = _menuOffset();
             return Positioned(
               top: offset.dy,

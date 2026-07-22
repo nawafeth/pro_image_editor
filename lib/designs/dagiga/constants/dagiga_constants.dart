@@ -96,17 +96,23 @@ const kDagigaColorCloseIconSize = 8.0;
 /// Eyedropper glyph size inside the 32px control (Figma 14).
 const kDagigaColorEyedropperIconSize = 14.0;
 
+/// Package name for Dagiga asset lookups from dependent apps.
+const kDagigaAssetsPackage = 'pro_image_editor';
+
 /// Package asset path for the rainbow color-entry ring.
 const kDagigaColorRingAsset =
-    'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_color_ring.png';
+    'lib/designs/dagiga/assets/dagiga_color_ring.png';
+
+/// Default host app asset when the ring lives in marketplace.
+const kDagigaColorRingAppAsset = 'assets/images/dagiga_color_ring.png';
 
 /// Color strip: close (X).
 const kDagigaColorCloseAsset =
-    'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_color_close.svg';
+    'lib/designs/dagiga/assets/dagiga_color_close.svg';
 
 /// Color strip: eyedropper / pick color.
 const kDagigaColorEyedropperAsset =
-    'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_color_eyedropper.svg';
+    'lib/designs/dagiga/assets/dagiga_color_eyedropper.svg';
 
 /// Text selection menu: bold.
 const kDagigaMenuBoldAsset =

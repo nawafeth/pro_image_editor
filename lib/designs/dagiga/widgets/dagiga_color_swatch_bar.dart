@@ -43,6 +43,7 @@ class DagigaColorSwatchBar extends StatelessWidget {
             onPressed: onClose,
             child: SvgPicture.asset(
               kDagigaColorCloseAsset,
+              package: kDagigaAssetsPackage,
               width: kDagigaColorCloseIconSize,
               height: kDagigaColorCloseIconSize,
               fit: BoxFit.contain,
@@ -57,6 +58,7 @@ class DagigaColorSwatchBar extends StatelessWidget {
             onPressed: onEyedropper,
             child: SvgPicture.asset(
               kDagigaColorEyedropperAsset,
+              package: kDagigaAssetsPackage,
               width: kDagigaColorEyedropperIconSize,
               height: kDagigaColorEyedropperIconSize,
               fit: BoxFit.contain,
