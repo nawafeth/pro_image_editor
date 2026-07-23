@@ -38,6 +38,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  bordered_text: ^3.0.2
   http: ^1.6.0
   plugin_platform_interface: ^2.1.8
   shared_preferences: ^2.5.4
@@ -83,6 +84,8 @@ flutter:
     - lib/designs/dagiga/assets/dagiga_menu_underline.svg
     - lib/designs/dagiga/assets/dagiga_menu_duplicate.svg
     - lib/designs/dagiga/assets/dagiga_menu_delete.svg
+    - lib/designs/dagiga/assets/dagiga_menu_replace.svg
+    - lib/designs/dagiga/assets/dagiga_logo_rotate.svg
   shaders:
     - lib/shared/shaders/pixelate.frag
   fonts:

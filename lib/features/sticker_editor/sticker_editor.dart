@@ -16,6 +16,9 @@ class StickerEditor extends StatefulWidget with SimpleConfigsAccess {
     required this.configs,
     this.callbacks = const ProImageEditorCallbacks(),
     required this.scrollController,
+    this.builderOverride,
+    this.keepOpenOnSelect = false,
+    this.onLayerSelected,
   });
   @override
   final ProImageEditorConfigs configs;
@@ -25,6 +28,15 @@ class StickerEditor extends StatefulWidget with SimpleConfigsAccess {
 
   /// Controller for managing scroll actions.
   final ScrollController scrollController;
+
+  /// Optional builder override (e.g. logo library). Falls back to configs.
+  final StickerBuilder? builderOverride;
+
+  /// When true, [setLayer] notifies [onLayerSelected] instead of popping.
+  final bool keepOpenOnSelect;
+
+  /// Called when a layer is selected while [keepOpenOnSelect] is true.
+  final ValueChanged<WidgetLayer>? onLayerSelected;
 
   @override
   createState() => StickerEditorState();
@@ -49,19 +61,27 @@ class StickerEditorState extends State<StickerEditor>
 
   @override
   Widget build(BuildContext context) {
-    assert(stickerEditorConfigs.builder != null, '`builder` is required');
+    final builder =
+        widget.builderOverride ?? stickerEditorConfigs.builder;
+    assert(builder != null, '`builder` is required');
 
     return ExtendedPopScope(
       canPop: stickerEditorConfigs.enableGesturePop,
-      child: stickerEditorConfigs.builder!.call(
+      child: builder!.call(
         setLayer,
         widget.scrollController,
       ),
     );
   }
 
-  /// Close the editor with the selected widget-layer.
+  /// Applies the selected widget-layer.
+  ///
+  /// Closes the sheet unless [StickerEditor.keepOpenOnSelect] is enabled.
   void setLayer(WidgetLayer widgetLayer) {
+    if (widget.keepOpenOnSelect) {
+      widget.onLayerSelected?.call(widgetLayer);
+      return;
+    }
     Navigator.of(context).pop(widgetLayer);
   }
 }

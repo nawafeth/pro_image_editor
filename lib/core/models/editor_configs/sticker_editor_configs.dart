@@ -34,10 +34,12 @@ class StickerEditorConfigs
     this.layerFractionalOffset = const Offset(-0.5, -0.5),
     this.enableGesturePop = true,
     this.builder,
+    this.logoBuilder,
     this.initWidth = 100,
     this.minScale = double.negativeInfinity,
     this.maxScale = double.infinity,
     this.style = const StickerEditorStyle(),
+    this.logoStyle,
     this.icons = const StickerEditorIcons(),
   }) : assert(initWidth > 0, 'initWidth must be positive'),
        assert(
@@ -68,6 +70,12 @@ class StickerEditorConfigs
   /// and behavior of stickers in the editor.
   final StickerBuilder? builder;
 
+  /// Optional builder for the logo library sheet opened via
+  /// [ProImageEditorState.openLogoEditor].
+  ///
+  /// When null, [openLogoEditor] falls back to [builder].
+  final StickerBuilder? logoBuilder;
+
   /// The minimum scale factor from the layer.
   final double minScale;
 
@@ -76,6 +84,9 @@ class StickerEditorConfigs
 
   /// Style configuration for the sticker editor.
   final StickerEditorStyle style;
+
+  /// Optional sheet style for the logo library. Falls back to [style].
+  final StickerEditorStyle? logoStyle;
 
   /// Icons used in the sticker editor.
   final StickerEditorIcons icons;
@@ -91,9 +102,11 @@ class StickerEditorConfigs
     bool? enableGesturePop,
     double? initWidth,
     StickerBuilder? builder,
+    StickerBuilder? logoBuilder,
     double? minScale,
     double? maxScale,
     StickerEditorStyle? style,
+    StickerEditorStyle? logoStyle,
     StickerEditorIcons? icons,
   }) {
     return StickerEditorConfigs(
@@ -102,9 +115,11 @@ class StickerEditorConfigs
       enableGesturePop: enableGesturePop ?? this.enableGesturePop,
       initWidth: initWidth ?? this.initWidth,
       builder: builder ?? this.builder,
+      logoBuilder: logoBuilder ?? this.logoBuilder,
       minScale: minScale ?? this.minScale,
       maxScale: maxScale ?? this.maxScale,
       style: style ?? this.style,
+      logoStyle: logoStyle ?? this.logoStyle,
       icons: icons ?? this.icons,
     );
   }

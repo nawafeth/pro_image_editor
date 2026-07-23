@@ -2429,6 +2429,195 @@ class ProImageEditorState extends State<ProImageEditor>
     mainEditorCallbacks?.handleUpdateUI();
   }
 
+  /// Opens the logo library sheet.
+  ///
+  /// Unlike [openStickerEditor], selections keep the sheet open and apply
+  /// layers immediately via [onLayerSelected] / direct editor APIs. The sheet
+  /// dismisses only when the user taps outside or drags it closed.
+  ///
+  /// When [clearSelection] is false (e.g. Replace from the logo menu), the
+  /// currently selected logo layer is preserved so the picker can swap it.
+  void openLogoEditor({bool clearSelection = true}) async {
+    if (clearSelection) {
+      setState(() => layerInteractionManager.selectedLayerId = '');
+    }
+    _checkInteractiveViewer();
+    ServicesBinding.instance.keyboard.removeHandler(_onKeyEvent);
+
+    final logoStyle =
+        stickerEditorConfigs.logoStyle ?? stickerEditorConfigs.style;
+    final effectiveBoxConstraints = logoStyle.editorBoxConstraintsBuilder
+        ?.call(context, configs);
+    final sheetTheme = logoStyle.draggableSheetStyle;
+    final sheetController = DraggableScrollableController();
+    final extentNotifier = ValueNotifier<double>(sheetTheme.initialChildSize);
+    final builder =
+        stickerEditorConfigs.logoBuilder ?? stickerEditorConfigs.builder;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.transparent,
+      constraints: effectiveBoxConstraints,
+      showDragHandle: logoStyle.showDragHandle,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: false,
+      useSafeArea: false,
+      builder: (sheetContext) {
+        final keyboardInset = MediaQuery.viewInsetsOf(sheetContext).bottom;
+        final safeBottom = MediaQuery.paddingOf(sheetContext).bottom;
+        return Padding(
+          padding: EdgeInsets.only(bottom: keyboardInset),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => Navigator.of(sheetContext).pop(),
+                ),
+              ),
+              NotificationListener<DraggableScrollableNotification>(
+                onNotification: (notification) {
+                  extentNotifier.value = notification.extent;
+                  return false;
+                },
+                child: DraggableScrollableSheet(
+                  controller: sheetController,
+                  expand: true,
+                  initialChildSize: sheetTheme.initialChildSize,
+                  maxChildSize: sheetTheme.maxChildSize,
+                  minChildSize: sheetTheme.minChildSize,
+                  shouldCloseOnMinExtent: sheetTheme.shouldCloseOnMinExtent,
+                  snap: sheetTheme.snap,
+                  snapAnimationDuration:
+                      sheetTheme.snapAnimationDuration ??
+                      const Duration(milliseconds: 280),
+                  snapSizes: sheetTheme.snapSizes,
+                  builder: (_, scrollController) {
+                    final collapsedSize =
+                        sheetTheme.snapSizes?.isNotEmpty == true
+                            ? sheetTheme.snapSizes!.first
+                            : sheetTheme.minChildSize;
+                    return ValueListenableBuilder<double>(
+                      valueListenable: extentNotifier,
+                      builder: (context, extent, child) {
+                        return StickerSheetExtentScope(
+                          extent: extent,
+                          collapsedSize: collapsedSize,
+                          expandedSize: sheetTheme.initialChildSize,
+                          maxSize: sheetTheme.maxChildSize,
+                          sheetController: sheetController,
+                          child: child!,
+                        );
+                      },
+                      // Full-height sheet absorbs hits; route empty area taps
+                      // to dismiss so the canvas logo stays reachable.
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => Navigator.of(sheetContext).pop(),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: safeBottom),
+                              child: StickerEditor(
+                                configs: configs,
+                                scrollController: scrollController,
+                                builderOverride: builder,
+                                keepOpenOnSelect: true,
+                                onLayerSelected: (layer) {
+                                  final selected = selectedLayer;
+                                  if (selected is WidgetLayer &&
+                                      selected.meta?['kind'] == 'logo') {
+                                    replaceWidgetLayerContent(
+                                      layer: selected,
+                                      widget: layer.widget,
+                                      exportConfigs: layer.exportConfigs,
+                                      meta: layer.meta,
+                                    );
+                                    selectLayerById(selected.id);
+                                  } else {
+                                    addLayer(layer);
+                                    selectLayerById(layer.id);
+                                  }
+                                  setState(() {});
+                                  mainEditorCallbacks?.handleUpdateUI();
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    extentNotifier.dispose();
+    sheetController.dispose();
+    ServicesBinding.instance.keyboard.addHandler(_onKeyEvent);
+  }
+
+  /// Replaces the visual content / metadata of an existing [WidgetLayer]
+  /// while preserving transform, selection, and history.
+  void replaceWidgetLayerContent({
+    required WidgetLayer layer,
+    required Widget widget,
+    WidgetLayerExportConfigs? exportConfigs,
+    Map<String, dynamic>? meta,
+  }) {
+    final index = getLayerStackIndex(layer);
+    if (index < 0) return;
+
+    final updated = layer.copyWith(
+      widget: widget,
+      exportConfigs: exportConfigs,
+      meta: meta,
+    );
+    replaceLayer(index: index, layer: updated);
+    selectLayerById(updated.id);
+  }
+
+  /// Updates [layer]'s scale.
+  ///
+  /// When [recordHistory] is false the scale mutates live without a history
+  /// entry (useful while dragging a size slider). Pass `true` on release.
+  void setLayerScale(
+    Layer layer, {
+    required double scale,
+    bool recordHistory = true,
+  }) {
+    final index = getLayerStackIndex(layer);
+    if (index < 0) return;
+
+    final clamped = scale.clamp(
+      stickerEditorConfigs.minScale,
+      stickerEditorConfigs.maxScale,
+    );
+
+    if (!recordHistory) {
+      activeLayers[index].scale = clamped;
+      _controllers.uiLayerCtrl.add(null);
+      setState(() {});
+      return;
+    }
+
+    final copy = _layerCopyManager.copyLayer(activeLayers[index])
+      ..scale = clamped;
+    replaceLayer(index: index, layer: copy);
+    selectLayerById(copy.id);
+  }
+
   /// Opens the audio editor page to select or adjust an audio track.
   ///
   /// Throws an [ArgumentError] if called while editing an image

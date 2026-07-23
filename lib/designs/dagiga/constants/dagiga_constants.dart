@@ -134,6 +134,14 @@ const kDagigaMenuDuplicateAsset =
 const kDagigaMenuDeleteAsset =
     'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_menu_delete.svg';
 
+/// Logo selection menu: replace / swap.
+const kDagigaMenuReplaceAsset =
+    'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_menu_replace.svg';
+
+/// Logo selection: rotate handle glyph.
+const kDagigaLogoRotateAsset =
+    'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_logo_rotate.svg';
+
 /// Figma SVG for the Text tool.
 const kDagigaToolTextIconAsset =
     'packages/pro_image_editor/lib/designs/dagiga/assets/dagiga_tool_text.svg';
@@ -181,6 +189,35 @@ const kDagigaStickerGridGap = 16.0;
 /// Upload CTA height (Figma 48).
 const kDagigaStickerUploadHeight = 48.0;
 
+/// Logo sheet solid fill (same navy as sticker sheet).
+const kDagigaLogoSheetBackground = Color(0xFF000529);
+
+/// Logo sheet height when only the upload CTA is visible.
+const kDagigaLogoSheetEmptySize = 150 / 874;
+
+/// Logo sheet height for Recent Logos + upload.
+const kDagigaLogoSheetBrowseSize = 260 / 874;
+
+/// Logo sheet height for Variations + Size (Figma ~320/874).
+const kDagigaLogoSheetSize = 320 / 874;
+
+/// Recent-logo thumbnail size (Figma 66).
+const kDagigaLogoRecentTileSize = 66.0;
+
+/// Variation thumbnail size (Figma 84.5).
+const kDagigaLogoVariationTileSize = 84.5;
+
+/// Logo upload CTA height (Figma 56).
+const kDagigaLogoUploadHeight = 56.0;
+
+/// Corner radius for logo tiles (Figma 12).
+const kDagigaLogoTileRadius = 12.0;
+
+/// Gap between logo / variation tiles (Figma 8).
+const kDagigaLogoTileGap = 8.0;
+
+/// Display width used when placing a logo layer on the canvas.
+const kDagigaLogoLayerDisplaySize = 120.0;
 
 /// Default text color swatches (Figma color strip).
 const List<Color> selectionColors = [
@@ -217,11 +254,9 @@ const List<Color> selectionColors = [
 /// Background color swatches — same palette plus transparent (no fill).
 const List<Color> kDagigaBackgroundSwatches = [
   Colors.transparent,
-  ...selectionColors, // Fixed: removed '+' prefix
+  ...selectionColors,
 ];
 
 const kDagigaDefaultSwatches = <Color>[
-  ...selectionColors
+  ...selectionColors,
 ];
-
-
