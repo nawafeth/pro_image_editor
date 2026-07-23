@@ -58,17 +58,46 @@ abstract final class DagigaIcons {
     double height = 25,
     Color color = Colors.white,
   }) {
+    return textAlignIcon(
+      align: TextAlign.center,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+
+  /// Text-align icon for menu / compact controls (14×11 default).
+  static Widget textAlignIcon({
+    required TextAlign align,
+    double width = 14,
+    double height = 11,
+    Color color = const Color(0xFF000529),
+  }) {
+    final paths = switch (align) {
+      TextAlign.left || TextAlign.start => const [
+        'M1 1.5 H10',
+        'M1 5.5 H13',
+        'M1 9.5 H11',
+      ],
+      TextAlign.right || TextAlign.end => const [
+        'M4 1.5 H13',
+        'M1 5.5 H13',
+        'M3 9.5 H13',
+      ],
+      _ => const [
+        'M3 1.5 H11',
+        'M1 5.5 H13',
+        'M2 9.5 H12',
+      ],
+    };
+
     return CustomPaint(
       size: Size(width, height),
       painter: _StrokePathPainter(
         color: color,
-        strokeWidth: 2.2,
-        viewBox: const Size(32, 25),
-        paths: const [
-          'M7.38461 5H27.0769',
-          'M2.46154 12.5H27.0769',
-          'M9.84616 20H24.6154',
-        ],
+        strokeWidth: 1.2 * (height / 11),
+        viewBox: const Size(14, 11),
+        paths: paths,
       ),
     );
   }

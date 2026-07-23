@@ -16,6 +16,7 @@ class TextEditorCallbacks extends StandaloneEditorCallbacks {
     this.onTextAlignChanged,
     this.onFontScaleChanged,
     this.onBackgroundModeChanged,
+    this.onBorderColorChanged,
     super.onInit,
     super.onAfterViewInit,
     super.onDone,
@@ -73,6 +74,11 @@ class TextEditorCallbacks extends StandaloneEditorCallbacks {
   /// The function takes a single parameter of type [LayerBackgroundColorModeE],
   /// which represents the new background mode.
   final ValueChanged<LayerBackgroundMode>? onBackgroundModeChanged;
+
+  /// A callback that is called when the text border color is changed.
+  ///
+  /// Null indicates the border was removed.
+  final ValueChanged<int?>? onBorderColorChanged;
 
   /// Handles the value change event.
   ///
@@ -137,6 +143,12 @@ class TextEditorCallbacks extends StandaloneEditorCallbacks {
     handleUpdateUI();
   }
 
+  /// Handles the text border color change event.
+  void handleBorderColorChanged(int? newColor) {
+    onBorderColorChanged?.call(newColor);
+    handleUpdateUI();
+  }
+
   /// Creates a copy with modified editor callbacks.
   TextEditorCallbacks copyWith({
     ValueChanged<String>? onChanged,
@@ -146,6 +158,7 @@ class TextEditorCallbacks extends StandaloneEditorCallbacks {
     ValueChanged<TextAlign>? onTextAlignChanged,
     ValueChanged<double>? onFontScaleChanged,
     ValueChanged<LayerBackgroundMode>? onBackgroundModeChanged,
+    ValueChanged<int?>? onBorderColorChanged,
     Function()? onInit,
     Function()? onAfterViewInit,
     Function()? onDone,
@@ -161,6 +174,7 @@ class TextEditorCallbacks extends StandaloneEditorCallbacks {
       onFontScaleChanged: onFontScaleChanged ?? this.onFontScaleChanged,
       onBackgroundModeChanged:
           onBackgroundModeChanged ?? this.onBackgroundModeChanged,
+      onBorderColorChanged: onBorderColorChanged ?? this.onBorderColorChanged,
       onInit: onInit ?? this.onInit,
       onAfterViewInit: onAfterViewInit ?? this.onAfterViewInit,
       onDone: onDone ?? this.onDone,

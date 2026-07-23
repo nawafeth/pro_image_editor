@@ -1,3 +1,4 @@
+import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,9 @@ class RoundedBackgroundTextField extends StatefulWidget {
     required this.configs,
     required this.style,
     required this.backgroundColor,
+    required this.borderColor,
+    required this.borderWidth,
+    required this.textColor,
     required this.textAlign,
     required this.focusNode,
     this.maxTextWidth = double.infinity,
@@ -56,6 +60,15 @@ class RoundedBackgroundTextField extends StatefulWidget {
 
   /// {@macro rounded_background_text.background_color}
   final Color backgroundColor;
+
+  /// Optional stroke color around text glyphs.
+  final Color? borderColor;
+
+  /// Stroke width when [borderColor] is set.
+  final double borderWidth;
+
+  /// Foreground color for the text glyphs.
+  final Color textColor;
 
   /// {@macro flutter.widgets.editableText.autofocus}
   final bool autofocus;
@@ -134,6 +147,8 @@ class _RoundedBackgroundTextFieldState
         },
         children: [
           if (_textController.text.isNotEmpty) _buildBackgroundText(),
+          if (widget.borderColor != null && _textController.text.isNotEmpty)
+            _buildBorderText(fontSize: fontSize),
           _buildEditableText(fontSize: fontSize),
         ],
       ),
@@ -161,6 +176,34 @@ class _RoundedBackgroundTextFieldState
           cursorWidth: widget.cursorWidth,
           textAlign: widget.textAlign,
           backgroundColor: widget.backgroundColor,
+          borderColor: widget.borderColor,
+          borderWidth: widget.borderWidth,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBorderText({required double fontSize}) {
+    return Positioned(
+      top: _scrollCtrl.hasClients ? -_scrollCtrl.position.pixels : null,
+      left: 0,
+      right: 0,
+      child: IgnorePointer(
+        child: BorderedText(
+          strokeWidth: widget.borderWidth,
+          strokeColor: widget.borderColor!,
+          child: Text(
+            _textController.text,
+            style: widget.style.copyWith(
+              color: widget.textColor,
+              fontSize: fontSize,
+              leadingDistribution: widget.configs.style.leadingDistribution,
+              height: widget.configs.style.textHeight,
+              decoration: TextDecoration.none,
+            ),
+            textAlign: widget.textAlign,
+            maxLines: null,
+          ),
         ),
       ),
     );

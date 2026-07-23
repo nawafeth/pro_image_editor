@@ -25,6 +25,7 @@ class RoundedBackgroundTextPainter extends CustomPainter {
     required this.textDirection,
     required this.hitBoxCorrectionOffset,
     this.cursorWidth = 0.0,
+    this.paintText = true,
   });
 
   /// Callback function triggered with the result of a hit test on the text
@@ -54,6 +55,9 @@ class RoundedBackgroundTextPainter extends CustomPainter {
 
   /// An offset used to correct the position of the hitbox.
   final Offset hitBoxCorrectionOffset;
+
+  /// Whether to paint the text glyphs. When false, only the background is drawn.
+  final bool paintText;
 
   Path _buildBackgroundPath() {
     final metrics = painter.computeLineMetrics();
@@ -430,7 +434,9 @@ class RoundedBackgroundTextPainter extends CustomPainter {
       ..translate(hitBoxCorrectionOffset.dx, hitBoxCorrectionOffset.dy)
       ..drawPath(_cachedPath!, painter);
 
-    this.painter.paint(canvas, Offset.zero);
+    if (paintText) {
+      this.painter.paint(canvas, Offset.zero);
+    }
   }
 
   Path? _cachedPath;
@@ -460,7 +466,8 @@ class RoundedBackgroundTextPainter extends CustomPainter {
         oldDelegate.textAlign != textAlign ||
         oldDelegate.hitBoxCorrectionOffset != hitBoxCorrectionOffset ||
         oldDelegate.textDirection != textDirection ||
-        oldDelegate.outerRadius != outerRadius;
+        oldDelegate.outerRadius != outerRadius ||
+        oldDelegate.paintText != paintText;
 
     if (changed) _cachedPath = null; // invalidate cache
 
@@ -480,7 +487,8 @@ class RoundedBackgroundTextPainter extends CustomPainter {
         other.cursorWidth == cursorWidth &&
         other.hitBoxCorrectionOffset == hitBoxCorrectionOffset &&
         other.innerRadius == innerRadius &&
-        other.outerRadius == outerRadius;
+        other.outerRadius == outerRadius &&
+        other.paintText == paintText;
   }
 
   @override
@@ -493,6 +501,7 @@ class RoundedBackgroundTextPainter extends CustomPainter {
         cursorWidth.hashCode ^
         hitBoxCorrectionOffset.hashCode ^
         innerRadius.hashCode ^
-        outerRadius.hashCode;
+        outerRadius.hashCode ^
+        paintText.hashCode;
   }
 }

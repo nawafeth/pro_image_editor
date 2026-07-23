@@ -61,6 +61,8 @@ class TextEditorConfigs
     this.customTextStyles,
     this.defaultTextStyle = const TextStyle(),
     this.initialBackgroundColorMode = LayerBackgroundMode.backgroundAndColor,
+    this.initialBorderColor,
+    this.defaultTextBorderWidth = 2.0,
     this.safeArea = const EditorSafeArea(),
     this.style = const TextEditorStyle(),
     this.icons = const TextEditorIcons(),
@@ -141,6 +143,12 @@ class TextEditorConfigs
 
   /// The initial background color mode for the layer.
   final LayerBackgroundMode initialBackgroundColorMode;
+
+  /// The initial text border (stroke) color. Null means no border.
+  final Color? initialBorderColor;
+
+  /// Default stroke width when a text border color is applied.
+  final double defaultTextBorderWidth;
 
   /// Allow users to select a different font style
   final List<TextStyle>? customTextStyles;
@@ -250,6 +258,8 @@ class TextEditorConfigs
     double? maxFontScale,
     double? minFontScale,
     LayerBackgroundMode? initialBackgroundColorMode,
+    Color? initialBorderColor,
+    double? defaultTextBorderWidth,
     List<TextStyle>? customTextStyles,
     TextStyle? defaultTextStyle,
     double? minScale,
@@ -294,6 +304,9 @@ class TextEditorConfigs
       minFontScale: minFontScale ?? this.minFontScale,
       initialBackgroundColorMode:
           initialBackgroundColorMode ?? this.initialBackgroundColorMode,
+      initialBorderColor: initialBorderColor ?? this.initialBorderColor,
+      defaultTextBorderWidth:
+          defaultTextBorderWidth ?? this.defaultTextBorderWidth,
       customTextStyles: customTextStyles ?? this.customTextStyles,
       defaultTextStyle: defaultTextStyle ?? this.defaultTextStyle,
       minScale: minScale ?? this.minScale,

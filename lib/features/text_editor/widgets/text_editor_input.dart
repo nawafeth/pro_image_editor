@@ -36,6 +36,8 @@ class TextEditorInput extends StatefulWidget {
     required this.scaleFactor,
     required this.textColor,
     required this.backgroundColor,
+    required this.borderColor,
+    required this.borderWidth,
     required this.layer,
     required this.textCtrl,
     required this.maxWidth,
@@ -78,6 +80,12 @@ class TextEditorInput extends StatefulWidget {
 
   /// The background color of the text input field.
   final Color backgroundColor;
+
+  /// Optional stroke color around text glyphs.
+  final Color? borderColor;
+
+  /// Stroke width when [borderColor] is set.
+  final double borderWidth;
 
   /// The text layer being edited, if applicable.
   final TextLayer? layer;
@@ -204,8 +212,13 @@ class _TextEditorInputState extends State<TextEditorInput> {
               shadows: widget.configs.style.inputShadows,
             ),
             backgroundColor: widget.backgroundColor,
+            borderColor: widget.borderColor,
+            borderWidth: widget.borderWidth,
+            textColor: widget.textColor,
             style: widget.selectedTextStyle.copyWith(
-              color: widget.textColor,
+              color: widget.borderColor != null
+                  ? Colors.transparent
+                  : widget.textColor,
               fontSize: widget.textFontSize,
               letterSpacing: widget.configs.style.inputLetterSpacing,
               shadows: widget.configs.style.inputShadows,

@@ -166,6 +166,14 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
                   );
                 },
               ),
+              removeLayerArea: (removeAreaKey, editor, rebuildStream, isDragging) {
+                return DagigaRemoveLayerArea(
+                  removeAreaKey: removeAreaKey,
+                  editor: editor,
+                  rebuildStream: rebuildStream,
+                  isLayerBeingTransformed: isDragging,
+                );
+              },
             ),
             style: const MainEditorStyle(
               background: kDagigaBackground,
@@ -290,6 +298,9 @@ class _DagigaDesignExampleState extends State<DagigaDesignExample>
                     editor: editorState,
                     onAlternateStyle: () {
                       _textBarKey.currentState?.openBackgroundColorPicker();
+                    },
+                    onBorderStyle: () {
+                      _textBarKey.currentState?.openBorderColorPicker();
                     },
                   ),
                 ),

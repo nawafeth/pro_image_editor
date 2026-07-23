@@ -121,6 +121,23 @@ class TextEditorState extends State<TextEditor>
     });
   }
 
+  /// Gets the text border (stroke) color. Null means no border.
+  Color? get borderColor => _borderColor;
+  Color? _borderColor;
+  set borderColor(Color? color) {
+    setState(() {
+      _borderColor = color;
+      textEditorCallbacks?.handleBorderColorChanged(color?.toHex());
+    });
+  }
+
+  /// Stroke width applied when [borderColor] is set.
+  late double _borderWidth;
+  double get borderWidth => _borderWidth;
+  set borderWidth(double value) {
+    setState(() => _borderWidth = value);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -131,6 +148,8 @@ class TextEditorState extends State<TextEditor>
     align = textEditorConfigs.initialTextAlign;
     _fontScale = textEditorConfigs.initFontScale;
     backgroundColorMode = textEditorConfigs.initialBackgroundColorMode;
+    _borderColor = textEditorConfigs.initialBorderColor;
+    _borderWidth = textEditorConfigs.defaultTextBorderWidth;
 
     selectedTextStyle =
         widget.layer?.textStyle ??
@@ -174,6 +193,8 @@ class TextEditorState extends State<TextEditor>
             ? widget.layer!.background
             : widget.layer!.color;
       }
+      _borderColor = widget.layer!.borderColor;
+      _borderWidth = widget.layer!.borderWidth;
     }
   }
 
@@ -329,6 +350,8 @@ class TextEditorState extends State<TextEditor>
         colorMode: backgroundColorMode,
         textStyle: selectedTextStyle,
         customSecondaryColor: _secondaryColor != null,
+        borderColor: _borderColor,
+        borderWidth: borderWidth,
         maxTextWidth:
             (textEditorConfigs.enableAutoWrapOnLayer ||
                 textEditorConfigs.enableImageBoundaryTextWrap)
@@ -483,6 +506,8 @@ class TextEditorState extends State<TextEditor>
       heroTag: widget.heroTag,
       align: align,
       backgroundColor: _backgroundColor,
+      borderColor: _borderColor,
+      borderWidth: borderWidth,
       textCtrl: textCtrl,
       scaleFactor: widget.scaleFactor,
       focusNode: focusNode,
@@ -519,6 +544,7 @@ class TextEditorState extends State<TextEditor>
       ..add(DoubleProperty('fontScale', _fontScale))
       ..add(ColorProperty('primaryColor', primaryColor))
       ..add(ColorProperty('secondaryColor', secondaryColor))
+      ..add(ColorProperty('borderColor', borderColor))
       ..add(DiagnosticsProperty<Size>('editorBodySize', editorBodySize));
   }
 }

@@ -132,6 +132,15 @@ class LayerCopyManager {
       meta: layer.meta,
       maxTextWidth: layer.maxTextWidth,
       customSecondaryColor: layer.customSecondaryColor,
+      borderColor: layer.borderColor == null
+          ? null
+          : Color.from(
+              red: layer.borderColor!.r,
+              green: layer.borderColor!.g,
+              blue: layer.borderColor!.b,
+              alpha: layer.borderColor!.a,
+            ),
+      borderWidth: layer.borderWidth,
       interaction: layer.interaction.copyWith(),
       boxConstraints: layer.boxConstraints?.copyWith(),
       startTime: layer.startTime,

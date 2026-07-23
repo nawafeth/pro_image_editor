@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '/pro_image_editor.dart';
 import '../constants/dagiga_constants.dart';
-import 'dagiga_icons.dart';
+import 'bottombar/dagiga_text_bar.dart';
+import 'dagiga_text_style_controls.dart';
 
 /// Floating Alignment + Alternate Style controls for the text editor canvas.
 class DagigaTextFloatingControls extends StatefulWidget {
@@ -12,10 +13,11 @@ class DagigaTextFloatingControls extends StatefulWidget {
     required this.editor,
     required this.isArabic,
     this.onAlternateStyle,
+    this.onBorderStyle,
     this.alignmentLabel = 'Alignment',
     this.alternateStyleLabel = 'Alternate Style',
+    this.borderStyleLabel = 'Text Border',
   });
-
 
   /// Text editor state.
   final TextEditorState editor;
@@ -25,13 +27,19 @@ class DagigaTextFloatingControls extends StatefulWidget {
   /// When null, falls back to [TextEditorState.toggleBackgroundMode].
   final VoidCallback? onAlternateStyle;
 
+  /// Opens the text border color strip.
+  final VoidCallback? onBorderStyle;
+
   /// Alignment control label.
   final String alignmentLabel;
 
   /// Alternate style control label.
   final String alternateStyleLabel;
 
-  ///app language
+  /// Text border control label.
+  final String borderStyleLabel;
+
+  /// App language direction.
   final bool isArabic;
 
   @override
@@ -60,17 +68,14 @@ class _DagigaTextFloatingControlsState
   bool get _hasBackground =>
       widget.editor.backgroundColorMode != LayerBackgroundMode.onlyColor;
 
-  bool get _isArabicText => RegExp(
-        r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]',
-      ).hasMatch(widget.editor.textCtrl.text);
+  bool get _hasBorder => widget.editor.borderColor != null;
+
+  bool get _isArabicText =>
+      dagigaTextContainsArabic(widget.editor.textCtrl.text);
 
   @override
   Widget build(BuildContext context) {
     final isRtl = widget.isArabic;
-
-    final alternateFill = _hasBackground
-        ? widget.editor.secondaryColor
-        : kDagigaAlternateStyleFill;
 
     return SafeArea(
       child: Align(
@@ -83,104 +88,23 @@ class _DagigaTextFloatingControlsState
             start: isRtl ? 16 : 0,
             end: isRtl ? 0 : 16,
           ),
-          child: Column(
-            crossAxisAlignment:
-                isRtl ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _FloatingControl(
-                isRtl: isRtl,
-                label: widget.alignmentLabel,
-                onTap: widget.editor.toggleTextAlign,
-                trailing: DagigaIcons.alignBars(width: 32, height: 25),
-              ),
-              const SizedBox(height: 12),
-              _FloatingControl(
-                isRtl: isRtl,
-                label: widget.alternateStyleLabel,
-                onTap: widget.onAlternateStyle ??
-                    widget.editor.toggleBackgroundMode,
-                trailing: Container(
-                  width: 32,
-                  height: 32,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: alternateFill,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    _isArabicText ? 'أبج' : 'Aa',
-                    style: widget.editor.selectedTextStyle.copyWith(
-                      color: Colors.white,
-                      fontSize: _isArabicText ? 11 : 12,
-                      height: 1,
-                      fontWeight: FontWeight.w700,
-                      shadows: const [
-                        Shadow(
-                          color: Color(0x66000000),
-                          blurRadius: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FloatingControl extends StatelessWidget {
-  const _FloatingControl({
-    required this.label,
-    required this.onTap,
-    required this.trailing,
-    required this.isRtl,
-  });
-
-  final bool isRtl;
-  final String label;
-  final VoidCallback onTap;
-  final Widget trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = Text(
-      this.label,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 19,
-        fontWeight: FontWeight.w700,
-        height: 1,
-        shadows: [
-          Shadow(
-            color: Color(0x66000000),
-            blurRadius: 4,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-    );
-    const gap = SizedBox(width: 8);
-
-    return Directionality(
-      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: isRtl
-                  ? [trailing, gap, label]
-                  : [label, gap, trailing],
-            ),
+          child: DagigaTextStyleControlsColumn(
+            isArabic: isRtl,
+            alignmentLabel: widget.alignmentLabel,
+            alternateStyleLabel: widget.alternateStyleLabel,
+            borderStyleLabel: widget.borderStyleLabel,
+            onToggleAlign: widget.editor.toggleTextAlign,
+            textAlign: widget.editor.align,
+            onAlternateStyle: widget.onAlternateStyle ??
+                widget.editor.toggleBackgroundMode,
+            onBorderStyle: widget.onBorderStyle ?? () {},
+            hasBackground: _hasBackground,
+            hasBorder: _hasBorder,
+            backgroundPreviewColor: widget.editor.secondaryColor,
+            borderPreviewColor:
+                widget.editor.borderColor ?? kDagigaAlternateStyleFill,
+            previewTextStyle: widget.editor.selectedTextStyle,
+            previewText: _isArabicText ? 'أبج' : 'Aa',
           ),
         ),
       ),

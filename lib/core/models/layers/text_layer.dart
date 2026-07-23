@@ -33,6 +33,8 @@ class TextLayer extends Layer {
     this.colorMode = LayerBackgroundMode.backgroundAndColor,
     this.color = const Color(0xFF000000),
     this.background = const Color(0xFFFFFFFF),
+    this.borderColor,
+    this.borderWidth = 2.0,
     this.align = TextAlign.left,
     this.fontScale = 1.0,
     this.maxTextWidth,
@@ -182,6 +184,10 @@ class TextLayer extends Layer {
       ),
       color: Color(map[keyConverter('color')]),
       background: Color(map[keyConverter('background')]),
+      borderColor: map[keyConverter('borderColor')] != null
+          ? Color(map[keyConverter('borderColor')] as int)
+          : null,
+      borderWidth: tryParseDouble(map[keyConverter('borderWidth')]) ?? 2.0,
       align: TextAlign.values.firstWhere(
         (element) => element.name == map[keyConverter!('align')],
       ),
@@ -203,6 +209,12 @@ class TextLayer extends Layer {
 
   /// The background color for the text.
   Color background;
+
+  /// Optional stroke color around the text glyphs.
+  Color? borderColor;
+
+  /// Stroke width when [borderColor] is set.
+  double borderWidth;
 
   /// This flag define if the secondary color is manually set.
   bool customSecondaryColor;
@@ -240,6 +252,9 @@ class TextLayer extends Layer {
       'colorMode': LayerBackgroundMode.values[colorMode.index].name,
       'color': color.toHex(),
       'background': background.toHex(),
+      if (borderColor != null) 'borderColor': borderColor!.toHex(),
+      if (borderColor != null)
+        'borderWidth': borderWidth.roundSmart(maxDecimalPlaces),
       'align': align.name,
       'fontScale': fontScale.roundSmart(maxDecimalPlaces),
       'type': 'text',
@@ -291,6 +306,10 @@ class TextLayer extends Layer {
         'fontScale': fontScale.roundSmart(maxDecimalPlaces),
       if (paintLayer.color != color) 'color': color.toHex(),
       if (paintLayer.background != background) 'background': background.toHex(),
+      if (paintLayer.borderColor != borderColor)
+        'borderColor': borderColor?.toHex(),
+      if (paintLayer.borderWidth != borderWidth)
+        'borderWidth': borderWidth.roundSmart(maxDecimalPlaces),
       if (paintLayer.colorMode.name != colorMode.name)
         'colorMode': LayerBackgroundMode.values[colorMode.index].name,
       if (paintLayer.customSecondaryColor != customSecondaryColor)
@@ -332,6 +351,8 @@ class TextLayer extends Layer {
     String? text,
     Color? color,
     Color? background,
+    Color? borderColor,
+    double? borderWidth,
     LayerBackgroundMode? colorMode,
     TextAlign? align,
     TextStyle? textStyle,
@@ -366,6 +387,8 @@ class TextLayer extends Layer {
       colorMode: colorMode ?? this.colorMode,
       color: color ?? this.color,
       background: background ?? this.background,
+      borderColor: borderColor ?? this.borderColor,
+      borderWidth: borderWidth ?? this.borderWidth,
       align: align ?? this.align,
       fontScale: fontScale ?? this.fontScale,
       maxTextWidth: maxTextWidth ?? this.maxTextWidth,
@@ -398,6 +421,8 @@ class TextLayer extends Layer {
       ..add(EnumProperty<LayerBackgroundMode>('colorMode', colorMode))
       ..add(ColorProperty('color', color))
       ..add(ColorProperty('background', background))
+      ..add(ColorProperty('borderColor', borderColor))
+      ..add(DoubleProperty('borderWidth', borderWidth))
       ..add(
         DiagnosticsProperty<bool>('customSecondaryColor', customSecondaryColor),
       )

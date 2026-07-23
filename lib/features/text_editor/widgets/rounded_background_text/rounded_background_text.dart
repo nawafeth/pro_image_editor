@@ -1,3 +1,4 @@
+import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,8 @@ class RoundedBackgroundText extends StatelessWidget {
     TextStyle? style,
     this.textAlign,
     this.backgroundColor,
+    this.borderColor,
+    this.borderWidth = 2.0,
     this.onHitTestResult,
     required this.maxTextWidth,
     this.cursorWidth = 0,
@@ -38,6 +41,8 @@ class RoundedBackgroundText extends StatelessWidget {
     super.key,
     required this.text,
     this.backgroundColor,
+    this.borderColor,
+    this.borderWidth = 2.0,
     this.textAlign,
     this.onHitTestResult,
     required this.maxTextWidth,
@@ -58,6 +63,12 @@ class RoundedBackgroundText extends StatelessWidget {
 
   /// The optional background color behind the text.
   final Color? backgroundColor;
+
+  /// Optional stroke color around text glyphs via [BorderedText].
+  final Color? borderColor;
+
+  /// Stroke width when [borderColor] is set.
+  final double borderWidth;
 
   /// The maximum width the text is allowed to occupy. If null, the text can
   /// expand freely.
@@ -102,6 +113,14 @@ class RoundedBackgroundText extends StatelessWidget {
       builder: (context, constraints) {
         painter.layout(maxWidth: maxTextWidth);
 
+        final size = Size(
+          painter.width.clamp(0, constraints.maxWidth) + horizontalSpace * 2,
+          painter.height.clamp(0, constraints.maxHeight) + verticalSpace * 2,
+        );
+
+        final useBorderedText =
+            borderColor != null && painter.plainText.isNotEmpty;
+
         return CustomPaint(
           isComplex: true,
           painter: RoundedBackgroundTextPainter(
@@ -112,11 +131,33 @@ class RoundedBackgroundText extends StatelessWidget {
             cursorWidth: cursorWidth,
             textDirection: Directionality.of(context),
             hitBoxCorrectionOffset: Offset(horizontalSpace, verticalSpace),
+            paintText: !useBorderedText,
           ),
-          size: Size(
-            painter.width.clamp(0, constraints.maxWidth) + horizontalSpace * 2,
-            painter.height.clamp(0, constraints.maxHeight) + verticalSpace * 2,
-          ),
+          child: useBorderedText
+              ? IgnorePointer(
+                  child: SizedBox(
+                    width: size.width,
+                    height: size.height,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: horizontalSpace,
+                        top: verticalSpace,
+                      ),
+                      child: _BorderedTextOverlay(
+                        text: painter.plainText,
+                        style:
+                            TextStyle(leadingDistribution: leadingDistribution)
+                                .merge(style),
+                        textAlign: align,
+                        borderColor: borderColor!,
+                        borderWidth: borderWidth,
+                        maxWidth: maxTextWidth,
+                      ),
+                    ),
+                  ),
+                )
+              : null,
+          size: size,
         );
       },
     );
@@ -132,6 +173,8 @@ class RoundedBackgroundText extends StatelessWidget {
       ..add(
         ColorProperty('backgroundColor', backgroundColor, defaultValue: null),
       )
+      ..add(ColorProperty('borderColor', borderColor, defaultValue: null))
+      ..add(DoubleProperty('borderWidth', borderWidth, defaultValue: 2.0))
       ..add(DoubleProperty('maxTextWidth', maxTextWidth))
       ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 0))
       ..add(
@@ -155,5 +198,37 @@ class RoundedBackgroundText extends StatelessWidget {
           defaultValue: TextLeadingDistribution.proportional,
         ),
       );
+  }
+}
+
+class _BorderedTextOverlay extends StatelessWidget {
+  const _BorderedTextOverlay({
+    required this.text,
+    required this.style,
+    required this.textAlign,
+    required this.borderColor,
+    required this.borderWidth,
+    required this.maxWidth,
+  });
+
+  final String text;
+  final TextStyle style;
+  final TextAlign textAlign;
+  final Color borderColor;
+  final double borderWidth;
+  final double maxWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return BorderedText(
+      strokeWidth: borderWidth,
+      strokeColor: borderColor,
+      child: Text(
+        text,
+        style: style.copyWith(decoration: TextDecoration.none),
+        textAlign: textAlign,
+        maxLines: null,
+      ),
+    );
   }
 }

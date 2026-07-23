@@ -78,6 +78,8 @@ class LayerWidgetTextItem extends StatelessWidget {
       onHitTestResult: _handleLayerHit,
       layer.text.toString(),
       backgroundColor: layer.background,
+      borderColor: layer.borderColor,
+      borderWidth: layer.borderWidth,
       textAlign: layer.align,
       style: finalStyle,
       leadingDistribution: textEditorConfigs.style.leadingDistribution,

@@ -69,6 +69,9 @@ enum DagigaTextBarColorTarget {
 
   /// Text background fill ([TextEditorState.secondaryColor]).
   background,
+
+  /// Text border / stroke color ([TextEditorState.borderColor]).
+  border,
 }
 
 /// Returns true when [text] contains Arabic letters.
@@ -152,6 +155,14 @@ class DagigaTextBarState extends State<DagigaTextBar>
     });
   }
 
+  /// Opens the swatch strip for text border (stroke) color.
+  void openBorderColorPicker() {
+    setState(() {
+      _colorTarget = DagigaTextBarColorTarget.border;
+      _mode = DagigaTextBarMode.colors;
+    });
+  }
+
   Color get _selectedColor {
     if (_colorTarget == DagigaTextBarColorTarget.background) {
       if (widget.editor.backgroundColorMode == LayerBackgroundMode.onlyColor) {
@@ -160,6 +171,9 @@ class DagigaTextBarState extends State<DagigaTextBar>
       // Use the stored secondary only — never the auto-contrast fallback,
       // so text-color changes cannot appear as a selected background swatch.
       return widget.editor.secondaryColor;
+    }
+    if (_colorTarget == DagigaTextBarColorTarget.border) {
+      return widget.editor.borderColor ?? Colors.transparent;
     }
     return widget.editor.primaryColor;
   }
@@ -179,14 +193,25 @@ class DagigaTextBarState extends State<DagigaTextBar>
       setState(() {});
       return;
     }
-    // Text/font color only — never mutates background.
+    if (_colorTarget == DagigaTextBarColorTarget.border) {
+      if (color.a == 0) {
+        widget.editor.borderColor = null;
+        setState(() {});
+        return;
+      }
+      widget.editor.borderColor = color;
+      setState(() {});
+      return;
+    }
+    // Text/font color only — never mutates background or border.
     widget.editor.primaryColor = color;
     setState(() {});
   }
 
   void _onEyedropper() {
     // Eyedropper is only meaningful for opaque colors.
-    if (_colorTarget == DagigaTextBarColorTarget.background &&
+    if ((_colorTarget == DagigaTextBarColorTarget.background ||
+            _colorTarget == DagigaTextBarColorTarget.border) &&
         _selectedColor.a == 0) {
       widget.showColorPicker(Colors.white, _onSwatchSelected);
       return;
@@ -198,6 +223,7 @@ class DagigaTextBarState extends State<DagigaTextBar>
   Widget build(BuildContext context) {
     final isBackground =
         _colorTarget == DagigaTextBarColorTarget.background;
+    final isBorder = _colorTarget == DagigaTextBarColorTarget.border;
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: ColoredBox(
@@ -210,7 +236,7 @@ class DagigaTextBarState extends State<DagigaTextBar>
                 ? DagigaColorSwatchBar(
                     key: ValueKey('colors-$_colorTarget'),
                     selectedColor: _selectedColor,
-                    swatches: isBackground
+                    swatches: isBackground || isBorder
                         ? kDagigaBackgroundSwatches
                         : kDagigaDefaultSwatches,
                     onColorChanged: _onSwatchSelected,
